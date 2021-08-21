@@ -1,0 +1,14 @@
+{
+    "index":{
+        "title":"TimeAwareBPMN-js"
+    },
+    "TA_BPMN_editor":{
+        "title":"TimeAwareBPMN-editor"
+    },
+    "temporal-plugins-server":{
+        "title":"Server-side plug-in"
+    },
+    "temporal-plugins-client":{
+        "title":"Client-side plug-in"
+    }
+}

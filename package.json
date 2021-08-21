@@ -1,0 +1,50 @@
+{
+  "name": "timeawarebpmn-js",
+  "version": "0.0.0",
+  "description": "NodeJS app that uses the TimeAwareBPMN-js Web editor and desktop applications added as plug-ins to verify temporal properties of the models",
+  "main": "serverNodeJS.js",
+  "dependencies": {
+    "java": "^0.12.2",
+    "node-static": "^0.7.11",
+    "open": "^8.2.1"
+  },
+  "devDependencies": {
+    "jsdoc": "^3.6.7"
+  },
+  "scripts": {
+    "start": "node serverNodeJS.js",
+    "doc": "jsdoc -c jsdoc.json",
+    "clientInstallDep":"cd TA_BPMN_editor && npm install",
+    "clientUpdate":"cd TA_BPMN_editor && npm run all"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/univr.di/TimeAwareBPMN"
+  },
+  "keywords": [
+    "Time-Aware BPMN",
+    "Temporal Process Modeling",
+    "Temporal Constraints",
+    "Temporal Constraint Networks",
+    "Temporal Verification",
+    "Constraint Checking",
+    "BPMNio",
+    "Java",
+    "CSTNU"
+  ],
+  "author": {
+    "name": "Mario Ocampo",
+    "url": "https://gitlab.com/MarioOcampo"
+  },
+  "contributors": [
+    {
+      "name": "Roberto Posenato",
+      "url": ""
+    },
+    {
+      "name": "Francesca Zerbato",
+      "url": ""
+    }
+  ],
+  "license": "MIT"
+}

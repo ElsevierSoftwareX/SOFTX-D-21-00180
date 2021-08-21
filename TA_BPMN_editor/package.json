@@ -1,0 +1,59 @@
+{
+  "name": "timeawarebpmn-editor",
+  "version": "0.0.0",
+  "description": "Editor and viewer of time-aware BPMN processes",
+  "main": "app/index.js",
+  "scripts": {
+    "all": "grunt",
+    "dev": "grunt auto-build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/univr.di/TimeAwareBPMN"
+  },
+  "keywords": [
+    "time-aware", "BPMN", "editor" 
+  ],
+  "author": {
+    "name": "Mario Ocampo",
+    "url": "https://gitlab.com/MarioOcampo"
+  },
+  "contributors": [
+    {
+      "name": "Roberto Posenato",
+      "url": ""
+    },
+    {
+      "name": "Francesca Zerbato",
+      "url": ""
+    }
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "babelify": "^8.0.0",
+    "grunt": "~1.0.1",
+    "grunt-browserify": "^5.0.0",
+    "grunt-contrib-connect": "~1.0.2",
+    "grunt-contrib-copy": "~1.0.0",
+    "grunt-contrib-less": "^1.0.1",
+    "grunt-contrib-watch": "~1.0.0",
+    "load-grunt-tasks": "~3.5.0",
+    "stringify": "^3.1.0"
+  },
+  "dependencies": {
+    "bpmn-js": "^8.5.0",
+    "bpmn-js-properties-panel": "^0.42.0",
+    "camunda-bpmn-moddle": "^5.1.0",
+    "diagram-js": "^7.2.3",
+    "inherits": "^2.0.3",
+    "jquery": "^3.5.1",
+    "min-dash": "^3.7.0",
+    "tiny-svg": "^2.2.1",
+    "xmlbuilder": "^15.1.1"
+  }
+}

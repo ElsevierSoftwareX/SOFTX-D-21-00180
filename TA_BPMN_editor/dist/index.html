@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>bpmn-js-Temporal-constraints extension demo</title>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="css/diagram-js.css" />
+  <link rel="stylesheet" href="vendor/bpmn-font/css/bpmn-embedded.css" />
+  <link rel="stylesheet" href="css/app.css" />
+  <style>
+    .icon-custom-triangle {
+      background: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22%2352B415%22%20width%3D%22270%22%20height%3D%22240%22%3E%3Cpath%20d%3D%22M8%2C40%20l%2015%2C-27%20l%2015%2C27%20z%22%2F%3E%3C%2Fsvg%3E');
+    }
+  </style>
+</head>
+
+<body>
+  <div class="content" id="js-drop-zone">
+
+    <div class="message intro">
+      <div class="note">
+        Drop BPMN model from your desktop or <a id="js-create-diagram" href>create a new model</a> to get started.
+      </div>
+    </div>
+
+    <div class="message error">
+      <div class="note">
+        <p>Ooops, we could not display the BPMN 2.0 model.</p>
+
+        <div class="details">
+          <span>cause of the problem</span>
+          <pre></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="canvas" id="canvas"></div>
+    <!-- js-canvas -->
+    <div id="js-properties-panel"></div>
+  </div>
+
+
+  <ul id="ulButtonsTCEvaluation" class="buttonsTCEvaluation">
+    <li id="liSelectTCEvaluation">
+      TC evaluation:
+      <select id="selectTCEvaluation"> </select>
+    </li>
+  </ul>
+
+
+  <ul class="buttonsLoadFiles">
+    <li>Load</li>
+    <li>
+      BPMN model <input type="file" id="inputFile_bpmn" accept=".bpmn">
+    </li>
+    <li>
+      Inter-tasks <input type="file" id="inputFile_intertasks" accept=".json">
+    </li>
+  </ul>
+
+
+  <ul class="buttonsDownloadFiles">
+    <li>
+      Save
+    </li>
+    <li>
+      <a id="js-download-diagram" href title="download BPMN diagram">
+        BPMN model
+      </a>
+    </li>
+    <li>
+      <a id="js-download-svg" href title="download as SVG image">
+        SVG image
+      </a>
+    </li>
+    <li>
+      <a id="js-download-intertasks" href title="download intertasks">
+        Intertasks
+      </a>
+    </li>
+  </ul>
+
+
+
+  <!-- Trigger/Open The Modal -->
+
+
+  <!-- The Modal -->
+  <div id="divModalMessages" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="close">&times;</span>
+        <h2>Log</h2>
+      </div>
+      <div id="divModalContent" class="modal-body">
+
+      </div>
+      <div id="divLoader" class="loader"></div>
+      <div class="modal-footer">
+        <br>
+        <button id="btnDownloadCSTNU">Continue</button>
+        <h3></h3>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="index.js"></script>
+
+</html>
