@@ -14,8 +14,8 @@
   "scripts": {
     "start": "node serverNodeJS.js",
     "doc": "jsdoc -c jsdoc.json",
-    "clientInstallDep":"cd TA_BPMN_editor && npm install",
-    "clientUpdate":"cd TA_BPMN_editor && npm run all"
+    "clientInstallDep": "cd TA_BPMN_editor && npm install",
+    "clientUpdate": "cd TA_BPMN_editor && npm run all"
   },
   "repository": {
     "type": "git",

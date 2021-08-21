@@ -12,7 +12,9 @@
     "url": "https://gitlab.com/univr.di/TimeAwareBPMN"
   },
   "keywords": [
-    "time-aware", "BPMN", "editor" 
+    "time-aware",
+    "BPMN",
+    "editor"
   ],
   "author": {
     "name": "Mario Ocampo",
