@@ -34,6 +34,6 @@ The plug-ins have access to the object `window` and all the objects in the Docum
 
 The plug-ins should be added in the folder `TA_BPMN_editor/app/temporal-modeler/temporal-plugins-client/` and have as entry point a file that should be imported in the `index.js` file in the folder `temporal-plugins-client` and added to the object `evaluationModules` (as was it done for the `evalCSTNU` object). 
 
-Once the files were added the TimeAwareBPMN-editor has to be updated with the command `npm run all` (in the folder `TA_BPMN_editor`) which compiles the editor using the tool `Browserify`. 
+Once the files were added the TimeAwareBPMN-editor has to be updated with the command `npm run all`, in the folder `TA_BPMN_editor`, or the command `npm run clientUpdate`, in the app folder, which compiles the editor using the tool `Browserify`. 
 
 
