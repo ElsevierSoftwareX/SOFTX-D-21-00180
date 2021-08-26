@@ -468,7 +468,7 @@ function setTwoNodesToEdges(params) {
   //If minD or maxD are not OK, do not create the nodes
   if (!okVals) {
     countObjs.elementsWithError += 1;
-    return;
+    // return;
   }
   tmpObj = getXY(bpmnPlane, element.attributes.id.value);
   let x = tmpObj.x;
@@ -673,7 +673,7 @@ function setTwoEdges_sequenceFlow(params) {
   //If minD or maxD are not OK, do not create the edges
   if (!okVals) {
     countObjs.elementsWithError += 1;
-    return;
+    // return;
   }
   //Get cstnuId of the connected nodes
   let source = element.attributes.sourceRef.value;
@@ -803,7 +803,7 @@ function setTwoEdges_intertask(params) {
   //If minD, maxD, or id are not OK, do not create the edges
   if (!okVals) {
     countObjs.elementsWithError += 1;
-    return;
+    // return;
   }
 
   //Get cstnuId of the connected nodes
