@@ -81,12 +81,12 @@ export default function bpmnSetcstnuLabels(bpmn) {
             let tempElement = window.bpmnjs.get('elementRegistry').get(node.id);
             tempElement.businessObject.gatewaySplitJoin = 'split';
 
-            if (myObjs[node.id].proposition)
-              tempProposition = myObjs[node.id].proposition;
+            if (myObjs[node.id].observed_proposition)
+              tempProposition = myObjs[node.id].observed_proposition;
             else {
               if (myObjs['nodeObservation'].length > 0) {
                 tempProposition = myObjs['nodeObservation'].shift();
-                tempElement.businessObject.proposition = tempProposition;
+                tempElement.businessObject.observed_proposition = tempProposition;
               }
               else {
                 myLogObj.errors += '\nMax number of observations reached \n';
@@ -105,7 +105,7 @@ export default function bpmnSetcstnuLabels(bpmn) {
         }
         //Update element in BPMN diagram
         let tempElement = window.bpmnjs.get('elementRegistry').get(node.id);
-        tempElement.businessObject.label_l = Array.from(node.cps).join("");
+        tempElement.businessObject.propositional_label = Array.from(node.cps).join("");
         eventBus.fire('element.changed', { element: tempElement });
 
 
@@ -202,17 +202,17 @@ function processElements(params) {
           }
           if (element.nodeName.includes("exclusiveGateway")) {
 
-            if (element.attributes['cstnu:proposition'] != undefined) {
-              myObjs[element.attributes.id.value].proposition = element.attributes['cstnu:proposition'].value.trim().charAt(0);
+            if (element.attributes['cstnu:observed_proposition'] != undefined) {
+              myObjs[element.attributes.id.value].observed_proposition = element.attributes['cstnu:observed_proposition'].value.trim().charAt(0);
               // Check and remove from array of possible letters 
-              const index = myObjs['nodeObservation'].indexOf(myObjs[element.attributes.id.value].proposition);
+              const index = myObjs['nodeObservation'].indexOf(myObjs[element.attributes.id.value].observed_proposition);
               if (index > -1) {
                 myObjs['nodeObservation'].splice(index, 1);
               }
               countObjs.nObservedProposition += 1;
             }
             else {
-              myObjs[element.attributes.id.value].proposition = undefined; // This will be set when the labels are created            
+              myObjs[element.attributes.id.value].observed_proposition = undefined; // This will be set when the labels are created            
             }
             myObjs[element.attributes.id.value].obs = 'split';
           }
@@ -234,17 +234,17 @@ function processElements(params) {
 
           if (element.nodeName.includes("exclusiveGateway")) {
 
-            if (element.attributes['cstnu:proposition'] != undefined) {
-              myObjs[element.attributes.id.value].proposition = element.attributes['cstnu:proposition'].value.trim().charAt(0);
+            if (element.attributes['cstnu:observed_proposition'] != undefined) {
+              myObjs[element.attributes.id.value].observed_proposition = element.attributes['cstnu:observed_proposition'].value.trim().charAt(0);
               // Check and remove from array of possible letters 
-              const index = myObjs['nodeObservation'].indexOf(myObjs[element.attributes.id.value].proposition);
+              const index = myObjs['nodeObservation'].indexOf(myObjs[element.attributes.id.value].observed_proposition);
               if (index > -1) {
                 myObjs['nodeObservation'].splice(index, 1);
               }
               countObjs.nObservedProposition += 1;
             }
             else {
-              myObjs[element.attributes.id.value].proposition = undefined; // This will be set when the labes are created            
+              myObjs[element.attributes.id.value].observed_proposition = undefined; // This will be set when the labes are created            
             }
           }
         }

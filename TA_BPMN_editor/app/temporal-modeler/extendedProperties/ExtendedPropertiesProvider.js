@@ -1,5 +1,6 @@
 // Require your custom property entries.
-import spellProps from './PanelTemporalProperties';
+import temporalConstraintsFields from './PanelTemporalProperties';
+import typeOfGatewayFields from './PanelTypeOfGateway';
 
 var LOW_PRIORITY = 500;
 
@@ -11,12 +12,12 @@ function createTemporalTabGroups(element, translate) {
   // Create a group called "Temporal Constraints".
   var temporalConstraintsGroup = {
     id: 'temporal-constraints',
-    label: 'Temporal constraints',
+    label: '', //'Temporal constraints',
     entries: []
   };
 
-  // Add the spell props to the Temporal Constraints group.
-  spellProps(temporalConstraintsGroup, element, translate);
+  // Add the fields (textbox, labels, etc) to the Temporal Constraints group.
+  temporalConstraintsFields(temporalConstraintsGroup, element, translate);
 
   return [
     temporalConstraintsGroup
@@ -28,15 +29,29 @@ export default function TemporalPropertiesProvider(propertiesPanel, translate) {
   // Register our custom temporal properties provider.
   // Use a lower priority to ensure it is loaded after the basic BPMN properties.
   propertiesPanel.registerProvider(LOW_PRIORITY, this);
-
+//https://forum.bpmn.io/t/disable-id-field/6307/4
+https://forum.bpmn.io/t/properties-panel-edit-fields/5990
   this.getTabs = function (element) {
-
     return function (entries) {
+
+      const generalTab = entries.find((e) => e.id === "general");
+      const groups = generalTab.groups;
+
+      // Add the "type of gateway" group to the general tab
+      const typeOfGatewayGroup = {
+        id: "type-of-gateway",
+        label: "Type of gateway",
+        entries: []
+      };
+
+      typeOfGatewayFields(typeOfGatewayGroup, element, translate);
+      groups.push(typeOfGatewayGroup);
+
 
       // Add the "temporalProperties" tab
       var temporalPropertiesTab = {
         id: 'temporalProperties',
-        label: 'Temporal Properties',
+        label: 'Temporal Constraints',
         groups: createTemporalTabGroups(element, translate)
       };
 

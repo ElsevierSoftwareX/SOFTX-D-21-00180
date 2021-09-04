@@ -39,7 +39,7 @@
           "type": "String"
         },
         {
-          "name": "label_l",
+          "name": "propositional_label",
           "isAttr": true,
           "type": "String"
         },
@@ -77,7 +77,7 @@
       "extends": ["bpmn:ExclusiveGateway"],
       "properties": [
         {
-          "name": "proposition",
+          "name": "observed_proposition",
           "isAttr": true,
           "type": "String"
         }

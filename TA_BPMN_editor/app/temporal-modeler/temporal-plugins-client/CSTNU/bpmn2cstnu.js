@@ -408,11 +408,11 @@ function checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs) {
           return false;
         }
         if (element.nodeName.includes("exclusiveGateway")) {
-          if (element.attributes['cstnu:proposition'] != undefined) {
-            myObjs[element.attributes.id.value].proposition = element.attributes['cstnu:proposition'].value;
+          if (element.attributes['cstnu:observed_proposition'] != undefined) {
+            myObjs[element.attributes.id.value].observed_proposition = element.attributes['cstnu:observed_proposition'].value;
           }
           else {
-            myLogObj.errors += '\n' + element.nodeName + ' (' + element.attributes.id.value + ')' + ' proposition not defined \n';
+            myLogObj.errors += '\n' + element.nodeName + ' (' + element.attributes.id.value + ')' + ' observed_proposition not defined \n';
             countObjs.elementsWithError += 1;
             return false;
           }
@@ -489,26 +489,26 @@ function setTwoNodesToEdges(params) {
     if (!checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs))
       return;
 
-    let label_l = "⊡";
-    if (element.attributes["cstnu:label_l"] != undefined)
-      if (element.attributes["cstnu:label_l"].value != '')
-        label_l = element.attributes["cstnu:label_l"].value;
+    let propositional_label = "⊡";
+    if (element.attributes["cstnu:propositional_label"] != undefined)
+      if (element.attributes["cstnu:propositional_label"].value != '')
+        propositional_label = element.attributes["cstnu:propositional_label"].value;
 
     // Nodes
     let node = graph.ele("node", { id: "S_" + elementType + "_" + elementTypeNumber }, "");
     node.ele("data", { key: "x" }, Number(x) + Number(elementTypeNumber) - 25);
     node.ele("data", { key: "y" }, Number(y) + Number(elementTypeNumber));
-    node.ele("data", { key: "Label" }, label_l);
+    node.ele("data", { key: "Label" }, propositional_label);
 
     node = graph.ele("node", { id: "E_" + elementType + "_" + elementTypeNumber }, "");
     node.ele("data", { key: "x" }, Number(x) - Number(elementTypeNumber) + 25);
     node.ele("data", { key: "y" }, Number(y) - Number(elementTypeNumber));
-    node.ele("data", { key: "Label" }, label_l);
+    node.ele("data", { key: "Label" }, propositional_label);
 
     if (myObjs[element.attributes.id.value].obs) {
       if (myObjs[element.attributes.id.value].obs === 'split') {
-        node.ele("data", { key: "Obs" }, element.attributes['cstnu:proposition'].value);
-        myObjs[element.attributes.id.value].proposition = element.attributes['cstnu:proposition'].value;
+        node.ele("data", { key: "Obs" }, element.attributes['cstnu:observed_proposition'].value);
+        myObjs[element.attributes.id.value].observed_proposition = element.attributes['cstnu:observed_proposition'].value;
         countObjs.nObservedProposition += 1;
       }
     }

@@ -178,9 +178,6 @@ var validateMaxDuration_sequenceFlow = function (element, values, node) {
 
 export default function (group, element, translate) {
 
-  // Only return an entry, if the currently selected
-  // element is a start event.
-
   function set_group_minDuration(group, comparisonFunction, strComment = "") {
     group.entries.push(entryFactory.textField(translate, {
       id: 'minDuration',
@@ -202,12 +199,18 @@ export default function (group, element, translate) {
   }
 
 
-  function set_group_label_l(group) {
+  function set_group_propositional_label(group, disabled) {
+    
+    if(disabled===undefined)
+      disabled = true;
+    else 
+      disabled = false;
     group.entries.push(entryFactory.textField(translate, {
-      id: 'label_l',
+      id: 'propositional_label',
       description: 'Label created with propositions of XORs',
-      label: 'Conditions',
-      modelProperty: 'label_l'
+      label: 'Propositional label',
+      modelProperty: 'propositional_label', 
+      disabled: function(){ return disabled;}
     }));
   }
 
@@ -255,7 +258,7 @@ export default function (group, element, translate) {
       if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
         set_group_minDuration(group, validateMinDuration_contingent);
         set_group_maxDuration(group, validateMaxDuration_contingent);
-        set_group_label_l(group);
+        set_group_propositional_label(group);
       }
       // bpmn:TimerEventDefinition  it is different, minDuration is the same as maxDuration
       strOptions = ['bpmn:TimerEventDefinition'];
@@ -263,7 +266,7 @@ export default function (group, element, translate) {
       if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
         // set_group_minDuration(group, validateMinDuration_contingent);
         set_group_maxDuration(group, validateMaxDuration_contingent);
-        set_group_label_l(group);
+        set_group_propositional_label(group);
       }
     }
   }
@@ -276,7 +279,7 @@ export default function (group, element, translate) {
 
     set_group_minDuration(group, validateMinDuration_contingent);
     set_group_maxDuration(group, validateMaxDuration_contingent);
-    set_group_label_l(group);
+    set_group_propositional_label(group);
   }
 
   if (is(element, 'bpmn:ExclusiveGateway')) {
@@ -284,26 +287,27 @@ export default function (group, element, translate) {
     set_group_minDuration(group, validateMinDuration_noContingent);
     set_group_maxDuration(group, validateMaxDuration_noContingent);
 
-    group.entries.push(entryFactory.selectBox(translate, {
-      id: 'gatewaySplitJoin',
-      description: 'Set the Gateway as XOR Split or XOR Join',
-      label: 'Type of XOR',
-      modelProperty: 'gatewaySplitJoin',
-      // Default configuration, the property is not created id it does not change/click
-      // TODO force to create the property in the XML file
-      selectOptions: [{ name: '', value: '' }, { name: 'Split', value: 'split' }, { name: 'Join', value: 'join' }],
-    }));
+    // Moved to tab General 
+    // group.entries.push(entryFactory.selectBox(translate, {
+    //   id: 'gatewaySplitJoin',
+    //   description: 'Set the Gateway as XOR Split or XOR Join',
+    //   label: 'Type of XOR',
+    //   modelProperty: 'gatewaySplitJoin',
+    //   // Default configuration, the property is not created id it does not change/click
+    //   // TODO force to create the property in the XML file
+    //   selectOptions: [{ name: '', value: '' }, { name: 'Split', value: 'split' }, { name: 'Join', value: 'join' }],
+    // }));
 
     if (element.businessObject.gatewaySplitJoin == 'split') {
       group.entries.push(entryFactory.textField(translate, {
-        id: 'proposition',
+        id: 'observed_proposition',
         description: 'Type one letter to be used as proposition',
-        label: 'Proposition/observation',
-        modelProperty: 'proposition'
+        label: 'Observed proposition',
+        modelProperty: 'observed_proposition'
       }));
     }
 
-    set_group_label_l(group);
+    set_group_propositional_label(group);
   }
 
 
@@ -312,18 +316,19 @@ export default function (group, element, translate) {
     set_group_minDuration(group, validateMinDuration_noContingent);
     set_group_maxDuration(group, validateMaxDuration_noContingent);
 
-    group.entries.push(entryFactory.selectBox(translate, {
-      id: 'gatewaySplitJoin',
-      description: 'Set the Gateway as XOR Split or XOR Join',
-      label: 'Type of AND',
-      modelProperty: 'gatewaySplitJoin',
-      // Default configuration, the property is not created id it does not change/click
-      // TODO force to create the property in the XML file
-      selectOptions: [{ name: '', value: '' }, { name: 'Split', value: 'split' }, { name: 'Join', value: 'join' }],
+    // Moved to tab General 
+    // group.entries.push(entryFactory.selectBox(translate, {
+    //   id: 'gatewaySplitJoin',
+    //   description: 'Set the Gateway as XOR Split or XOR Join',
+    //   label: 'Type of AND',
+    //   modelProperty: 'gatewaySplitJoin',
+    //   // Default configuration, the property is not created id it does not change/click
+    //   // TODO force to create the property in the XML file
+    //   selectOptions: [{ name: '', value: '' }, { name: 'Split', value: 'split' }, { name: 'Join', value: 'join' }],
 
-    }));
+    // }));
 
-    set_group_label_l(group);
+    set_group_propositional_label(group);
 
   }
 
@@ -363,6 +368,9 @@ export default function (group, element, translate) {
 
     set_group_minDuration(group, validateMinDuration_intertask, " (default: 0)");
     set_group_maxDuration(group, validateMaxDuration_sequenceFlow, " (default: ∞)");
+
+    set_group_propositional_label(group, false);
+
   }
 
 }
