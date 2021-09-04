@@ -53,6 +53,12 @@ Build and run the project
 npm run dev
 ```
 
+## Troubleshooting
+
+To build and run the project it is required `grunt`. For Windows this is not installed globally, which can be done with the command: 
+```
+npm install -g grunt-cli
+```
 
 ## License
 
