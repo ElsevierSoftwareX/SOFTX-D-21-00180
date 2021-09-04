@@ -254,21 +254,21 @@ a:link {
   font-weight: normal;
   font-style: normal;
 }
-/* line 16, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 16, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-panel {
   background-color: #f8f8f8;
   position: relative;
 }
-/* line 20, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 20, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-panel:empty {
   display: none;
 }
-/* line 24, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 24, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-panel label,
 .bpp-properties-panel input {
   vertical-align: middle;
 }
-/* line 29, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 29, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-panel button,
 .bpp-properties-panel input,
 .bpp-properties-panel select,
@@ -278,7 +278,7 @@ a:link {
   padding: 3px 6px;
   border: 1px solid #cccccc;
 }
-/* line 38, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 38, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-panel button:focus,
 .bpp-properties-panel input:focus,
 .bpp-properties-panel select:focus,
@@ -288,7 +288,7 @@ a:link {
   border-color: #1a70ff;
   box-shadow: 0 0 0 2px #a2c5ff, 0 0 0 1px #cdcdcd inset;
 }
-/* line 42, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 42, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-panel button.invalid,
 .bpp-properties-panel input.invalid,
 .bpp-properties-panel select.invalid,
@@ -296,7 +296,7 @@ a:link {
 .bpp-properties-panel [contenteditable].invalid {
   border-color: #ff3d3d;
 }
-/* line 44, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 44, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-panel button.invalid:focus,
 .bpp-properties-panel input.invalid:focus,
 .bpp-properties-panel select.invalid:focus,
@@ -304,19 +304,19 @@ a:link {
 .bpp-properties-panel [contenteditable].invalid:focus {
   box-shadow: 0 0 0 2px #ffb3b3, 0 0 0 1px #cdcdcd inset;
 }
-/* line 50, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 50, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-panel [type=text],
 .bpp-properties-panel [contenteditable],
 .bpp-properties-panel textarea,
 .bpp-properties-panel select {
   width: 100%;
 }
-/* line 57, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 57, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-panel [contenteditable],
 .bpp-properties-panel textarea {
   resize: vertical;
 }
-/* line 62, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 62, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-panel [contenteditable] {
   min-height: 24px;
   outline: 0px solid transparent;
@@ -333,15 +333,15 @@ a:link {
   word-wrap: break-word;
   /* Internet Explorer 5.5+ */
 }
-/* line 76, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 76, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-panel [contenteditable]:before {
   content: "\feff";
 }
-/* line 81, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 81, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-panel [disabled] {
   color: #808080;
 }
-/* line 85, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 85, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-panel label {
   font-weight: bolder;
   display: inline-block;
@@ -349,11 +349,11 @@ a:link {
   color: #666666;
   margin-bottom: 3px;
 }
-/* line 67, node_modules/bpmn-js-properties-panel/styles/_mixins.less */
+/* line 67, node_modules\bpmn-js-properties-panel\styles\_mixins.less */
 .bpp-properties-panel label.bpp-hidden {
   display: none;
 }
-/* line 91, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 91, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-panel .entry-label {
   font-weight: bolder;
   display: inline-block;
@@ -363,18 +363,18 @@ a:link {
   margin-top: 5px;
   margin-bottom: 10px;
 }
-/* line 67, node_modules/bpmn-js-properties-panel/styles/_mixins.less */
+/* line 67, node_modules\bpmn-js-properties-panel\styles\_mixins.less */
 .bpp-properties-panel .entry-label.bpp-hidden {
   display: none;
 }
-/* line 97, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 97, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-panel .entry-label.divider {
   border-top: 1px dotted #cccccc;
   padding-top: 8px;
   margin-top: 16px;
   width: 100%;
 }
-/* line 105, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 105, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-panel .action-button {
   position: absolute;
   top: 0;
@@ -384,11 +384,11 @@ a:link {
   background-color: #f8f8f8;
   border: 1px solid #cccccc;
 }
-/* line 40, node_modules/bpmn-js-properties-panel/styles/_mixins.less */
+/* line 40, node_modules\bpmn-js-properties-panel\styles\_mixins.less */
 .bpp-properties-panel .action-button > span {
   display: none;
 }
-/* line 44, node_modules/bpmn-js-properties-panel/styles/_mixins.less */
+/* line 44, node_modules\bpmn-js-properties-panel\styles\_mixins.less */
 .bpp-properties-panel .action-button:before {
   font-family: "bpmn-js-pp";
   font-style: normal;
@@ -404,56 +404,56 @@ a:link {
   -moz-osx-font-smoothing: grayscale;
   position: relative;
 }
-/* line 49, node_modules/bpmn-js-properties-panel/styles/_mixins.less */
+/* line 49, node_modules\bpmn-js-properties-panel\styles\_mixins.less */
 .bpp-properties-panel .action-button.add:before {
   content: '\E803';
 }
-/* line 53, node_modules/bpmn-js-properties-panel/styles/_mixins.less */
+/* line 53, node_modules\bpmn-js-properties-panel\styles\_mixins.less */
 .bpp-properties-panel .action-button.clear:before {
   content: '\E802';
 }
-/* line 57, node_modules/bpmn-js-properties-panel/styles/_mixins.less */
+/* line 57, node_modules\bpmn-js-properties-panel\styles\_mixins.less */
 .bpp-properties-panel .action-button:hover {
   color: #005df7;
 }
-/* line 109, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 109, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-panel .bpp-checkbox {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
   align-items: center;
 }
-/* line 115, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 115, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-panel .bpp-checkbox > .bpp-error-message {
   order: 1;
   width: 100%;
 }
-/* line 123, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 123, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-error-message,
 .bpp-error-message.bpp-entry-link {
   margin-top: 5px;
   color: #ff3d3d;
 }
-/* line 129, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 129, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-row {
   margin-top: 10px;
   margin-bottom: 10px;
 }
-/* line 132, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 132, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-row:first-of-type {
   margin-top: 0;
 }
-/* line 135, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 135, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-row:last-of-type {
   margin-bottom: 0;
 }
-/* line 140, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 140, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-textfield,
 .bpp-textbox,
 .bpp-autosuggest-textbox {
   margin-bottom: 3px;
 }
-/* line 146, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 146, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-autosuggest-list {
   position: fixed;
   min-width: 100px;
@@ -465,74 +465,74 @@ a:link {
   overflow-y: auto;
   max-height: 200px;
 }
-/* line 159, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 159, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-autosuggest-list.active {
   display: block;
 }
-/* line 164, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 164, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-autosuggest-item {
   padding: 6px 3px;
 }
-/* line 167, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 167, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-autosuggest-item:hover {
   background: #4d90ff;
   color: #ffffff;
 }
-/* line 173, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 173, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-radios-group {
   list-style: none;
   padding: 0;
   margin: 0 0 9px 0;
 }
-/* line 178, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 178, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-radios-group .bpp-radio-wrapper {
   margin: 6px 0;
 }
-/* line 182, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 182, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-radios-group input,
 .bpp-radios-group label {
   vertical-align: middle;
 }
-/* line 187, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 187, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-radios-group input {
   margin-top: 0;
   margin-left: 0;
 }
-/* line 195, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 195, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-radios-group input,
 .bpp-checkbox input {
   margin-left: 0;
 }
-/* line 200, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 200, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-radios-group label:after,
 .bpp-checkbox label:after {
   display: none;
 }
-/* line 207, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 207, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-textfield input {
   padding-right: 28px;
 }
-/* line 211, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 211, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-textfield .clear {
   background: transparent;
   border: none;
   top: 0;
   right: 0;
 }
-/* line 219, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 219, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-combo-input {
   margin-top: 7px;
 }
-/* line 224, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 224, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-select select {
   height: 23px;
 }
-/* line 227, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 227, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-select .action-button.add {
   top: -22px;
   right: 0;
 }
-/* line 237, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 237, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-select .action-button.add,
 .bpp-element-list .action-button.add,
 .bpp-select .action-button.clear,
@@ -540,117 +540,117 @@ a:link {
   top: -23px;
   border-bottom: none;
 }
-/* line 244, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 244, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-select .action-button.add,
 .bpp-element-list .action-button.add {
   right: 0px;
 }
-/* line 248, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 248, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-select .action-button.clear,
 .bpp-element-list .action-button.clear {
   right: 23px;
 }
-/* line 253, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 253, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-entry {
   margin-bottom: 9px;
 }
-/* line 256, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 256, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-entry .bpp-field-wrapper {
   position: relative;
 }
-/* line 259, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 259, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-entry .bpp-field-wrapper input[readonly] + .clear {
   display: none;
 }
-/* line 263, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 263, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-entry .bpp-field-wrapper select {
   resize: vertical;
 }
-/* line 268, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 268, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-entry.bpp-entry--warning {
   background-color: #fffadb;
   border-top: solid 1px #e8e3c7;
   border-bottom: solid 1px #e8e3c7;
 }
-/* line 275, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 275, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-hidden {
   display: none;
 }
-/* line 279, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 279, node_modules\bpmn-js-properties-panel\styles\properties.less */
 label.bpp-hidden {
   display: none;
 }
-/* line 284, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 284, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-table-add-row > .action-button {
   position: relative;
   margin-left: 10px;
 }
-/* line 290, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 290, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-table {
   margin-top: 10px;
 }
-/* line 294, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 294, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-table-row {
   margin-bottom: 2px;
   overflow: hidden;
 }
-/* line 298, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 298, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-table-row > input,
 .bpp-table-row > .action-button {
   float: left;
 }
-/* line 303, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 303, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-table-row > label {
   padding-left: 5px;
 }
-/* line 310, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 310, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-table-row > label.bpp-table-row-columns-1,
 .bpp-table-row > input.bpp-table-row-columns-1 {
   width: 100%;
 }
-/* line 312, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 312, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-table-row > label.bpp-table-row-columns-1.bpp-table-row-removable,
 .bpp-table-row > input.bpp-table-row-columns-1.bpp-table-row-removable {
   width: calc(100% - 24px);
 }
-/* line 317, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 317, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-table-row > label.bpp-table-row-columns-2,
 .bpp-table-row > input.bpp-table-row-columns-2 {
   width: 50%;
   box-sizing: border-box;
 }
-/* line 320, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 320, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-table-row > label.bpp-table-row-columns-2.bpp-table-row-removable,
 .bpp-table-row > input.bpp-table-row-columns-2.bpp-table-row-removable {
   width: calc(50% - 12px);
 }
-/* line 323, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 323, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-table-row > label.bpp-table-row-columns-2:nth-child(2),
 .bpp-table-row > input.bpp-table-row-columns-2:nth-child(2) {
   border-left: none;
 }
-/* line 328, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 328, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-table-row > label.bpp-table-row-columns-3,
 .bpp-table-row > input.bpp-table-row-columns-3 {
   width: 33%;
   box-sizing: border-box;
 }
-/* line 331, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 331, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-table-row > label.bpp-table-row-columns-3.bpp-table-row-removable,
 .bpp-table-row > input.bpp-table-row-columns-3.bpp-table-row-removable {
   width: calc(33% - 8px);
 }
-/* line 334, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 334, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-table-row > label.bpp-table-row-columns-3:not(:first-child),
 .bpp-table-row > input.bpp-table-row-columns-3:not(:first-child) {
   border-left: none;
 }
-/* line 340, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 340, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-table-row > .action-button {
   border-left: none;
   position: static;
 }
-/* line 346, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 346, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-properties-static {
   margin-bottom: 0;
   margin-top: 0;
@@ -660,12 +660,12 @@ label.bpp-hidden {
   font: 13.3333px Arial;
   width: 100%;
 }
-/* line 356, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 356, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-entry-link {
   color: #1a70ff;
   text-decoration: underline;
 }
-/* line 360, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 360, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-entry-link.bpp-entry-link-button {
   display: inline-block;
   padding: 3px 13px;
@@ -675,7 +675,7 @@ label.bpp-hidden {
   border-radius: 100px;
   text-decoration: none;
 }
-/* line 371, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 371, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-icon-warning:before {
   font-family: "bpmn-js-pp";
   font-style: normal;
@@ -691,40 +691,40 @@ label.bpp-hidden {
   -moz-osx-font-smoothing: grayscale;
   content: '\E806';
 }
-/* line 376, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 376, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-field-description {
   margin-top: 5px;
   color: #999999;
 }
-/* line 380, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 380, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-field-description a {
   color: #0056e6;
   text-decoration: none;
 }
-/* line 384, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 384, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-field-description a:hover {
   color: #1a70ff;
 }
-/* line 390, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 390, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-description {
   color: #999999;
 }
-/* line 394, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 394, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-collapsible {
   height: 19px;
 }
-/* line 397, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 397, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-collapsible .bpp-field-wrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
-/* line 403, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 403, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-collapsible .bpp-collapsible__icon {
   display: block;
   padding-right: 2px;
 }
-/* line 409, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 409, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-collapsible .bpp-collapsible__icon:before {
   display: block;
   height: 16px;
@@ -732,11 +732,11 @@ label.bpp-hidden {
   content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpolygon fill='%23666666' fill-rule='evenodd' points='5 4.414 6.414 3 11.364 7.95 6.414 12.899 5 11.485 8.534 7.95'/%3E%3C/svg%3E%0A");
   transform: rotate(90deg);
 }
-/* line 419, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 419, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-collapsible.bpp-collapsible--collapsed .bpp-collapsible__icon:before {
   transform: none;
 }
-/* line 423, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 423, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-collapsible .bpp-collapsible__title {
   display: block;
   flex: 1 0;
@@ -747,15 +747,15 @@ label.bpp-hidden {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* line 435, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 435, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-collapsible:not(.bpp-collapsible--collapsed) .bpp-collapsible__title {
   padding-right: 0;
 }
-/* line 440, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 440, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-collapsible:not(.bpp-collapsible--collapsed) .bpp-collapsible__title:nth-last-child(3) {
   padding-right: 24px;
 }
-/* line 444, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 444, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-collapsible .bpp-collapsible__description {
   display: none;
   flex: 1 1;
@@ -767,55 +767,55 @@ label.bpp-hidden {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* line 458, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 458, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-collapsible.bpp-collapsible--collapsed .bpp-collapsible__description {
   display: block;
 }
-/* line 462, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 462, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-collapsible .bpp-collapsible__remove {
   height: 24px;
   top: -4px;
   right: 0;
 }
-/* line 468, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 468, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-collapsible.bpp-collapsible--collapsed .bpp-collapsible__remove {
   display: none;
 }
-/* line 473, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 473, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-collapsible ~ .bpp-properties-entry:not(.bpp-collapsible):not(.bpp-collapsible-break) {
   margin-left: 18px;
 }
-/* line 479, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 479, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-process-variables.bpp-process-variables__description {
   margin-bottom: 16px;
 }
-/* line 483, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 483, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-process-variables.bpp-process-variables__scope-title {
   font-size: 13px;
   font-weight: 600;
   color: #666666;
   margin-bottom: 16px;
 }
-/* line 491, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 491, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-process-variables.bpp-process-variables__created-in .bpp-process-variables__created-in-item {
   margin-bottom: 4px;
   margin-top: 4px;
 }
-/* line 498, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 498, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-collapsible ~ .bpp-properties-entry.bpp-input-output {
   margin-left: 0;
 }
-/* line 502, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 502, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-collapsible ~ .bpp-properties-entry.bpp-error {
   margin-left: 0;
 }
-/* line 506, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 506, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-collapsible--with-mapping .bpp-collapsible__description:not(:empty) {
   position: relative;
   text-indent: 24px;
   padding-right: 24px;
 }
-/* line 514, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 514, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-collapsible--with-mapping .bpp-collapsible__description:not(:empty):before {
   position: absolute;
   top: -1px;
@@ -826,13 +826,13 @@ label.bpp-hidden {
   content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpolygon fill='%23909090' fill-rule='evenodd' points='8 3 8 7 15 7 15 9 8 9 8 13 2 8'/%3E%3C/svg%3E");
   opacity: 0.7;
 }
-/* line 527, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 527, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-collapsible-error .bpp-collapsible__description:not(:empty) {
   position: relative;
   text-indent: 24px;
   padding-right: 24px;
 }
-/* line 535, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 535, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-collapsible-error .bpp-collapsible__description:not(:empty):before {
   position: absolute;
   top: -1px;
@@ -843,58 +843,58 @@ label.bpp-hidden {
   content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpolygon fill='%23909090' fill-rule='evenodd' points='8 3 8 7 15 7 15 9 8 9 8 13 2 8'/%3E%3C/svg%3E");
   opacity: 0.7;
 }
-/* line 549, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 549, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-input-output .bpp-input-output__add {
   top: -28px;
   right: 0;
 }
-/* line 556, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 556, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-error .bpp-error__add {
   top: -28px;
   right: 0;
 }
-/* line 562, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 562, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-input-output-placeholder {
   padding-bottom: 3px;
   font-size: 14px;
 }
-/* line 567, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 567, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-error-placeholder {
   padding-bottom: 3px;
   font-size: 14px;
 }
-/* line 572, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 572, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-collapsible--with-template-out .bpp-collapsible__description:not(:empty):before {
   content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpolygon fill='%23909090' fill-rule='evenodd' points='15 8 9 13 9 9 2 9 2 7 9 7 9 3'/%3E%3C/svg%3E");
 }
-/* line 578, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 578, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-toggle-switch .bpp-field-wrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
-/* line 584, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 584, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-toggle-switch .bpp-field-wrapper.bpp-hidden {
   display: none;
 }
-/* line 588, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 588, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-toggle-switch .bpp-toggle-switch__label {
   margin: 0;
   margin-left: 6px;
 }
-/* line 593, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 593, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-toggle-switch .bpp-toggle-switch__switcher {
   position: relative;
   width: 48px;
   height: 20px;
 }
-/* line 598, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 598, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-toggle-switch .bpp-toggle-switch__switcher input[type='checkbox'] {
   opacity: 0;
   width: 0;
   height: 0;
 }
-/* line 604, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 604, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-toggle-switch .bpp-toggle-switch__switcher .bpp-toggle-switch__slider {
   position: absolute;
   top: 0;
@@ -906,7 +906,7 @@ label.bpp-hidden {
   transition: 0.4s;
   border-radius: 34px;
 }
-/* line 615, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 615, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-toggle-switch .bpp-toggle-switch__switcher .bpp-toggle-switch__slider:before {
   position: absolute;
   content: "";
@@ -919,32 +919,32 @@ label.bpp-hidden {
   transition: 0.4s;
   border-radius: 50%;
 }
-/* line 629, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 629, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-toggle-switch .bpp-toggle-switch__switcher input[type='checkbox']:checked + .bpp-toggle-switch__slider {
   background-color: #4d90ff;
   box-shadow: 0 0 1px #4d90ff;
 }
-/* line 633, node_modules/bpmn-js-properties-panel/styles/properties.less */
+/* line 633, node_modules\bpmn-js-properties-panel\styles\properties.less */
 .bpp-toggle-switch .bpp-toggle-switch__switcher input[type='checkbox']:checked + .bpp-toggle-switch__slider:before {
   -webkit-transform: translateX(28px);
   -ms-transform: translateX(28px);
   transform: translateX(28px);
 }
-/* line 1, node_modules/bpmn-js-properties-panel/styles/header.less */
+/* line 1, node_modules\bpmn-js-properties-panel\styles\header.less */
 .bpp-properties-header {
   padding: 15px;
   padding-bottom: 5px;
 }
-/* line 5, node_modules/bpmn-js-properties-panel/styles/header.less */
+/* line 5, node_modules\bpmn-js-properties-panel\styles\header.less */
 .bpp-properties-header > .label {
   font-size: 16px;
   font-weight: bolder;
 }
-/* line 1, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 1, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group {
   position: relative;
 }
-/* line 4, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 4, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group .group-header {
   display: flex;
   flex-direction: row;
@@ -952,7 +952,7 @@ label.bpp-hidden {
   justify-content: space-between;
   padding: 10px 15px;
 }
-/* line 11, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 11, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group .group-header .group-label {
   font-weight: bolder;
   display: inline-block;
@@ -960,24 +960,24 @@ label.bpp-hidden {
   color: #666666;
   font-size: 16px;
 }
-/* line 67, node_modules/bpmn-js-properties-panel/styles/_mixins.less */
+/* line 67, node_modules\bpmn-js-properties-panel\styles\_mixins.less */
 .bpp-properties-group .group-header .group-label.bpp-hidden {
   display: none;
 }
-/* line 18, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 18, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group > .bpp-properties-entry {
   padding-left: 15px;
   padding-right: 15px;
 }
-/* line 22, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 22, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group > .bpp-properties-entry:last-child {
   margin-bottom: 6px;
 }
-/* line 27, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 27, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group:empty {
   display: none;
 }
-/* line 31, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 31, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group > .group-toggle {
   position: absolute;
   top: 0;
@@ -985,52 +985,52 @@ label.bpp-hidden {
   bottom: 0;
   width: 4px;
 }
-/* line 37, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 37, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group > .group-toggle:hover {
   background-color: #4d90ff;
 }
-/* line 42, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 42, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group:hover > .group-toggle {
   background-color: #cccccc;
 }
-/* line 44, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 44, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group:hover > .group-toggle:hover {
   background-color: #4d90ff;
 }
-/* line 49, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 49, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group.group-closed {
   border-top: none;
 }
-/* line 52, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 52, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group.group-closed > .group-toggle {
   background-color: #cccccc;
 }
-/* line 56, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 56, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group.group-closed:hover > .group-toggle {
   background-color: #4d90ff;
 }
-/* line 60, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 60, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group.group-closed > div:not(.group-header) {
   display: none;
 }
-/* line 64, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 64, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group.group-closed .group-label {
   margin-bottom: 5px;
 }
-/* line 69, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 69, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group + .bpp-properties-group {
   border-top: 1px solid #eeeeee;
 }
-/* line 73, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 73, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group:last-child {
   padding-bottom: 9px;
 }
-/* line 77, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 77, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group .group__dropdown {
   position: relative;
   justify-self: flex-end;
 }
-/* line 82, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 82, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group .group__dropdown-button {
   width: 26px;
   height: 26px;
@@ -1043,27 +1043,27 @@ label.bpp-hidden {
   justify-content: center;
   align-items: center;
 }
-/* line 96, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 96, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group .group__dropdown--open .group__dropdown-button,
 .bpp-properties-group .group__dropdown-button:hover {
   background-color: #cdcdcd;
 }
-/* line 101, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 101, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group .group__dropdown-menu {
   position: absolute;
   top: 30px;
   right: 0;
   z-index: 10000;
 }
-/* line 108, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 108, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group .group__dropdown:not(.group__dropdown--open) .group__dropdown-menu {
   display: none;
 }
-/* line 112, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 112, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group .group__dropdown-button {
   border-radius: 100%;
 }
-/* line 116, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 116, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group .group__dropdown-menu {
   background-color: #ffffff;
   border: solid 1px #cdcdcd;
@@ -1071,30 +1071,30 @@ label.bpp-hidden {
   padding: 4px 0 4px 0;
   box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
 }
-/* line 127, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 127, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group .group__dropdown-menu-item {
   padding: 8px 16px;
 }
-/* line 131, node_modules/bpmn-js-properties-panel/styles/groups.less */
+/* line 131, node_modules\bpmn-js-properties-panel\styles\groups.less */
 .bpp-properties-group .group__dropdown-menu-item:hover {
   background-color: #cdcdcd;
 }
-/* line 2, node_modules/bpmn-js-properties-panel/styles/listeners.less */
+/* line 2, node_modules\bpmn-js-properties-panel\styles\listeners.less */
 .cam-add-listener > .action-button {
   position: relative;
   margin-left: 10px;
 }
-/* line 8, node_modules/bpmn-js-properties-panel/styles/listeners.less */
+/* line 8, node_modules\bpmn-js-properties-panel\styles\listeners.less */
 [data-list-entry-container] > .bpp-listener-area {
   border: 1px solid #cccccc;
   margin: 10px 1px;
   padding: 10px;
 }
-/* line 14, node_modules/bpmn-js-properties-panel/styles/listeners.less */
+/* line 14, node_modules\bpmn-js-properties-panel\styles\listeners.less */
 .bpp-listener-area {
   position: relative;
 }
-/* line 16, node_modules/bpmn-js-properties-panel/styles/listeners.less */
+/* line 16, node_modules\bpmn-js-properties-panel\styles\listeners.less */
 .bpp-listener-area > .action-button {
   position: absolute;
   right: 0;
@@ -1102,56 +1102,56 @@ label.bpp-hidden {
   border: none;
   background: none;
 }
-/* line 25, node_modules/bpmn-js-properties-panel/styles/listeners.less */
+/* line 25, node_modules\bpmn-js-properties-panel\styles\listeners.less */
 .bpp-listener-area + .bpp-listener-area {
   margin-top: 20px;
 }
-/* line 1, node_modules/bpmn-js-properties-panel/styles/tabs.less */
+/* line 1, node_modules\bpmn-js-properties-panel\styles\tabs.less */
 .bpp-properties-tab-bar {
   border-bottom: 1px solid #cccccc;
   padding: 0 15px;
 }
-/* line 5, node_modules/bpmn-js-properties-panel/styles/tabs.less */
+/* line 5, node_modules\bpmn-js-properties-panel\styles\tabs.less */
 .bpp-properties-tab-bar .scroll-tabs-button {
   font-size: 16px;
   padding: 3px 4px 3px 4px;
   color: #666666;
 }
-/* line 10, node_modules/bpmn-js-properties-panel/styles/tabs.less */
+/* line 10, node_modules\bpmn-js-properties-panel\styles\tabs.less */
 .bpp-properties-tab-bar .scroll-tabs-button:hover {
   font-weight: bold;
 }
-/* line 14, node_modules/bpmn-js-properties-panel/styles/tabs.less */
+/* line 14, node_modules\bpmn-js-properties-panel\styles\tabs.less */
 .bpp-properties-tab-bar .scroll-tabs-button.scroll-tabs-left {
   float: left;
   margin-left: -15px;
 }
-/* line 19, node_modules/bpmn-js-properties-panel/styles/tabs.less */
+/* line 19, node_modules\bpmn-js-properties-panel\styles\tabs.less */
 .bpp-properties-tab-bar .scroll-tabs-button.scroll-tabs-right {
   float: right;
   margin-right: -15px;
 }
-/* line 26, node_modules/bpmn-js-properties-panel/styles/tabs.less */
+/* line 26, node_modules\bpmn-js-properties-panel\styles\tabs.less */
 .bpp-properties-tab-bar:not(.scroll-tabs-overflow) .scroll-tabs-button {
   display: none;
 }
-/* line 32, node_modules/bpmn-js-properties-panel/styles/tabs.less */
+/* line 32, node_modules\bpmn-js-properties-panel\styles\tabs.less */
 ul.bpp-properties-tabs-links {
   margin: 5px 0 -1px 0;
   padding: 0;
   white-space: nowrap;
   overflow: hidden;
 }
-/* line 38, node_modules/bpmn-js-properties-panel/styles/tabs.less */
+/* line 38, node_modules\bpmn-js-properties-panel\styles\tabs.less */
 ul.bpp-properties-tabs-links > li {
   display: inline-block;
   margin: 0;
 }
-/* line 42, node_modules/bpmn-js-properties-panel/styles/tabs.less */
+/* line 42, node_modules\bpmn-js-properties-panel\styles\tabs.less */
 ul.bpp-properties-tabs-links > li.bpp-hidden {
   display: none;
 }
-/* line 46, node_modules/bpmn-js-properties-panel/styles/tabs.less */
+/* line 46, node_modules\bpmn-js-properties-panel\styles\tabs.less */
 ul.bpp-properties-tabs-links > li > a {
   display: inline-block;
   font-size: 12px;
@@ -1164,26 +1164,26 @@ ul.bpp-properties-tabs-links > li > a {
   text-decoration: none;
   cursor: default;
 }
-/* line 63, node_modules/bpmn-js-properties-panel/styles/tabs.less */
+/* line 63, node_modules\bpmn-js-properties-panel\styles\tabs.less */
 ul.bpp-properties-tabs-links > li > a:hover {
   color: #4d4d4d;
 }
-/* line 69, node_modules/bpmn-js-properties-panel/styles/tabs.less */
+/* line 69, node_modules\bpmn-js-properties-panel\styles\tabs.less */
 ul.bpp-properties-tabs-links > li + li {
   margin-left: 4px;
 }
-/* line 75, node_modules/bpmn-js-properties-panel/styles/tabs.less */
+/* line 75, node_modules\bpmn-js-properties-panel\styles\tabs.less */
 ul.bpp-properties-tabs-links > li.bpp-active a {
   padding-bottom: 5px;
   border-top: 3px solid #4d90ff;
   border-bottom: none;
 }
-/* line 84, node_modules/bpmn-js-properties-panel/styles/tabs.less */
+/* line 84, node_modules\bpmn-js-properties-panel\styles\tabs.less */
 .bpp-properties-tab,
 .bpp-properties-tab.bpp-hidden {
   display: none;
 }
-/* line 89, node_modules/bpmn-js-properties-panel/styles/tabs.less */
+/* line 89, node_modules\bpmn-js-properties-panel\styles\tabs.less */
 .bpp-properties-tab.bpp-active {
   display: block;
 }
