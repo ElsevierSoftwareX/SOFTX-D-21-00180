@@ -1,3 +1,7 @@
+20210904
+Remove SVG button, there is a problem with intertasks
+Change attribute names, Proposition -> Observed proposition and Condition -> Propositional label
+
 TimeAwareBPMN-js 20210818
 Fix bugs
 Correction of spelling errors and rename files according to the paper naming used
