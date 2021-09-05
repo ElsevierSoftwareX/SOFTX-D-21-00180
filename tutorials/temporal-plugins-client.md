@@ -1,4 +1,4 @@
-<!-- # TimeAwareBPMN-js - Client-side plug-in -->
+# TimeAwareBPMN-js - Client-side plug-in
 
 The TimeAwareBPMN-js - Client-side plug-ins prepare the BPMN models for the verification, send the data to the corresponding server-side plug-in, and receive and show the results.
 

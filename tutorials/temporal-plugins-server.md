@@ -1,4 +1,4 @@
-<!-- # TimeAwareBPMN-js - Server-side plug-in -->
+# TimeAwareBPMN-js - Server-side plug-in
 
 The TimeAwareBPMN-js - Server-side plug-ins enable the verification of time-aware BPMN models based on temporal constraint networks using external libraries.
 
