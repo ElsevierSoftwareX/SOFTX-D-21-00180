@@ -44,7 +44,7 @@ export default function CustomEvents(eventBus, commandStack, elementRegistry) {
   });
 
 
-  eventBus.on('cstnu.changed', (event) => {
+  eventBus.on('tempcon.changed', (event) => {
     var currentElement = event.element;
 
     if (is(currentElement, "bpmn:ParallelGateway")) {

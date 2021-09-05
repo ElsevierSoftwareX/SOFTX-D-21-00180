@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:cstnu="http://cstnu" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  xmlns:tempcon="https://gitlab.com/univr.di/TimeAwareBPMN" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
   <bpmn2:process id="Process_1" isExecutable="false">
     <bpmn2:startEvent id="StartEvent_1" name="s">
       <bpmn2:outgoing>Flow_1y1s5dn</bpmn2:outgoing>
     </bpmn2:startEvent>
-    <bpmn2:exclusiveGateway id="G1" name="Payment method? (G1)" cstnu:minDuration="2" cstnu:maxDuration="4" cstnu:propositional_label="" cstnu:gatewaySplitJoin="split" cstnu:observed_proposition="R" cstnu:xorSplitJoin="split">
+    <bpmn2:exclusiveGateway id="G1" name="Payment method? (G1)" tempcon:minDuration="2" tempcon:maxDuration="4" tempcon:propositional_label="" tempcon:gatewaySplitJoin="split" tempcon:observed_proposition="R" tempcon:xorSplitJoin="split">
       <bpmn2:incoming>Flow_15ktg1j</bpmn2:incoming>
       <bpmn2:outgoing>Flow_0k7m6jp</bpmn2:outgoing>
       <bpmn2:outgoing>Flow_01g0xld</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="Flow_0k7m6jp" name="Cash" sourceRef="G1" targetRef="T3" cstnu:pLiteralValue="true" />
-    <bpmn2:exclusiveGateway id="G2" name="G2" cstnu:minDuration="1" cstnu:maxDuration="2" cstnu:propositional_label="" cstnu:gatewaySplitJoin="join" cstnu:observed_proposition="R" cstnu:xorSplitJoin="join">
+    <bpmn2:sequenceFlow id="Flow_0k7m6jp" name="Cash" sourceRef="G1" targetRef="T3" tempcon:pLiteralValue="true" />
+    <bpmn2:exclusiveGateway id="G2" name="G2" tempcon:minDuration="1" tempcon:maxDuration="2" tempcon:propositional_label="" tempcon:gatewaySplitJoin="join" tempcon:observed_proposition="R" tempcon:xorSplitJoin="join">
       <bpmn2:incoming>Flow_1h69eb3</bpmn2:incoming>
       <bpmn2:incoming>Flow_0wuk23o</bpmn2:incoming>
       <bpmn2:outgoing>Flow_0j73ge2</bpmn2:outgoing>
@@ -20,30 +25,30 @@
     <bpmn2:endEvent id="e" name="e">
       <bpmn2:incoming>Flow_0pp9mni</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:userTask id="T3" name="Accept Cash (T3)" cstnu:minDuration="14" cstnu:maxDuration="6" cstnu:propositional_label="R">
+    <bpmn2:userTask id="T3" name="Accept Cash (T3)" tempcon:minDuration="14" tempcon:maxDuration="6" tempcon:propositional_label="R">
       <bpmn2:incoming>Flow_0k7m6jp</bpmn2:incoming>
       <bpmn2:outgoing>Flow_1h69eb3</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="Flow_0wuk23o" sourceRef="IE1" targetRef="G2" />
-    <bpmn2:userTask id="T4" name="Deliver Package (T4)" cstnu:minDuration="1" cstnu:maxDuration="4" cstnu:propositional_label="">
+    <bpmn2:userTask id="T4" name="Deliver Package (T4)" tempcon:minDuration="1" tempcon:maxDuration="4" tempcon:propositional_label="">
       <bpmn2:incoming>Flow_0j73ge2</bpmn2:incoming>
       <bpmn2:outgoing>Flow_0pp9mni</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="Flow_0pp9mni" sourceRef="T4" targetRef="e" />
-    <bpmn2:sequenceFlow id="Flow_01g0xld" name="Credit card" sourceRef="G1" targetRef="T2" cstnu:pLiteralValue="false" />
+    <bpmn2:sequenceFlow id="Flow_01g0xld" name="Credit card" sourceRef="G1" targetRef="T2" tempcon:pLiteralValue="false" />
     <bpmn2:sequenceFlow id="Flow_1qye66p" sourceRef="T2" targetRef="IE1" />
-    <bpmn2:intermediateCatchEvent id="IE1" name="Payment authorized (IE1)" cstnu:minDuration="1" cstnu:maxDuration="3" cstnu:propositional_label="¬R">
+    <bpmn2:intermediateCatchEvent id="IE1" name="Payment authorized (IE1)" tempcon:minDuration="1" tempcon:maxDuration="3" tempcon:propositional_label="¬R">
       <bpmn2:incoming>Flow_1qye66p</bpmn2:incoming>
       <bpmn2:outgoing>Flow_0wuk23o</bpmn2:outgoing>
       <bpmn2:messageEventDefinition id="MessageEventDefinition_1by8qh7" />
     </bpmn2:intermediateCatchEvent>
-    <bpmn2:userTask id="T1" name="Identify Payment Method (T1)" cstnu:minDuration="2" cstnu:maxDuration="3" cstnu:propositional_label="">
+    <bpmn2:userTask id="T1" name="Identify Payment Method (T1)" tempcon:minDuration="2" tempcon:maxDuration="3" tempcon:propositional_label="">
       <bpmn2:incoming>Flow_1y1s5dn</bpmn2:incoming>
       <bpmn2:outgoing>Flow_15ktg1j</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="Flow_15ktg1j" sourceRef="T1" targetRef="G1" />
     <bpmn2:sequenceFlow id="Flow_1y1s5dn" sourceRef="StartEvent_1" targetRef="T1" />
-    <bpmn2:userTask id="T2" name="Authorize Credit Card (T2)" cstnu:minDuration="1" cstnu:maxDuration="2" cstnu:propositional_label="¬R">
+    <bpmn2:userTask id="T2" name="Authorize Credit Card (T2)" tempcon:minDuration="1" tempcon:maxDuration="2" tempcon:propositional_label="¬R">
       <bpmn2:incoming>Flow_01g0xld</bpmn2:incoming>
       <bpmn2:outgoing>Flow_1qye66p</bpmn2:outgoing>
     </bpmn2:userTask>

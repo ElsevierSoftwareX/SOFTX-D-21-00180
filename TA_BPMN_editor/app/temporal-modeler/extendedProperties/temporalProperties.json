@@ -1,7 +1,7 @@
 {
-  "name": "CSTNU",
-  "prefix": "cstnu",
-  "uri": "http://cstnu",
+  "name": "TemporalConstraints",
+  "prefix": "tempcon",
+  "uri": "https://gitlab.com/univr.di/TimeAwareBPMN",
   "xml": {
     "tagAlias": "lowerCase"
   },

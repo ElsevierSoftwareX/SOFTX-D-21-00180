@@ -179,8 +179,8 @@ function processElements(params) {
         }
       }
 
-      if (element.attributes['cstnu:gatewaySplitJoin'] != undefined) { //Read it
-        if (element.attributes['cstnu:gatewaySplitJoin'].value.includes('join')) {
+      if (element.attributes['tempcon:gatewaySplitJoin'] != undefined) { //Read it
+        if (element.attributes['tempcon:gatewaySplitJoin'].value.includes('join')) {
 
           // if join, it should have 2 inputs and 1 output
           if (nIncoming != 2 || nOutgoing != 1) {
@@ -192,7 +192,7 @@ function processElements(params) {
             myObjs[element.attributes.id.value].obs = 'join';
           }
         }
-        else if (element.attributes['cstnu:gatewaySplitJoin'].value.includes('split')) {
+        else if (element.attributes['tempcon:gatewaySplitJoin'].value.includes('split')) {
 
           // if split, it should have 1 input and 2 outputs
           if (nIncoming != 1 || nOutgoing != 2) {
@@ -202,8 +202,8 @@ function processElements(params) {
           }
           if (element.nodeName.includes("exclusiveGateway")) {
 
-            if (element.attributes['cstnu:observed_proposition'] != undefined) {
-              myObjs[element.attributes.id.value].observed_proposition = element.attributes['cstnu:observed_proposition'].value.trim().charAt(0);
+            if (element.attributes['tempcon:observed_proposition'] != undefined) {
+              myObjs[element.attributes.id.value].observed_proposition = element.attributes['tempcon:observed_proposition'].value.trim().charAt(0);
               // Check and remove from array of possible letters 
               const index = myObjs['nodeObservation'].indexOf(myObjs[element.attributes.id.value].observed_proposition);
               if (index > -1) {
@@ -218,7 +218,7 @@ function processElements(params) {
           }
         }
         else {
-          myLogObj.errors += '\n' + element.nodeName + ' (' + element.attributes.id.value + '): gatewaySplitJoin="' + element.attributes['cstnu:gatewaySplitJoin'].value + '" not valid \n';
+          myLogObj.errors += '\n' + element.nodeName + ' (' + element.attributes.id.value + '): gatewaySplitJoin="' + element.attributes['tempcon:gatewaySplitJoin'].value + '" not valid \n';
           countObjs.elementsWithError += 1;
           return;
         }
@@ -234,8 +234,8 @@ function processElements(params) {
 
           if (element.nodeName.includes("exclusiveGateway")) {
 
-            if (element.attributes['cstnu:observed_proposition'] != undefined) {
-              myObjs[element.attributes.id.value].observed_proposition = element.attributes['cstnu:observed_proposition'].value.trim().charAt(0);
+            if (element.attributes['tempcon:observed_proposition'] != undefined) {
+              myObjs[element.attributes.id.value].observed_proposition = element.attributes['tempcon:observed_proposition'].value.trim().charAt(0);
               // Check and remove from array of possible letters 
               const index = myObjs['nodeObservation'].indexOf(myObjs[element.attributes.id.value].observed_proposition);
               if (index > -1) {
@@ -341,9 +341,9 @@ function processSequenceFlow(params) {
   myObjs[target].inputs.push(idArrow);
   if (myObjs[source].obs != undefined) {
     if (myObjs[source].obs === 'split') {
-      if (element.attributes['cstnu:pLiteralValue'] != undefined) {
-        if (element.attributes['cstnu:pLiteralValue'].value != '') {
-          myObjs['arrows'][idArrow].pLiteralValue = element.attributes['cstnu:pLiteralValue'].value;
+      if (element.attributes['tempcon:pLiteralValue'] != undefined) {
+        if (element.attributes['tempcon:pLiteralValue'].value != '') {
+          myObjs['arrows'][idArrow].pLiteralValue = element.attributes['tempcon:pLiteralValue'].value;
           if (myObjs['arrows'][idArrow].pLiteralValue == 'true')
             myObjs[source].obsTrueArrow = idArrow;
           else

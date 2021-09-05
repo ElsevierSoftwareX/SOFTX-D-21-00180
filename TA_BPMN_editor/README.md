@@ -16,13 +16,13 @@ This implementation is based on the examples: [properties-panel-extension with c
 ### Editing temporal properties 
 
 We extend the properties panel to allow editing `temporal properties` on BPMN elements. 
-The temporal properties, like `cstnu:minDuration`, will be persisted as an extension as part of the BPMN 2.0 document:
+The temporal properties, like `tempcon:minDuration`, will be persisted as an extension as part of the BPMN 2.0 document:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions ... xmlns:cstnu="http://cstnu" id="sample-diagram">
+<bpmn2:definitions ... xmlns:tempcon="https://gitlab.com/univr.di/TimeAwareBPMN" id="sample-diagram">
   <bpmn2:process id="Process_1">
-    <bpmn2:userTask id="StartEvent_1" cstnu:minDuration="2" />
+    <bpmn2:userTask id="StartEvent_1" tempcon:minDuration="2" />
   </bpmn2:process>
   ...
 </bpmn2:definitions>

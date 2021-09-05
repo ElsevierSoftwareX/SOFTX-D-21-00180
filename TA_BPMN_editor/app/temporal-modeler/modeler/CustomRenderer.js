@@ -566,7 +566,7 @@ function drawShape_contingent(
         if (element.businessObject.outgoing.length != 1) colorFrame = "#cc0000";
     }
 
-    eventBus.fire("cstnu.changed", { element: element });
+    eventBus.fire("tempcon.changed", { element: element });
 
   }
 

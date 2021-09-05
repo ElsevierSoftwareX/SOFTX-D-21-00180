@@ -29,8 +29,6 @@ export default function TemporalPropertiesProvider(propertiesPanel, translate) {
   // Register our custom temporal properties provider.
   // Use a lower priority to ensure it is loaded after the basic BPMN properties.
   propertiesPanel.registerProvider(LOW_PRIORITY, this);
-//https://forum.bpmn.io/t/disable-id-field/6307/4
-https://forum.bpmn.io/t/properties-panel-edit-fields/5990
   this.getTabs = function (element) {
     return function (entries) {
 
