@@ -124,18 +124,18 @@ function checkMinMax(element, logObj, edgeType) {
   if (element.attributes.id != undefined) nodeName += ' (' + element.attributes.id.value + ') ';
   logObj.log += "\n " + nodeName + " ";
 
-  if (element.attributes["cstnu:minDuration"] === undefined) {
+  if (element.attributes["tempcon:minDuration"] === undefined) {
     currentErrors += '\n\tminDuration undefined';
     okVals = false;
   }
-  if (element.attributes["cstnu:maxDuration"] === undefined) {
+  if (element.attributes["tempcon:maxDuration"] === undefined) {
     currentErrors += '\n\tmaxDuration undefined';
     okVals = false;
   }
 
   if (okVals) {
-    minDuration = element.attributes["cstnu:minDuration"].value;
-    maxDuration = element.attributes["cstnu:maxDuration"].value;
+    minDuration = element.attributes["tempcon:minDuration"].value;
+    maxDuration = element.attributes["tempcon:maxDuration"].value;
 
     if (minDuration === undefined) {
       currentErrors += "\n\tminDuration undefined ";
@@ -213,15 +213,15 @@ function checkMinMax_sequenceFlow(element, logObj, edgeType) {
   if (element.attributes.id != undefined) nodeName += '\n[' + element.attributes.id.value + '] ';
   logObj.log += "\n " + nodeName + " ";
 
-  if (element.attributes["cstnu:minDuration"] === undefined)
+  if (element.attributes["tempcon:minDuration"] === undefined)
     minDuration = 0;
   else
-    minDuration = element.attributes["cstnu:minDuration"].value;
+    minDuration = element.attributes["tempcon:minDuration"].value;
 
-  if (element.attributes["cstnu:maxDuration"] === undefined)
+  if (element.attributes["tempcon:maxDuration"] === undefined)
     maxDuration = Infinity;
   else
-    maxDuration = element.attributes["cstnu:maxDuration"].value;
+    maxDuration = element.attributes["tempcon:maxDuration"].value;
 
   if (okVals) {
 
@@ -427,8 +427,8 @@ function checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs) {
         nOutgoing++;
       }
     }
-    if (element.attributes['cstnu:gatewaySplitJoin'] != undefined) {
-      if (element.attributes['cstnu:gatewaySplitJoin'].value.includes('split')) {
+    if (element.attributes['tempcon:gatewaySplitJoin'] != undefined) {
+      if (element.attributes['tempcon:gatewaySplitJoin'].value.includes('split')) {
         // if split, it should have 1 input and 2 outputs
         if (nIncoming != 1 || nOutgoing != 2) {
           myLogObj.errors += '\n' + element.nodeName + ' (' + element.attributes.id.value + ')' + ' invalid number of incoming/outcoming arrows \n';
@@ -436,18 +436,18 @@ function checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs) {
           return false;
         }
         if (element.nodeName.includes("exclusiveGateway")) {
-          if (element.attributes['cstnu:proposition'] != undefined) {
-            myObjs[element.attributes.id.value].proposition = element.attributes['cstnu:proposition'].value;
+          if (element.attributes['tempcon:observed_proposition'] != undefined) {
+            myObjs[element.attributes.id.value].observed_proposition = element.attributes['tempcon:observed_proposition'].value;
           }
           else {
-            myLogObj.errors += '\n' + element.nodeName + ' (' + element.attributes.id.value + ')' + ' proposition not defined \n';
+            myLogObj.errors += '\n' + element.nodeName + ' (' + element.attributes.id.value + ')' + ' observed_proposition not defined \n';
             countObjs.elementsWithError += 1;
             return false;
           }
           myObjs[element.attributes.id.value].obs = 'split';
         }
       }
-      if (element.attributes['cstnu:gatewaySplitJoin'].value.includes('join')) {
+      if (element.attributes['tempcon:gatewaySplitJoin'].value.includes('join')) {
         // if join, it should have 2 inputs and 1 output
         if (nIncoming != 2 || nOutgoing != 1) {
           myLogObj.errors += '\n' + element.nodeName + ' (' + element.attributes.id.value + ')' + ' invalid number of incoming/outcoming arrows \n';
@@ -496,7 +496,7 @@ function setTwoNodesToEdges(params) {
   //If minD or maxD are not OK, do not create the nodes
   if (!okVals) {
     countObjs.elementsWithError += 1;
-    return;
+    // return;
   }
   tmpObj = getXY(bpmnPlane, element.attributes.id.value);
   let x = tmpObj.x;
@@ -517,26 +517,26 @@ function setTwoNodesToEdges(params) {
     if (!checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs))
       return;
 
-    let label_l = "⊡";
-    if (element.attributes["cstnu:label_l"] != undefined)
-      if (element.attributes["cstnu:label_l"].value != '')
-        label_l = element.attributes["cstnu:label_l"].value;
+    let propositional_label = "⊡";
+    if (element.attributes["tempcon:propositional_label"] != undefined)
+      if (element.attributes["tempcon:propositional_label"].value != '')
+        propositional_label = element.attributes["tempcon:propositional_label"].value;
 
     // Nodes
     let node = graph.ele("node", { id: "S_" + elementType + "_" + elementTypeNumber }, "");
     node.ele("data", { key: "x" }, Number(x) + Number(elementTypeNumber) - 25);
     node.ele("data", { key: "y" }, Number(y) + Number(elementTypeNumber));
-    node.ele("data", { key: "Label" }, label_l);
+    node.ele("data", { key: "Label" }, propositional_label);
 
     node = graph.ele("node", { id: "E_" + elementType + "_" + elementTypeNumber }, "");
     node.ele("data", { key: "x" }, Number(x) - Number(elementTypeNumber) + 25);
     node.ele("data", { key: "y" }, Number(y) - Number(elementTypeNumber));
-    node.ele("data", { key: "Label" }, label_l);
+    node.ele("data", { key: "Label" }, propositional_label);
 
     if (myObjs[element.attributes.id.value].obs) {
       if (myObjs[element.attributes.id.value].obs === 'split') {
-        node.ele("data", { key: "Obs" }, element.attributes['cstnu:proposition'].value);
-        myObjs[element.attributes.id.value].proposition = element.attributes['cstnu:proposition'].value;
+        node.ele("data", { key: "Obs" }, element.attributes['tempcon:observed_proposition'].value);
+        myObjs[element.attributes.id.value].observed_proposition = element.attributes['tempcon:observed_proposition'].value;
         countObjs.nObservedProposition += 1;
       }
     }
@@ -701,7 +701,7 @@ function setTwoEdges_sequenceFlow(params) {
   //If minD or maxD are not OK, do not create the edges
   if (!okVals) {
     countObjs.elementsWithError += 1;
-    return;
+    // return;
   }
   //Get cstnuId of the connected nodes
   let source = element.attributes.sourceRef.value;
@@ -831,7 +831,7 @@ function setTwoEdges_intertask(params) {
   //If minD, maxD, or id are not OK, do not create the edges
   if (!okVals) {
     countObjs.elementsWithError += 1;
-    return;
+    // return;
   }
 
   //Get cstnuId of the connected nodes
@@ -1224,7 +1224,7 @@ function getProcessName(xmlDoc) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Aug 18 2021 22:32:17 GMT-0500 (Central Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sun Sep 05 2021 15:14:53 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>
