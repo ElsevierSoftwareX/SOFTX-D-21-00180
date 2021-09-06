@@ -813,6 +813,9 @@ function setTwoEdges_intertask(params) {
   let connTo = element.intertaskConnTo;
   let sourceTaskId, targetTaskId;
 
+  let propositional_label = "⊡";
+  if (element.propositional_label != undefined)
+    propositional_label = element.propositional_label;
 
   if (myObjs[source] != undefined) {
     if (myObjs[source].type === 'START' || myObjs[source].type === 'END') {
@@ -859,6 +862,7 @@ function setTwoEdges_intertask(params) {
   let edgeId = '';
   let countOccurrences = '';
   let edge;
+
   if (maxD != Infinity) { // maxD = '∞';
     edgeId = sourceTaskId + "-" + targetTaskId;
     countOccurrences = '';
@@ -877,6 +881,7 @@ function setTwoEdges_intertask(params) {
         id: edgeId,
         source: sourceTaskId,
         target: targetTaskId,
+        Label: propositional_label
       },
       ""
     );
@@ -905,6 +910,7 @@ function setTwoEdges_intertask(params) {
       id: edgeId,
       source: targetTaskId,
       target: sourceTaskId,
+      Label: propositional_label
     },
     ""
   );
