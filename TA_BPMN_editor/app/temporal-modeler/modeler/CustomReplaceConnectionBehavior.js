@@ -8,7 +8,7 @@ import inherits from 'inherits';
 
 import CommandInterceptor from 'diagram-js/lib/command/CommandInterceptor';
 
-import { is } from 'bpmn-js/lib/features/modeling/util/ModelingUtil';
+import { is } from 'bpmn-js/lib/util/ModelUtil';
 
 
 export default function ReplaceConnectionBehavior(eventBus, modeling, bpmnRules, injector) {
@@ -94,7 +94,7 @@ export default function ReplaceConnectionBehavior(eventBus, modeling, bpmnRules,
         replacement;
 
     allowed = bpmnRules.canConnect(source, target);
-    debugger;
+    
     if (!allowed || allowed.type === connection.type || connection.type === 'custom:connection') {
       return;
     }

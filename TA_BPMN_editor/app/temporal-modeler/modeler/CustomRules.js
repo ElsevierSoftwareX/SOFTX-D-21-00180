@@ -51,36 +51,38 @@ CustomRules.prototype.init = function () {
    */
   function canConnect(source, target) {
 
+    // // only judge about custom elements
+    // if (!isCustom(source) && !isCustom(target)) {
+    //   return;
+    // }
 
     if (window.creatingIntertask) {
       // debugger;
       // window.creatingIntertask = undefined;
       // console.log('Creating intertask ');
-      return { type: 'custom:connection' };
-    }
-    // only judge about custom elements
-    if (!isCustom(source) && !isCustom(target)) {
-      return;
-    }
+      // return { type: 'custom:connection' };
+    
+    
+      // return { type: 'custom:connection' };
 
-    // debugger;
-    // return { type: 'custom:connection' };
 
-    // allow connection between custom shape and task
-    if (isCustom(source)) {
-      if (is(target, 'bpmn:Task')) {
-        return { type: 'custom:connection' };
-      } else {
-        return false;
+
+      // allow connection between tasks
+      let allowedElements = ['bpmn:UserTask','bpmn:ServiceTask','bpmn:ScriptTask','bpmn:SendTask','bpmn:ReceiveTask','bpmn:ExclusiveGateway','bpmn:ParallelGateway','bpmn:IntermediateCatchEvent','bpmn:StartEvent','bpmn:EndEvent']
+      if (isAny(source, allowedElements)) {
+        if (isAny(target, allowedElements)) {
+          return { type: 'custom:connection' };
+        } else {
+          return false;
+        }
+      } else if (isAny(target, allowedElements)) {
+        if (isAny(source, allowedElements)) {
+          return { type: 'custom:connection' };
+        } else {
+          return false;
+        }
       }
-    } else if (isCustom(target)) {
-      if (is(source, 'bpmn:Task')) {
-        // debugger;
-        // return { type: 'bpmn:DataAssociation' };
-        return { type: 'custom:connection' };
-      } else {
-        return false;
-      }
+
     }
   }
 
