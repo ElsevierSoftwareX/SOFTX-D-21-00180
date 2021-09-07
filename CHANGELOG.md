@@ -2,6 +2,10 @@
 
 ## TimeAwareBPMN-js
 
+v0.5.4 - 20210907
+
+- Add CustomReplaceConnectionBehavior to manage the movement of inter-tasks' endpoints and do not change the to sequenceFlow. TODO the while the dagging the connector looks like a sequenceFlow, and when it finishes only the ending points are kept. See how this can be fixed.  
+
 v0.5.3 - 20210904
 
 - Remove SVG button, there is a problem with intertasks

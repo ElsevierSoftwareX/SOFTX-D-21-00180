@@ -8,6 +8,7 @@ import CustomUpdater from './CustomUpdater';
 import CustomReplaceMenuProvider from './CustomReplaceMenuProvider';
 // import ReplaceMenuProvider from './CustomReplaceMenuProvider';
 import CustomEvents from './CustomEvents';
+import CustomReplaceConnectionBehavior from './CustomReplaceConnectionBehavior';
 
 export default {
   __init__: [
@@ -18,7 +19,8 @@ export default {
     'customUpdater',
     'customEvents',
     'paletteProvider',
-    'replaceMenuProvider'
+    'replaceMenuProvider',
+    'replaceConnectionBehavior'
   ],
   contextPadProvider: ['type', CustomContextPadProvider],
   customOrderingProvider: ['type', CustomOrderingProvider],
@@ -28,6 +30,7 @@ export default {
   elementFactory: ['type', CustomElementFactory],
   customEvents: ['type', CustomEvents],
   paletteProvider: ['type', CustomPalette],
-  replaceMenuProvider: ['type', CustomReplaceMenuProvider]
+  replaceMenuProvider: ['type', CustomReplaceMenuProvider],
   // replaceMenuProvider: ['type', ReplaceMenuProvider]
+  replaceConnectionBehavior: [ 'type', CustomReplaceConnectionBehavior ]
 };

@@ -76,6 +76,7 @@ function createNewDiagram() {
   openDiagram(diagramXML);
 }
 
+
 async function openDiagram(xml, cElements) {
   try {
     await bpmnModeler.importXML(xml);
