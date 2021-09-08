@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns/graphml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml">
+  <key id="nContingent" for="graph">
+    <desc>Number of contingents in the graph</desc>
+    <default>0</default>
+  </key>
+  <key id="nObservedProposition" for="graph">
+    <desc>Number of observed propositions in the graph</desc>
+    <default>0</default>
+  </key>
+  <key id="NetworkType" for="graph">
+    <desc>Network Type</desc>
+    <default>CSTNU</default>
+  </key>
+  <key id="nEdges" for="graph">
+    <desc>Number of edges in the graph</desc>
+    <default>0</default>
+  </key>
+  <key id="nVertices" for="graph">
+    <desc>Number of vertices in the graph</desc>
+    <default>0</default>
+  </key>
+  <key id="Name" for="graph">
+    <desc>Graph Name</desc>
+    <default/>
+  </key>
+  <key id="Obs" for="node">
+    <desc>Proposition Observed. Value specification: [a-zA-F]</desc>
+    <default/>
+  </key>
+  <key id="x" for="node">
+    <desc>The x coordinate for the visualitation. A positive value.</desc>
+    <default>0</default>
+  </key>
+  <key id="Label" for="node">
+    <desc>Label. Format: [¬[a-zA-F]|[a-zA-F]]+|⊡</desc>
+    <default>⊡</default>
+  </key>
+  <key id="y" for="node">
+    <desc>The y coordinate for the visualitation. A positive value.</desc>
+    <default>0</default>
+  </key>
+  <key id="Potential" for="node">
+    <desc>Labeled Potential Values. Format: {[('node name (no case modification)', 'integer', 'label') ]+}|{}</desc>
+    <default/>
+  </key>
+  <key id="Type" for="edge">
+    <desc>Type: Possible values: normal|contingent|constraint|derived|internal.</desc>
+    <default>normal</default>
+  </key>
+  <key id="LowerCaseLabeledValues" for="edge">
+    <desc>Labeled Lower-Case Values. Format: {[('node name (no case modification)', 'integer', 'label') ]+}|{}</desc>
+    <default/>
+  </key>
+  <key id="UpperCaseLabeledValues" for="edge">
+    <desc>Labeled Upper-Case Values. Format: {[('node name (no case modification)', 'integer', 'label') ]+}|{}</desc>
+    <default/>
+  </key>
+  <key id="Value" for="edge">
+    <desc>Value for STN edge. Format: 'integer'</desc>
+    <default/>
+  </key>
+  <key id="LabeledValues" for="edge">
+    <desc>Labeled Values. Format: {[('integer', 'label') ]+}|{}</desc>
+    <default/>
+  </key>
+  <graph edgedefault="directed">
+    <node id="S_XOR_1">
+      
+      <data key="x">271</data>
+      <data key="y">156</data>
+      <data key="Label">⊡</data>
+    </node>
+    <node id="E_XOR_1">
+      
+      <data key="x">319</data>
+      <data key="y">154</data>
+      <data key="Label">⊡</data>
+      <data key="Obs">R</data>
+    </node>
+    <edge id="S_XOR_1-E_XOR_1" source="S_XOR_1" target="E_XOR_1">
+      
+      <data key="Type">normal</data>
+      <data key="Value">4</data>
+    </edge>
+    <edge id="E_XOR_1-S_XOR_1" source="E_XOR_1" target="S_XOR_1">
+      
+      <data key="Type">normal</data>
+      <data key="Value">-2</data>
+    </edge>
+    <node id="S_XOR_2">
+      
+      <data key="x">422</data>
+      <data key="y">157</data>
+      <data key="Label">⊡</data>
+    </node>
+    <node id="E_XOR_2">
+      
+      <data key="x">468</data>
+      <data key="y">153</data>
+      <data key="Label">⊡</data>
+    </node>
+    <edge id="S_XOR_2-E_XOR_2" source="S_XOR_2" target="E_XOR_2">
+      
+      <data key="Type">normal</data>
+      <data key="Value">2</data>
+    </edge>
+    <edge id="E_XOR_2-S_XOR_2" source="E_XOR_2" target="S_XOR_2">
+      
+      <data key="Type">normal</data>
+      <data key="Value">-1</data>
+    </edge>
+    <node id="S_TASK_1">
+      
+      <data key="x">246</data>
+      <data key="y">251</data>
+      <data key="Label">R</data>
+    </node>
+    <node id="E_TASK_1">
+      
+      <data key="x">294</data>
+      <data key="y">249</data>
+      <data key="Label">R</data>
+    </node>
+    <edge id="S_TASK_1-E_TASK_1" source="S_TASK_1" target="E_TASK_1">
+      
+      <data key="Type">contingent</data>
+      <data key="Value">6</data>
+    </edge>
+    <edge id="E_TASK_1-S_TASK_1" source="E_TASK_1" target="S_TASK_1">
+      
+      <data key="Type">contingent</data>
+      <data key="Value">-1</data>
+    </edge>
+    <node id="S_TASK_2">
+      
+      <data key="x">507</data>
+      <data key="y">142</data>
+      <data key="Label">⊡</data>
+    </node>
+    <node id="E_TASK_2">
+      
+      <data key="x">553</data>
+      <data key="y">138</data>
+      <data key="Label">⊡</data>
+    </node>
+    <edge id="S_TASK_2-E_TASK_2" source="S_TASK_2" target="E_TASK_2">
+      
+      <data key="Type">contingent</data>
+      <data key="Value">4</data>
+    </edge>
+    <edge id="E_TASK_2-S_TASK_2" source="E_TASK_2" target="S_TASK_2">
+      
+      <data key="Type">contingent</data>
+      <data key="Value">-1</data>
+    </edge>
+    <node id="S_TASK_3">
+      
+      <data key="x">430</data>
+      <data key="y">35</data>
+      <data key="Label">¬R</data>
+    </node>
+    <node id="E_TASK_3">
+      
+      <data key="x">474</data>
+      <data key="y">29</data>
+      <data key="Label">¬R</data>
+    </node>
+    <edge id="S_TASK_3-E_TASK_3" source="S_TASK_3" target="E_TASK_3">
+      
+      <data key="Type">normal</data>
+      <data key="Value">3</data>
+    </edge>
+    <edge id="E_TASK_3-S_TASK_3" source="E_TASK_3" target="S_TASK_3">
+      
+      <data key="Type">normal</data>
+      <data key="Value">-1</data>
+    </edge>
+    <node id="S_TASK_4">
+      
+      <data key="x">149</data>
+      <data key="y">144</data>
+      <data key="Label">⊡</data>
+    </node>
+    <node id="E_TASK_4">
+      
+      <data key="x">191</data>
+      <data key="y">136</data>
+      <data key="Label">⊡</data>
+    </node>
+    <edge id="S_TASK_4-E_TASK_4" source="S_TASK_4" target="E_TASK_4">
+      
+      <data key="Type">contingent</data>
+      <data key="Value">3</data>
+    </edge>
+    <edge id="E_TASK_4-S_TASK_4" source="E_TASK_4" target="S_TASK_4">
+      
+      <data key="Type">contingent</data>
+      <data key="Value">-2</data>
+    </edge>
+    <node id="S_TASK_5">
+      
+      <data key="x">250</data>
+      <data key="y">15</data>
+      <data key="Label">¬R</data>
+    </node>
+    <node id="E_TASK_5">
+      
+      <data key="x">290</data>
+      <data key="y">5</data>
+      <data key="Label">¬R</data>
+    </node>
+    <edge id="S_TASK_5-E_TASK_5" source="S_TASK_5" target="E_TASK_5">
+      
+      <data key="Type">contingent</data>
+      <data key="Value">2</data>
+    </edge>
+    <edge id="E_TASK_5-S_TASK_5" source="E_TASK_5" target="S_TASK_5">
+      
+      <data key="Type">contingent</data>
+      <data key="Value">-1</data>
+    </edge>
+    <node id="START_">
+      
+      <data key="x">112</data>
+      <data key="y">162</data>
+      <data key="Label">Z</data>
+    </node>
+    <node id="END_">
+      
+      <data key="x">742</data>
+      <data key="y">162</data>
+      <data key="Label">Ω</data>
+    </node>
+    <edge id="E_XOR_1-S_TASK_1" source="E_XOR_1" target="S_TASK_1">
+      
+      <data key="Type">normal</data>
+      <data key="Value">2</data>
+    </edge>
+    <edge id="S_TASK_1-E_XOR_1" source="S_TASK_1" target="E_XOR_1">
+      
+      <data key="Type">normal</data>
+      <data key="Value">-1</data>
+    </edge>
+    <edge id="S_XOR_2-E_TASK_1" source="S_XOR_2" target="E_TASK_1">
+      
+      <data key="Type">normal</data>
+      <data key="Value">0</data>
+    </edge>
+    <edge id="S_TASK_2-E_XOR_2" source="S_TASK_2" target="E_XOR_2">
+      
+      <data key="Type">normal</data>
+      <data key="Value">0</data>
+    </edge>
+    <edge id="S_XOR_2-E_TASK_3" source="S_XOR_2" target="E_TASK_3">
+      
+      <data key="Type">normal</data>
+      <data key="Value">0</data>
+    </edge>
+    <edge id="END_-E_TASK_2" source="END_" target="E_TASK_2">
+      
+      <data key="Type">normal</data>
+      <data key="Value">0</data>
+    </edge>
+    <edge id="E_XOR_1-S_TASK_5" source="E_XOR_1" target="S_TASK_5">
+      
+      <data key="Type">normal</data>
+      <data key="Value">2</data>
+    </edge>
+    <edge id="S_TASK_5-E_XOR_1" source="S_TASK_5" target="E_XOR_1">
+      
+      <data key="Type">normal</data>
+      <data key="Value">-1</data>
+    </edge>
+    <edge id="S_TASK_3-E_TASK_5" source="S_TASK_3" target="E_TASK_5">
+      
+      <data key="Type">normal</data>
+      <data key="Value">0</data>
+    </edge>
+    <edge id="S_XOR_1-E_TASK_4" source="S_XOR_1" target="E_TASK_4">
+      
+      <data key="Type">normal</data>
+      <data key="Value">0</data>
+    </edge>
+    <edge id="S_TASK_4-START_" source="S_TASK_4" target="START_">
+      
+      <data key="Type">normal</data>
+      <data key="Value">0</data>
+    </edge>
+    <edge id="S_TASK_4-E_TASK_2" source="S_TASK_4" target="E_TASK_2" Label="S">
+      
+      <data key="Type">normal </data>
+      <data key="Value">18</data>
+    </edge>
+    <edge id="E_TASK_2-S_TASK_4" source="E_TASK_2" target="S_TASK_4" Label="S">
+      
+      <data key="Type">normal</data>
+      <data key="Value">-2</data>
+    </edge>
+    <data key="nContingent">4</data>
+    <data key="nObservedProposition">1</data>
+    <data key="NetworkType">CSTNU</data>
+    <data key="nEdges">27</data>
+    <data key="nVertices">14</data>
+    <data key="Name">diagrma</data>
+  </graph>
+</graphml>

@@ -1,0 +1,31 @@
+[
+	{
+		"type": "custom:connection",
+		"id": "InterTask_7y18aromoa7loumv4omkrjz6e",
+		"waypoints": [
+			{
+				"x": 220,
+				"y": 220
+			},
+			{
+				"x": 220,
+				"y": 360
+			},
+			{
+				"x": 580,
+				"y": 360
+			},
+			{
+				"x": 580,
+				"y": 220
+			}
+		],
+		"source": "T1",
+		"target": "T4",
+		"minDuration": "2",
+		"maxDuration": "18",
+		"propositionalLabel": "S",
+		"intertaskConnFrom": "start",
+		"intertaskConnTo": "end"
+	}
+]
