@@ -52,7 +52,7 @@ export default function CustomContextPadProvider(injector, connect, translate) {
         }
       });
     }
-    if (isAny(businessObject, ['bpmn:Task', 'bpmn:Gateway', 'bpmn:IntermediateCatchEvent']) && !element.labelTarget) {
+    if (isAny(businessObject, ['bpmn:Task', 'bpmn:Gateway', 'bpmn:IntermediateCatchEvent','bpmn:StartEvent','bpmn:EndEvent']) && !element.labelTarget) {
       assign(actions, {
         'intertask': {
           group: 'intertask',

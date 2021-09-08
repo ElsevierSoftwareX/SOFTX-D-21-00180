@@ -62,21 +62,18 @@ CustomRules.prototype.init = function () {
       // console.log('Creating intertask ');
       // return { type: 'custom:connection' };
     
-    
       // return { type: 'custom:connection' };
 
-
-
       // allow connection between tasks
-      let allowedElements = ['bpmn:UserTask','bpmn:ServiceTask','bpmn:ScriptTask','bpmn:SendTask','bpmn:ReceiveTask','bpmn:ExclusiveGateway','bpmn:ParallelGateway','bpmn:IntermediateCatchEvent','bpmn:StartEvent','bpmn:EndEvent']
-      if (isAny(source, allowedElements)) {
-        if (isAny(target, allowedElements)) {
+      let allowedElements = ['bpmn:UserTask','bpmn:ServiceTask','bpmn:ScriptTask','bpmn:SendTask','bpmn:ReceiveTask','bpmn:ExclusiveGateway','bpmn:ParallelGateway','bpmn:IntermediateCatchEvent','bpmn:StartEvent','bpmn:EndEvent'];
+      if (isAny(source, allowedElements) && !source.labelTarget) {
+        if (isAny(target, allowedElements) && !target.labelTarget) {
           return { type: 'custom:connection' };
         } else {
           return false;
         }
-      } else if (isAny(target, allowedElements)) {
-        if (isAny(source, allowedElements)) {
+      } else if (isAny(target, allowedElements) && !target.labelTarget) {
+        if (isAny(source, allowedElements) && !source.labelTarget) {
           return { type: 'custom:connection' };
         } else {
           return false;
