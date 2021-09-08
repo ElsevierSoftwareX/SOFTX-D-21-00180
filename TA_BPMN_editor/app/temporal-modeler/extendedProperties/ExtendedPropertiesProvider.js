@@ -1,5 +1,5 @@
 // Require your custom property entries.
-import temporalConstraintsFields from './PanelTemporalProperties';
+import temporalConstraintsFields from './PanelTemporalConstraints';
 import typeOfGatewayFields from './PanelTypeOfGateway';
 
 var LOW_PRIORITY = 500;
@@ -24,7 +24,7 @@ function createTemporalTabGroups(element, translate) {
   ];
 }
 
-export default function TemporalPropertiesProvider(propertiesPanel, translate) {
+export default function TemporalConstraintsProvider(propertiesPanel, translate) {
 
   // Register our custom temporal properties provider.
   // Use a lower priority to ensure it is loaded after the basic BPMN properties.
@@ -46,19 +46,19 @@ export default function TemporalPropertiesProvider(propertiesPanel, translate) {
       groups.push(typeOfGatewayGroup);
 
 
-      // Add the "temporalProperties" tab
-      var temporalPropertiesTab = {
-        id: 'temporalProperties',
+      // Add the "temporalConstraints" tab
+      var temporalConstraintsTab = {
+        id: 'temporalConstraints',
         label: 'Temporal Constraints',
         groups: createTemporalTabGroups(element, translate)
       };
 
-      entries.push(temporalPropertiesTab);
+      entries.push(temporalConstraintsTab);
 
-      // Show general + "temporalProperties" tab
+      // Show general + "temporalConstraints" tab
       return entries;
     };
   };
 }
 
-TemporalPropertiesProvider.$inject = ['propertiesPanel', 'translate'];
+TemporalConstraintsProvider.$inject = ['propertiesPanel', 'translate'];

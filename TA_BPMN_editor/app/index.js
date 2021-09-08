@@ -3,8 +3,8 @@ import CustomModeler from './temporal-modeler';
 
 import propertiesPanelModule from 'bpmn-js-properties-panel';
 import bpmnPropertiesProviderModule from 'bpmn-js-properties-panel/lib/provider/bpmn';
-import temporalPropertiesProviderModule from './temporal-modeler/extendedProperties';
-import temporalPropertiesModdleDescriptor from './temporal-modeler/extendedProperties/temporalProperties';
+import temporalConstraintsProviderModule from './temporal-modeler/extendedProperties';
+import temporalConstraintsModdleDescriptor from './temporal-modeler/extendedProperties/temporalConstraints';
 import { debounce } from 'min-dash';
 
 import diagramXML from '../resources/newDiagram.bpmn';
@@ -62,10 +62,10 @@ var bpmnModeler = new CustomModeler({
   additionalModules: [
     propertiesPanelModule,
     bpmnPropertiesProviderModule,
-    temporalPropertiesProviderModule
+    temporalConstraintsProviderModule
   ],
   moddleExtensions: {
-    temporalProperties: temporalPropertiesModdleDescriptor
+    tempcon: temporalConstraintsModdleDescriptor
   },
   keyboard: {
     bindTo: document

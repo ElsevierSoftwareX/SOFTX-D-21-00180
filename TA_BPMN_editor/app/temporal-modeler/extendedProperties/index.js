@@ -1,6 +1,6 @@
-import TemporalPropertiesProvider from './ExtendedPropertiesProvider';
+import TemporalConstraintsProvider from './ExtendedPropertiesProvider';
 
 export default {
-  __init__: ['temporalPropertiesProvider'],
-  temporalPropertiesProvider: ['type', TemporalPropertiesProvider]
+  __init__: ['temporalConstraintsProvider'],
+  temporalConstraintsProvider: ['type', TemporalConstraintsProvider]
 };

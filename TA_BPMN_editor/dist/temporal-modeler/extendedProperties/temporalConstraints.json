@@ -1,0 +1,82 @@
+{
+  "name": "TemporalConstraints",
+  "prefix": "tempcon",
+  "uri": "https://gitlab.com/univr.di/TimeAwareBPMN",
+  "xml": {
+    "tagAlias": "lowerCase"
+  },
+  "associations": [],
+  "types": [
+    {
+      "name": "tcnDuration",
+      "extends": [
+        "bpmn:Task",
+        "bpmn:UserTask",
+        "bpmn:ServiceTask",
+        "bpmn:ScriptTask",
+        "bpmn:SendTask",
+        "bpmn:ReceiveTask",
+        "bpmn:ParallelGateway",
+        "bpmn:ExclusiveGateway",
+        "bpmn:EventBasedGateway",
+        "bpmn:IntermediateCatchEvent",
+        "bpmn:BoundaryEvent",
+        "bpmn:SequenceFlow",
+        "bpmn:DataObjectReference"
+      ],
+      "properties": [
+        {
+          "name": "minDuration",
+          "isAttr": true,
+          "type": "String",
+          "constraints": {
+            "notEmpty": true
+          }
+        },
+        {
+          "name": "maxDuration",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "propositionalLabel",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    },
+    {
+      "name": "tcnPLiteralValue",
+      "extends": ["bpmn:SequenceFlow"],
+      "properties": [
+        {
+          "name": "pLiteralValue",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    },
+    {
+      "name": "tcnGatewaySplitJoin",
+      "extends": ["bpmn:ExclusiveGateway", "bpmn:ParallelGateway"],
+      "properties": [
+        {
+          "name": "gatewaySplitJoin",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    },
+    {
+      "name": "tcnXorProposition",
+      "extends": ["bpmn:ExclusiveGateway"],
+      "properties": [
+        {
+          "name": "observedProposition",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    }
+  ]
+}
