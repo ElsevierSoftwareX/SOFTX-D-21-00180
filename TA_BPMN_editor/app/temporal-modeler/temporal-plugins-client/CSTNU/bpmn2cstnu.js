@@ -408,11 +408,11 @@ function checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs) {
           return false;
         }
         if (element.nodeName.includes("exclusiveGateway")) {
-          if (element.attributes['tempcon:observed_proposition'] != undefined) {
-            myObjs[element.attributes.id.value].observed_proposition = element.attributes['tempcon:observed_proposition'].value;
+          if (element.attributes['tempcon:observedProposition'] != undefined) {
+            myObjs[element.attributes.id.value].observedProposition = element.attributes['tempcon:observedProposition'].value;
           }
           else {
-            myLogObj.errors += '\n' + element.nodeName + ' (' + element.attributes.id.value + ')' + ' observed_proposition not defined \n';
+            myLogObj.errors += '\n' + element.nodeName + ' (' + element.attributes.id.value + ')' + ' observedProposition not defined \n';
             countObjs.elementsWithError += 1;
             return false;
           }
@@ -489,26 +489,26 @@ function setTwoNodesToEdges(params) {
     if (!checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs))
       return;
 
-    let propositional_label = "⊡";
-    if (element.attributes["tempcon:propositional_label"] != undefined)
-      if (element.attributes["tempcon:propositional_label"].value != '')
-        propositional_label = element.attributes["tempcon:propositional_label"].value;
+    let propositionalLabel = "⊡";
+    if (element.attributes["tempcon:propositionalLabel"] != undefined)
+      if (element.attributes["tempcon:propositionalLabel"].value != '')
+        propositionalLabel = element.attributes["tempcon:propositionalLabel"].value;
 
     // Nodes
     let node = graph.ele("node", { id: "S_" + elementType + "_" + elementTypeNumber }, "");
     node.ele("data", { key: "x" }, Number(x) + Number(elementTypeNumber) - 25);
     node.ele("data", { key: "y" }, Number(y) + Number(elementTypeNumber));
-    node.ele("data", { key: "Label" }, propositional_label);
+    node.ele("data", { key: "Label" }, propositionalLabel);
 
     node = graph.ele("node", { id: "E_" + elementType + "_" + elementTypeNumber }, "");
     node.ele("data", { key: "x" }, Number(x) - Number(elementTypeNumber) + 25);
     node.ele("data", { key: "y" }, Number(y) - Number(elementTypeNumber));
-    node.ele("data", { key: "Label" }, propositional_label);
+    node.ele("data", { key: "Label" }, propositionalLabel);
 
     if (myObjs[element.attributes.id.value].obs) {
       if (myObjs[element.attributes.id.value].obs === 'split') {
-        node.ele("data", { key: "Obs" }, element.attributes['tempcon:observed_proposition'].value);
-        myObjs[element.attributes.id.value].observed_proposition = element.attributes['tempcon:observed_proposition'].value;
+        node.ele("data", { key: "Obs" }, element.attributes['tempcon:observedProposition'].value);
+        myObjs[element.attributes.id.value].observedProposition = element.attributes['tempcon:observedProposition'].value;
         countObjs.nObservedProposition += 1;
       }
     }
@@ -813,9 +813,9 @@ function setTwoEdges_intertask(params) {
   let connTo = element.intertaskConnTo;
   let sourceTaskId, targetTaskId;
 
-  let propositional_label = "⊡";
-  if (element.propositional_label != undefined)
-    propositional_label = element.propositional_label;
+  let propositionalLabel = "⊡";
+  if (element.propositionalLabel != undefined)
+    propositionalLabel = element.propositionalLabel;
 
   if (myObjs[source] != undefined) {
     if (myObjs[source].type === 'START' || myObjs[source].type === 'END') {
@@ -881,7 +881,7 @@ function setTwoEdges_intertask(params) {
         id: edgeId,
         source: sourceTaskId,
         target: targetTaskId,
-        Label: propositional_label
+        Label: propositionalLabel
       },
       ""
     );
@@ -910,7 +910,7 @@ function setTwoEdges_intertask(params) {
       id: edgeId,
       source: targetTaskId,
       target: sourceTaskId,
-      Label: propositional_label
+      Label: propositionalLabel
     },
     ""
   );

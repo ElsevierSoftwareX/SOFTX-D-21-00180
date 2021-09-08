@@ -81,12 +81,12 @@ export default function bpmnSetcstnuLabels(bpmn) {
             let tempElement = window.bpmnjs.get('elementRegistry').get(node.id);
             tempElement.businessObject.gatewaySplitJoin = 'split';
 
-            if (myObjs[node.id].observed_proposition)
-              tempProposition = myObjs[node.id].observed_proposition;
+            if (myObjs[node.id].observedProposition)
+              tempProposition = myObjs[node.id].observedProposition;
             else {
               if (myObjs['nodeObservation'].length > 0) {
                 tempProposition = myObjs['nodeObservation'].shift();
-                tempElement.businessObject.observed_proposition = tempProposition;
+                tempElement.businessObject.observedProposition = tempProposition;
               }
               else {
                 myLogObj.errors += '\nMax number of observations reached \n';
@@ -105,7 +105,7 @@ export default function bpmnSetcstnuLabels(bpmn) {
         }
         //Update element in BPMN diagram
         let tempElement = window.bpmnjs.get('elementRegistry').get(node.id);
-        tempElement.businessObject.propositional_label = Array.from(node.cps).join("");
+        tempElement.businessObject.propositionalLabel = Array.from(node.cps).join("");
         eventBus.fire('element.changed', { element: tempElement });
 
 
@@ -202,17 +202,17 @@ function processElements(params) {
           }
           if (element.nodeName.includes("exclusiveGateway")) {
 
-            if (element.attributes['tempcon:observed_proposition'] != undefined) {
-              myObjs[element.attributes.id.value].observed_proposition = element.attributes['tempcon:observed_proposition'].value.trim().charAt(0);
+            if (element.attributes['tempcon:observedProposition'] != undefined) {
+              myObjs[element.attributes.id.value].observedProposition = element.attributes['tempcon:observedProposition'].value.trim().charAt(0);
               // Check and remove from array of possible letters 
-              const index = myObjs['nodeObservation'].indexOf(myObjs[element.attributes.id.value].observed_proposition);
+              const index = myObjs['nodeObservation'].indexOf(myObjs[element.attributes.id.value].observedProposition);
               if (index > -1) {
                 myObjs['nodeObservation'].splice(index, 1);
               }
               countObjs.nObservedProposition += 1;
             }
             else {
-              myObjs[element.attributes.id.value].observed_proposition = undefined; // This will be set when the labels are created            
+              myObjs[element.attributes.id.value].observedProposition = undefined; // This will be set when the labels are created            
             }
             myObjs[element.attributes.id.value].obs = 'split';
           }
@@ -234,17 +234,17 @@ function processElements(params) {
 
           if (element.nodeName.includes("exclusiveGateway")) {
 
-            if (element.attributes['tempcon:observed_proposition'] != undefined) {
-              myObjs[element.attributes.id.value].observed_proposition = element.attributes['tempcon:observed_proposition'].value.trim().charAt(0);
+            if (element.attributes['tempcon:observedProposition'] != undefined) {
+              myObjs[element.attributes.id.value].observedProposition = element.attributes['tempcon:observedProposition'].value.trim().charAt(0);
               // Check and remove from array of possible letters 
-              const index = myObjs['nodeObservation'].indexOf(myObjs[element.attributes.id.value].observed_proposition);
+              const index = myObjs['nodeObservation'].indexOf(myObjs[element.attributes.id.value].observedProposition);
               if (index > -1) {
                 myObjs['nodeObservation'].splice(index, 1);
               }
               countObjs.nObservedProposition += 1;
             }
             else {
-              myObjs[element.attributes.id.value].observed_proposition = undefined; // This will be set when the labes are created            
+              myObjs[element.attributes.id.value].observedProposition = undefined; // This will be set when the labes are created            
             }
           }
         }

@@ -553,8 +553,8 @@ function drawShape_contingent(
         if (element.businessObject.incoming.length != 1) colorFrame = "#cc0000";
       if (element.businessObject.outgoing)
         if (element.businessObject.outgoing.length != 2) colorFrame = "#cc0000";
-      if (element.businessObject.observed_proposition)
-        if (element.businessObject.observed_proposition.length > 1) colorFrame = "#cc0000";
+      if (element.businessObject.observedProposition)
+        if (element.businessObject.observedProposition.length > 1) colorFrame = "#cc0000";
 
 
     }
@@ -580,8 +580,8 @@ function drawShape_contingent(
   });
   // debugger;
   let strText = minD + "-" + maxD;
-  // if (element.businessObject.propositional_label)
-  //   strText += ', ' + element.businessObject.propositional_label;
+  // if (element.businessObject.propositionalLabel)
+  //   strText += ', ' + element.businessObject.propositionalLabel;
 
 
   let text = textRenderer.createText(strText); // (label || '', options);

@@ -199,17 +199,17 @@ export default function (group, element, translate) {
   }
 
 
-  function set_group_propositional_label(group, disabled) {
+  function set_group_propositionalLabel(group, disabled) {
     
     if(disabled===undefined)
       disabled = true;
     else 
       disabled = false;
     group.entries.push(entryFactory.textField(translate, {
-      id: 'propositional_label',
+      id: 'propositionalLabel',
       description: 'Label created with propositions of XORs',
       label: 'Propositional label',
-      modelProperty: 'propositional_label', 
+      modelProperty: 'propositionalLabel', 
       disabled: function(){ return disabled;}
     }));
   }
@@ -258,7 +258,7 @@ export default function (group, element, translate) {
       if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
         set_group_minDuration(group, validateMinDuration_contingent);
         set_group_maxDuration(group, validateMaxDuration_contingent);
-        set_group_propositional_label(group);
+        set_group_propositionalLabel(group);
       }
       // bpmn:TimerEventDefinition  it is different, minDuration is the same as maxDuration
       strOptions = ['bpmn:TimerEventDefinition'];
@@ -266,7 +266,7 @@ export default function (group, element, translate) {
       if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
         // set_group_minDuration(group, validateMinDuration_contingent);
         set_group_maxDuration(group, validateMaxDuration_contingent);
-        set_group_propositional_label(group);
+        set_group_propositionalLabel(group);
       }
     }
   }
@@ -279,7 +279,7 @@ export default function (group, element, translate) {
 
     set_group_minDuration(group, validateMinDuration_contingent);
     set_group_maxDuration(group, validateMaxDuration_contingent);
-    set_group_propositional_label(group);
+    set_group_propositionalLabel(group);
   }
 
   if (is(element, 'bpmn:ExclusiveGateway')) {
@@ -300,14 +300,14 @@ export default function (group, element, translate) {
 
     if (element.businessObject.gatewaySplitJoin == 'split') {
       group.entries.push(entryFactory.textField(translate, {
-        id: 'observed_proposition',
+        id: 'observedProposition',
         description: 'Type one letter to be used as proposition',
         label: 'Observed proposition',
-        modelProperty: 'observed_proposition'
+        modelProperty: 'observedProposition'
       }));
     }
 
-    set_group_propositional_label(group);
+    set_group_propositionalLabel(group);
   }
 
 
@@ -328,7 +328,7 @@ export default function (group, element, translate) {
 
     // }));
 
-    set_group_propositional_label(group);
+    set_group_propositionalLabel(group);
 
   }
 
@@ -369,7 +369,7 @@ export default function (group, element, translate) {
     set_group_minDuration(group, validateMinDuration_intertask, " (default: 0)");
     set_group_maxDuration(group, validateMaxDuration_sequenceFlow, " (default: ∞)");
 
-    set_group_propositional_label(group, false);
+    set_group_propositionalLabel(group, false);
 
   }
 
