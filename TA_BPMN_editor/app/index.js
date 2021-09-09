@@ -81,6 +81,7 @@ async function openDiagram(xml, cElements) {
   try {
     await bpmnModeler.importXML(xml);
     bpmnModeler.cleanCustomElements();
+    bpmnModeler.loadCustomElementsFromXML();
 
     if (cElements) {
       bpmnModeler.addCustomElements(cElements);
@@ -154,8 +155,19 @@ $(function () {
   var downloadLink = $('#js-download-diagram');
   var downloadSvgLink = $('#js-download-svg');
   var downloadIntertasksLink = $('#js-download-intertasks');
+  var myButton = $('#myButton');
+  var myButton2 = $('#myButton2');
+
+  myButton.click(function(e){
+    bpmnModeler.getDefinitionsWithIntertaskAsExtensionElements()
+  });
+  myButton2.click(function(e){
+    bpmnModeler.loadCustomElementsFromXML()
+  });
 
   bpmnModeler.setTCEvaluationsModulesButtons();
+
+  
 
   $('.buttons a').click(function (e) {
     if (!$(this).is('.active')) {
@@ -199,7 +211,9 @@ $(function () {
     }
 
     try {
+      // let definitions = bpmnModeler.getDefinitionsWithIntertaskAsExtensionElements();
       let definitions = bpmnModeler.getDefinitions();
+      // definitions = bpmnModeler.setIntertaskAsExtensionElement();
       let { xml } = await bpmnModeler._moddle.toXML(definitions, { format: true });
       setEncoded(downloadLink, 'diagram.bpmn', xml);
 

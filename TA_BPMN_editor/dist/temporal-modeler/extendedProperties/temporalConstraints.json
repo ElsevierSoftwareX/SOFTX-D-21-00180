@@ -82,6 +82,62 @@
           "type": "String"
         }
       ]
+    },
+    {
+      "name": "intertask",
+      "superClass": ["Element"],
+      "properties": [
+        {
+          "name": "type",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "id_intertask",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "waypoints",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "source",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "target",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "minDuration",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "maxDuration",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "propositionalLabel",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "intertaskConnFrom",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "intertaskConnTo",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
     }
   ]
 }
