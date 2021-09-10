@@ -10,7 +10,8 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
 
   let parser = new DOMParser();
   let xmlCSTNU_Doc = parser.parseFromString(xmlCTNUChecked, "text/xml");
-  let modeling = window.bpmnjs.get('modeling');
+  const modeling = window.bpmnjs.get('modeling');
+  const elementRegistry = window.bpmnjs.get('elementRegistry');
   let elementsUpdated = [];
 
   let currentBPMN_Obj;
@@ -38,7 +39,7 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
             let newValue = newLabel.split(',')[0].split('(').slice(-1)[0];
 
             if (currentBPMN_Obj.cstnuEdgeIds[i][0] === 'S') { //Update max value
-              let tempElement = window.bpmnjs.get('elementRegistry').get(currentBPMN_Obj.id);
+              let tempElement = elementRegistry.get(currentBPMN_Obj.id);
 
               if (tempElement.businessObject.maxDuration && tempElement.businessObject.maxDuration != newValue) {
                 window.elementsUpdated.push(currentBPMN_Obj.id);
@@ -51,7 +52,7 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
 
             }
             else if (currentBPMN_Obj.cstnuEdgeIds[i][0] === 'E') { //Update min value
-              let tempElement = window.bpmnjs.get('elementRegistry').get(currentBPMN_Obj.id);
+              let tempElement = elementRegistry.get(currentBPMN_Obj.id);
 
               if (Number(newValue) != 0) newValue = -Number(newValue);
 
@@ -94,7 +95,7 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
             let newValue = newLabel.split(',')[0].split('(').slice(-1)[0];
 
             if (currentBPMN_Obj.cstnuEdgeIds[i][0] === 'E') { //Update max value
-              let tempElement = window.bpmnjs.get('elementRegistry').get(currentBPMN_Obj.id);
+              let tempElement = elementRegistry.get(currentBPMN_Obj.id);
 
               if (tempElement.businessObject.maxDuration && tempElement.businessObject.maxDuration != newValue) {
                 window.elementsUpdated.push(currentBPMN_Obj.id);
@@ -106,7 +107,7 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
               }
             }
             else if (currentBPMN_Obj.cstnuEdgeIds[i][0] === 'S') { //Update min value
-              let tempElement = window.bpmnjs.get('elementRegistry').get(currentBPMN_Obj.id);
+              let tempElement = elementRegistry.get(currentBPMN_Obj.id);
               if (Number(newValue) != 0) newValue = -Number(newValue);
               
               if (tempElement.businessObject.minDuration && tempElement.businessObject.minDuration != newValue) {
@@ -122,15 +123,11 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
             else {
               console.log('No updated ' + currentBPMN_Obj.id + ' ' + currentBPMN_Obj.cstnuEdgeIds);
             }
-
           }
         }
-
       }
-
     }
     currentBPMN_Obj = undefined;
   }
   return elementsUpdated;
-
 }

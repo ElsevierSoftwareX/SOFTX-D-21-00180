@@ -62,12 +62,12 @@ export default { moduleInfo };
 
 function removeNotesUpdatedError() {
 
-    let eventBus = window.bpmnjs.get('eventBus');
-
+    const eventBus = window.bpmnjs.get('eventBus');
+    const elementRegistry = window.bpmnjs.get('elementRegistry');
     // Remove notes/color of elements updated or with error  
     window.elementsUpdated.forEach(elementId => {
 
-        let tempElement = window.bpmnjs.get('elementRegistry').get(elementId);
+        let tempElement = elementRegistry.get(elementId);
         // Using this insted of modeling.updateProperties, this does not produce ctr+z
         tempElement.businessObject.updated = '';
         eventBus.fire('element.changed', { element: tempElement });
@@ -79,7 +79,7 @@ function removeNotesUpdatedError() {
 
     elementsErrorTmp.forEach(elementId => {
 
-        let tempElement = window.bpmnjs.get('elementRegistry').get(elementId);
+        let tempElement = elementRegistry.get(elementId);
         // Using this insted of modeling.updateProperties, this does not produce ctr+z
         eventBus.fire('element.changed', { element: tempElement });
 
@@ -234,7 +234,7 @@ function showModalExportCSTNU(bpmnXml, customElements, action) {
 
 function sendCSTNUtoEvaluate(cstnuXml, myObjs) {
 
-    let eventBus = window.bpmnjs.get('eventBus');
+    const eventBus = window.bpmnjs.get('eventBus');
 
     // Get the modal
     let modal = document.getElementById("divModalMessages");

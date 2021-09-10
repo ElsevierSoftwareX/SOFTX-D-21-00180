@@ -15,8 +15,8 @@
  */
 export default function bpmnSetcstnuLabels(bpmn) {
 
-  let eventBus = window.bpmnjs.get('eventBus');
-
+  const eventBus = window.bpmnjs.get('eventBus');
+  const elementRegistry = window.bpmnjs.get('elementRegistry');
   let parser = new DOMParser();
   let xmlDoc = parser.parseFromString(bpmn, "text/xml");
 
@@ -62,7 +62,7 @@ export default function bpmnSetcstnuLabels(bpmn) {
         if (myObjs[node.id].obs != undefined) {
           if (myObjs[node.id].obs === 'join') {
 
-            let tempElement = window.bpmnjs.get('elementRegistry').get(node.id);
+            let tempElement = elementRegistry.get(node.id);
             tempElement.businessObject.gatewaySplitJoin = 'join';
             try {
               eventBus.fire('element.changed', { element: tempElement });
@@ -78,7 +78,7 @@ export default function bpmnSetcstnuLabels(bpmn) {
             }
           }
           if (myObjs[node.id].obs === 'split') {
-            let tempElement = window.bpmnjs.get('elementRegistry').get(node.id);
+            let tempElement = elementRegistry.get(node.id);
             tempElement.businessObject.gatewaySplitJoin = 'split';
 
             if (myObjs[node.id].observedProposition)
@@ -104,7 +104,7 @@ export default function bpmnSetcstnuLabels(bpmn) {
 
         }
         //Update element in BPMN diagram
-        let tempElement = window.bpmnjs.get('elementRegistry').get(node.id);
+        let tempElement = elementRegistry.get(node.id);
         tempElement.businessObject.propositionalLabel = Array.from(node.cps).join("");
         eventBus.fire('element.changed', { element: tempElement });
 
@@ -352,7 +352,7 @@ function processSequenceFlow(params) {
         }
         else {
 
-          let tempElement = window.bpmnjs.get('elementRegistry').get(idArrow);
+          let tempElement = elementRegistry.get(idArrow);
           if (myObjs[source].obsTrueArrow == undefined) {
             tempElement.businessObject.pLiteralValue = 'true';
             myObjs[source].obsTrueArrow = idArrow;
@@ -377,7 +377,7 @@ function processSequenceFlow(params) {
       }
       else {
 
-        let tempElement = window.bpmnjs.get('elementRegistry').get(idArrow);
+        let tempElement = elementRegistry.get(idArrow);
 
         if (myObjs[source].obsTrueArrow == undefined) {
           tempElement.businessObject.pLiteralValue = 'true';
