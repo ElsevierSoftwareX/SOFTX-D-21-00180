@@ -23,11 +23,12 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
   let noConsideredElements = ["Task"];
 
   let myKeys = Object.keys(myObjs);
-  for (let i = 0; i < myKeys.length; i++) {
-    currentBPMN_Obj = myObjs[myKeys[i]];
+  for (let k = 0; k < myKeys.length; k++) {
+    currentBPMN_Obj = myObjs[myKeys[k]];
 
     if (currentBPMN_Obj.cstnuEdgeIds && currentBPMN_Obj.edgeType === 'normal') {
       for (let i = 0; i < currentBPMN_Obj.cstnuEdgeIds.length; i++) {
+
         let edge = xmlCSTNU_Doc.getElementById(currentBPMN_Obj.cstnuEdgeIds[i]);
         for (let j = 0; j < edge.children.length; j++) {
           let labeled = edge.children[j];
@@ -49,7 +50,7 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
               }
 
             }
-            else if (currentBPMN_Obj.cstnuEdgeIds[i][0] === 'E') { //Update max value
+            else if (currentBPMN_Obj.cstnuEdgeIds[i][0] === 'E') { //Update min value
               let tempElement = window.bpmnjs.get('elementRegistry').get(currentBPMN_Obj.id);
 
               if (Number(newValue) != 0) newValue = -Number(newValue);
@@ -78,8 +79,8 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
 
   // Update arrows
   myKeys = Object.keys(myObjs.arrows);
-  for (let i = 0; i < myKeys.length; i++) {
-    currentBPMN_Obj = myObjs.arrows[myKeys[i]];
+  for (let k = 0; k < myKeys.length; k++) {
+    currentBPMN_Obj = myObjs.arrows[myKeys[k]];
 
     if (currentBPMN_Obj.cstnuEdgeIds && currentBPMN_Obj.edgeType === 'normal') {
       for (let i = 0; i < currentBPMN_Obj.cstnuEdgeIds.length; i++) {
@@ -92,11 +93,11 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
             let newLabel = labeled.textContent;
             let newValue = newLabel.split(',')[0].split('(').slice(-1)[0];
 
-            if (currentBPMN_Obj.cstnuEdgeIds[i][0] === 'S') { //Update max value
+            if (currentBPMN_Obj.cstnuEdgeIds[i][0] === 'E') { //Update max value
               let tempElement = window.bpmnjs.get('elementRegistry').get(currentBPMN_Obj.id);
 
               if (tempElement.businessObject.maxDuration && tempElement.businessObject.maxDuration != newValue) {
-
+                window.elementsUpdated.push(currentBPMN_Obj.id);
                 modeling.updateProperties(tempElement, {
                   maxDuration: newValue,
                   updated: true
@@ -104,11 +105,13 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
                 elementsUpdated.push(currentBPMN_Obj.id);
               }
             }
-            else if (currentBPMN_Obj.cstnuEdgeIds[i][0] === 'E') { //Update max value
+            else if (currentBPMN_Obj.cstnuEdgeIds[i][0] === 'S') { //Update min value
               let tempElement = window.bpmnjs.get('elementRegistry').get(currentBPMN_Obj.id);
               if (Number(newValue) != 0) newValue = -Number(newValue);
-
+              
               if (tempElement.businessObject.minDuration && tempElement.businessObject.minDuration != newValue) {
+                
+                window.elementsUpdated.push(currentBPMN_Obj.id);
                 modeling.updateProperties(tempElement, {
                   minDuration: newValue,
                   updated: true
