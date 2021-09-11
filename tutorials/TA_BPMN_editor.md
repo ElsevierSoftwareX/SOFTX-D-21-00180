@@ -55,8 +55,8 @@ Added attributes | minDuration, maxDuration, propositionalLabel, gatewaySplitJoi
 
 |**Sequence flow**| |
 |---|---|
-Added attributes | minDuration (default: 0), maxDuration (default: Inf), and pLiteralValue
-| Example | `tempcon:minDuration="1" tempcon:maxDuration="2" tempcon:pLiteralValue="true"` |
+Added attributes | minDuration (default: 0), maxDuration (default: Inf), and isTrueBranch
+| Example | `tempcon:minDuration="1" tempcon:maxDuration="2" tempcon:isTrueBranch="true"` |
 
 ### Inter-task constraint
 

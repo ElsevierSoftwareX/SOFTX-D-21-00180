@@ -418,21 +418,21 @@ CustomRenderer.prototype.drawConnection = function (p, element) {
       (maxD != Infinity && !Number.isInteger(parseFloat(maxD)))) colorFrame = "#cc0000";
 
 
-    //pLiteralValue : true or false pLiteralValue
-    try {
-      if (element.businessObject.sourceRef) {
-        if (element.businessObject.sourceRef.$type.includes('ExclusiveGateway')) {
-          if (element.businessObject.sourceRef.gatewaySplitJoin != undefined) {
-            if (element.businessObject.sourceRef.gatewaySplitJoin === 'split') {
-              let pLiteralValue = element.businessObject.pLiteralValue;
-              if (pLiteralValue === undefined || pLiteralValue === "") colorFrame = "#cc0000";
-            }
-          }
-        }
-      }
-    } catch (error) {
-      console.log('Error in sequenceFlow connected to exclusiveGateway');
-    }
+    // //isTrueBranch : true or false isTrueBranch
+    // try {
+    //   if (element.businessObject.sourceRef) {
+    //     if (element.businessObject.sourceRef.$type.includes('ExclusiveGateway')) {
+    //       if (element.businessObject.sourceRef.gatewaySplitJoin != undefined) {
+    //         if (element.businessObject.sourceRef.gatewaySplitJoin === 'split') {
+    //           let isTrueBranch = element.businessObject.isTrueBranch;
+    //           if (isTrueBranch === undefined || isTrueBranch === "") colorFrame = "#cc0000";
+    //         }
+    //       }
+    //     }
+    //   }
+    // } catch (error) {
+    //   console.log('Error in sequenceFlow connected to exclusiveGateway');
+    // }
 
     try {
       if (element.businessObject.targetRef) {

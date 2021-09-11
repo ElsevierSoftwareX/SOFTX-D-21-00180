@@ -87,7 +87,6 @@ function selectTCEvaluationModule() {
     li.innerHTML = "No module was loaded";
     ulButtons.appendChild(li);
   }
-
 }
 
 // async function because the function toXML is a promise
@@ -102,9 +101,7 @@ async function callExternalFunction(idxFunction) {
   let selectedModule = window.bpmnjs._evaluationModels[Number(selectTCE.value)];
 
   selectedModule.moduleInfo.buttonFunctions[idxFunction].function(xml, customElements);
-
 }
-
 
 /**
  * Add a single custom element to the underlying diagram
@@ -121,7 +118,6 @@ CustomModeler.prototype._addCustomShape = function (customElement) {
   let customShape = elementFactory.create('shape', customAttrs);
 
   return canvas.addShape(customShape);
-
 };
 
 CustomModeler.prototype._addCustomConnection = function (customElement) {
@@ -141,7 +137,6 @@ CustomModeler.prototype._addCustomConnection = function (customElement) {
     elementRegistry.get(customElement.source).parent);
 
   return canvas.addConnection(connection);
-
 };
 
 /**
@@ -185,96 +180,94 @@ CustomModeler.prototype.cleanCustomElements = function () {
   this._customElements = [];
 };
 
-
 CustomModeler.prototype.loadCustomElementsFromXML = function () {
-  // if (!isArray(customElements)) {
-  //   throw new Error('argument must be an array');
-  // }
-
+ 
   const elementRegistry = this.get('elementRegistry');
   const modeling = this.get('modeling');
   const moddle = this.get('moddle');
+
+  let connections = [];
 
   elementRegistry.getAll().forEach(function(element) {
     let businessObject = getBusinessObject(element);
     let extensionElements = businessObject.extensionElements;
 
     if(extensionElements){
-      console.log(businessObject);
-      // let analysisDetails = getExtensionElement(businessObject, 'tempcon:intertask');
-  debugger
+      let intertasks = getExtensionElement(businessObject, 'tempcon:Intertask');
 
-
-
+      intertasks.forEach(function(intertask){
+        let customElement  =  {
+          type : intertask.type,
+          id : intertask.id_intertask,
+          name : intertask.name,
+          waypoints : JSON.parse(intertask.waypoints),
+          source : intertask.source,
+          target : intertask.target,
+          minDuration : intertask.minDuration,
+          maxDuration : intertask.maxDuration,
+          propositionalLabel : intertask.propositionalLabel,
+          intertaskConnFrom : intertask.intertaskConnFrom,
+          intentaskConnTo : intertask.intertaskConnTo
+        };
+        connections.push(customElement);
+      });  
     }
-
   });
-  debugger
-  // let shapes = [];
-  let connections = [];
-
-  // customElements.forEach(function (customElement) {
-  //   if (isCustomConnection(customElement)) {
-  //     connections.push(customElement);
-  //   } else {
-  //     shapes.push(customElement);
-  //   }
-  // });
-
-  // // add shapes before connections so that connections
-  // // can already rely on the shapes being part of the diagram
-  // shapes.forEach(this._addCustomShape, this);
-
-
-
   connections.forEach(this._addCustomConnection, this);
-
-
-
-
 };
 
 
 CustomModeler.prototype.getDefinitionsWithIntertaskAsExtensionElements = function(){
-  console.log('in function');
-  
+  // Update ectensionElements tempcon:Intertask
   const elementRegistry = this.get('elementRegistry');
   const modeling = this.get('modeling');
   const moddle = this.get('moddle');
 
+  // If there are inter-task elements remover them 
+  elementRegistry.getAll().forEach(function(element) {
+    let businessObject = getBusinessObject(element);
+    let extensionElements = businessObject.extensionElements;
 
+    if(extensionElements){
+      let intertasks = getExtensionElement(businessObject, 'tempcon:Intertask');
+
+      if(intertasks){
+        intertasks.forEach(function(intertask){
+          businessObject.extensionElements.values = businessObject.extensionElements.values.filter(function(item){
+            return item != intertask;
+          });
+        });
+      }
+    }
+  });
+
+  // for each customConnection, create an intertask extensionElement
   this._customElements.forEach(function(customConnection){
     let sourceElement = elementRegistry.get(customConnection.source);
     let businessObject = getBusinessObject(sourceElement);
     
     let extensionElements = businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
-    let analysisDetails = getExtensionElement(businessObject, 'tempcon:intertask');
-       
-    // console.log(sourceElement)
-    
-    analysisDetails = moddle.create('tempcon:intertask');
-    extensionElements.get('values').push(analysisDetails);
-    // debugger
 
-    
-    analysisDetails.type=customConnection.type;
-    analysisDetails.id_intertask=customConnection.id;
-    analysisDetails.waypoints=JSON.stringify(customConnection.waypoints);
-    analysisDetails.source=customConnection.source;
-    analysisDetails.target=customConnection.target;
-    analysisDetails.minDuration=customConnection.minDuration;
-    analysisDetails.maxDuration=customConnection.maxDuration;
-    analysisDetails.propositionalLabel=customConnection.propositionalLabel;
-    analysisDetails.intertaskConnFrom=customConnection.intertaskConnFrom;
-    analysisDetails.intentaskConnTo=customConnection.intertaskConnTo;
-
-    modeling.updateProperties(sourceElement, {extensionElements});
+      let intertask = moddle.create('tempcon:Intertask');
+      extensionElements.get('values').push(intertask);
+          
+      intertask.type = customConnection.type;
+      intertask.id_intertask = customConnection.id;
+      intertask.name = customConnection.name;
+      intertask.waypoints = JSON.stringify(customConnection.waypoints);
+      intertask.source = customConnection.source;
+      intertask.target = customConnection.target;
+      intertask.minDuration = customConnection.minDuration;
+      intertask.maxDuration = customConnection.maxDuration;
+      intertask.propositionalLabel = customConnection.propositionalLabel;
+      intertask.intertaskConnFrom = customConnection.intertaskConnFrom;
+      intertask.intentaskConnTo = customConnection.intertaskConnTo;
+  
+      modeling.updateProperties(sourceElement, {extensionElements});
 
   } );
      
   let definitions = this.getDefinitions();
-  // debugger;
-
 
   return definitions;
 }
@@ -296,5 +289,5 @@ function getExtensionElement(element, type) {
 
   return element.extensionElements.values.filter((extensionElement) => {
     return extensionElement.$instanceOf(type);
-  })[0];
+  });
 }

@@ -9,7 +9,7 @@
       <bpmn2:outgoing>Flow_0k7m6jp</bpmn2:outgoing>
       <bpmn2:outgoing>Flow_01g0xld</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="Flow_0k7m6jp" name="Cash" sourceRef="G1" targetRef="T3" tempcon:minDuration="1" tempcon:maxDuration="2" tempcon:isTrueBranch="true" />
+    <bpmn2:sequenceFlow id="Flow_0k7m6jp" name="Cash" sourceRef="G1" targetRef="T3" tempcon:isTrueBranch="true" />
     <bpmn2:exclusiveGateway id="G2" name="G2" tempcon:minDuration="1" tempcon:maxDuration="2" tempcon:propositionalLabel="" tempcon:gatewaySplitJoin="join" tempcon:observedProposition="R">
       <bpmn2:incoming>Flow_1h69eb3</bpmn2:incoming>
       <bpmn2:incoming>Flow_0wuk23o</bpmn2:incoming>
@@ -20,7 +20,7 @@
     <bpmn2:endEvent id="e" name="e">
       <bpmn2:incoming>Flow_0pp9mni</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:userTask id="T3" name="Accept Cash (T3)" tempcon:minDuration="1" tempcon:maxDuration="6" tempcon:propositionalLabel="R">
+    <bpmn2:userTask id="T3" name="Accept Cash (T3)" tempcon:minDuration="14" tempcon:maxDuration="6" tempcon:propositionalLabel="R">
       <bpmn2:incoming>Flow_0k7m6jp</bpmn2:incoming>
       <bpmn2:outgoing>Flow_1h69eb3</bpmn2:outgoing>
     </bpmn2:userTask>
@@ -30,7 +30,7 @@
       <bpmn2:outgoing>Flow_0pp9mni</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="Flow_0pp9mni" sourceRef="T4" targetRef="e" />
-    <bpmn2:sequenceFlow id="Flow_01g0xld" name="Credit card" sourceRef="G1" targetRef="T2" tempcon:minDuration="1" tempcon:maxDuration="2" tempcon:isTrueBranch="false" />
+    <bpmn2:sequenceFlow id="Flow_01g0xld" name="Credit card" sourceRef="G1" targetRef="T2" tempcon:isTrueBranch="false" />
     <bpmn2:sequenceFlow id="Flow_1qye66p" sourceRef="T2" targetRef="IE1" />
     <bpmn2:intermediateCatchEvent id="IE1" name="Payment authorized (IE1)" tempcon:minDuration="1" tempcon:maxDuration="3" tempcon:propositionalLabel="¬R">
       <bpmn2:incoming>Flow_1qye66p</bpmn2:incoming>
@@ -38,6 +38,11 @@
       <bpmn2:messageEventDefinition id="MessageEventDefinition_1by8qh7" />
     </bpmn2:intermediateCatchEvent>
     <bpmn2:userTask id="T1" name="Identify Payment Method (T1)" tempcon:minDuration="2" tempcon:maxDuration="3" tempcon:propositionalLabel="">
+      <bpmn2:extensionElements>
+        <tempcon:intertask type="custom:connection" id_intertask="InterTask_1" waypoints="[{&#34;x&#34;:220,&#34;y&#34;:140},{&#34;x&#34;:220,&#34;y&#34;:-70},{&#34;x&#34;:540,&#34;y&#34;:-70},{&#34;x&#34;:540,&#34;y&#34;:140}]" source="T1" target="T4" />
+        <tempcon:intertask type="custom:connection" id_intertask="InterTask_2" waypoints="[{&#34;x&#34;:220,&#34;y&#34;:220},{&#34;x&#34;:220,&#34;y&#34;:410},{&#34;x&#34;:390,&#34;y&#34;:520},{&#34;x&#34;:560,&#34;y&#34;:410},{&#34;x&#34;:560,&#34;y&#34;:220}]" source="T1" target="T4" />
+        <tempcon:intertask type="custom:connection" id_intertask="InterTask_bsonlmgyi988zahddjb4e7rzh" waypoints="[{&#34;x&#34;:270,&#34;y&#34;:154},{&#34;x&#34;:454,&#34;y&#34;:58}]" source="T1" target="IE1" minDuration="2" maxDuration="3" propositionalLabel="n" intertaskConnFrom="start" />
+      </bpmn2:extensionElements>
       <bpmn2:incoming>Flow_1y1s5dn</bpmn2:incoming>
       <bpmn2:outgoing>Flow_15ktg1j</bpmn2:outgoing>
     </bpmn2:userTask>

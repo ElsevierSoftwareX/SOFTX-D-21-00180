@@ -113,7 +113,7 @@ export default function bpmnSetcstnuLabels(bpmn) {
           cps = Array.from(node.cps);
           if (isSplit) {
             let prefx = '';
-            if (myObjs.arrows[adj].pLiteralValue === 'false') {
+            if (myObjs.arrows[adj].isTrueBranch === 'false') {
               prefx = '¬';
             }
             cps.push(prefx + tempProposition);
@@ -339,69 +339,69 @@ function processSequenceFlow(params) {
   myObjs['arrows'][idArrow] = { id: idArrow, source: source, target: target };
   myObjs[source].outputs.push(idArrow);
   myObjs[target].inputs.push(idArrow);
-  if (myObjs[source].obs != undefined) {
-    if (myObjs[source].obs === 'split') {
-      if (element.attributes['tempcon:pLiteralValue'] != undefined) {
-        if (element.attributes['tempcon:pLiteralValue'].value != '') {
-          myObjs['arrows'][idArrow].pLiteralValue = element.attributes['tempcon:pLiteralValue'].value;
-          if (myObjs['arrows'][idArrow].pLiteralValue == 'true')
-            myObjs[source].obsTrueArrow = idArrow;
-          else
-            myObjs[source].obsFalseArrow = idArrow;
+  // if (myObjs[source].obs != undefined) {
+  //   if (myObjs[source].obs === 'split') {
+  //     if (element.attributes['tempcon:isTrueBranch'] != undefined) {
+  //       if (element.attributes['tempcon:isTrueBranch'].value != '') {
+  //         myObjs['arrows'][idArrow].isTrueBranch = element.attributes['tempcon:isTrueBranch'].value;
+  //         if (myObjs['arrows'][idArrow].isTrueBranch == 'true')
+  //           myObjs[source].obsTrueArrow = idArrow;
+  //         else
+  //           myObjs[source].obsFalseArrow = idArrow;
 
-        }
-        else {
+  //       }
+  //       else {
 
-          let tempElement = elementRegistry.get(idArrow);
-          if (myObjs[source].obsTrueArrow == undefined) {
-            tempElement.businessObject.pLiteralValue = 'true';
-            myObjs[source].obsTrueArrow = idArrow;
-          }
-          else if (myObjs[source].obsFalseArrow == undefined) {
-            tempElement.businessObject.pLiteralValue = 'false';
-            myObjs[source].obsFalseArrow = idArrow;
-          }
-          else {
-            myLogObj.errors += "\n Invalid edges " + element.nodeName + ' of split ' + source;
-            countObjs.elementsWithError += 1;
-            return;
-          }
+  //         let tempElement = elementRegistry.get(idArrow);
+  //         if (myObjs[source].obsTrueArrow == undefined) {
+  //           tempElement.businessObject.isTrueBranch = 'true';
+  //           myObjs[source].obsTrueArrow = idArrow;
+  //         }
+  //         else if (myObjs[source].obsFalseArrow == undefined) {
+  //           tempElement.businessObject.isTrueBranch = 'false';
+  //           myObjs[source].obsFalseArrow = idArrow;
+  //         }
+  //         else {
+  //           myLogObj.errors += "\n Invalid edges " + element.nodeName + ' of split ' + source;
+  //           countObjs.elementsWithError += 1;
+  //           return;
+  //         }
 
-          try {
-            eventBus.fire('element.changed', { element: tempElement });
+  //         try {
+  //           eventBus.fire('element.changed', { element: tempElement });
 
-          } catch (error) {
-            console.log('Error when fire element.changed ' + tempElement.businessObject.id);
-          }
-        }
-      }
-      else {
+  //         } catch (error) {
+  //           console.log('Error when fire element.changed ' + tempElement.businessObject.id);
+  //         }
+  //       }
+  //     }
+  //     else {
 
-        let tempElement = elementRegistry.get(idArrow);
+  //       let tempElement = elementRegistry.get(idArrow);
 
-        if (myObjs[source].obsTrueArrow == undefined) {
-          tempElement.businessObject.pLiteralValue = 'true';
-          myObjs[source].obsTrueArrow = idArrow;
-        }
-        else if (myObjs[source].obsFalseArrow == undefined) {
-          tempElement.businessObject.pLiteralValue = 'false';
-          myObjs[source].obsFalseArrow = idArrow;
-        }
-        else {
-          myLogObj.errors += "\n Invalid edges " + element.nodeName + ' of split ' + source;
-          countObjs.elementsWithError += 1;
-          return;
-        }
+  //       if (myObjs[source].obsTrueArrow == undefined) {
+  //         tempElement.businessObject.isTrueBranch = 'true';
+  //         myObjs[source].obsTrueArrow = idArrow;
+  //       }
+  //       else if (myObjs[source].obsFalseArrow == undefined) {
+  //         tempElement.businessObject.isTrueBranch = 'false';
+  //         myObjs[source].obsFalseArrow = idArrow;
+  //       }
+  //       else {
+  //         myLogObj.errors += "\n Invalid edges " + element.nodeName + ' of split ' + source;
+  //         countObjs.elementsWithError += 1;
+  //         return;
+  //       }
 
-        try {
-          eventBus.fire('element.changed', { element: tempElement });
-        } catch (error) {
-          console.log('Error when fire element.changed ' + tempElement.businessObject.id);
-        }
+  //       try {
+  //         eventBus.fire('element.changed', { element: tempElement });
+  //       } catch (error) {
+  //         console.log('Error when fire element.changed ' + tempElement.businessObject.id);
+  //       }
 
-      }
-    }
-  }
+  //     }
+  //   }
+  // }
 
 
 }

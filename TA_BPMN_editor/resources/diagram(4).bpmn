@@ -9,7 +9,7 @@
       <bpmn2:outgoing>Flow_0k7m6jp</bpmn2:outgoing>
       <bpmn2:outgoing>Flow_01g0xld</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="Flow_0k7m6jp" name="Cash" sourceRef="G1" targetRef="T3" tempcon:pLiteralValue="true" />
+    <bpmn2:sequenceFlow id="Flow_0k7m6jp" name="Cash" sourceRef="G1" targetRef="T3" tempcon:isTrueBranch="true" />
     <bpmn2:exclusiveGateway id="G2" name="G2" tempcon:minDuration="1" tempcon:maxDuration="2" tempcon:propositionalLabel="" tempcon:gatewaySplitJoin="join" tempcon:observedProposition="R">
       <bpmn2:incoming>Flow_1h69eb3</bpmn2:incoming>
       <bpmn2:incoming>Flow_0wuk23o</bpmn2:incoming>
@@ -30,7 +30,7 @@
       <bpmn2:outgoing>Flow_0pp9mni</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="Flow_0pp9mni" sourceRef="T4" targetRef="e" />
-    <bpmn2:sequenceFlow id="Flow_01g0xld" name="Credit card" sourceRef="G1" targetRef="T2" tempcon:pLiteralValue="false" />
+    <bpmn2:sequenceFlow id="Flow_01g0xld" name="Credit card" sourceRef="G1" targetRef="T2" tempcon:isTrueBranch="false" />
     <bpmn2:sequenceFlow id="Flow_1qye66p" sourceRef="T2" targetRef="IE1" />
     <bpmn2:intermediateCatchEvent id="IE1" name="Payment authorized (IE1)" tempcon:minDuration="1" tempcon:maxDuration="3" tempcon:propositionalLabel="¬R">
       <bpmn2:incoming>Flow_1qye66p</bpmn2:incoming>
@@ -39,7 +39,19 @@
     </bpmn2:intermediateCatchEvent>
     <bpmn2:userTask id="T1" name="Identify Payment Method (T1)" tempcon:minDuration="2" tempcon:maxDuration="3" tempcon:propositionalLabel="">
       <bpmn2:extensionElements>
-        <tempcon:intertask type="custom:connection" id_intertask="InterTask_7y18aromoa7loumv4omkrjz6e" source="T1" target="T4" />
+        <tempcon:Intertask type="custom:connection" id_intertask="InterTask_7y18aromoa7loumv4omkrjz6e" source="T1" target="T4" >
+          Something
+        </tempcon:Intertask>
+        <tempcon:IntertaskDetails lastChecked="2019-03-27T13:59:37.098Z" nextCheck="2019-03-28T13:59:37.098Z" />
+
+        <tempcon:analysisDetails lastChecked="2019-03-27T13:59:37.098Z" nextCheck="2019-03-28T13:59:37.098Z">
+          <tempcon:comment author="Klaus">
+            Our operators always have a hard time to figure out, what they need to do here.
+          </tempcon:comment>
+          <tempcon:comment author="Walter">
+            I believe this can be split up in a number of activities and partly automated.
+          </tempcon:comment>
+        </tempcon:analysisDetails>
       </bpmn2:extensionElements>
       <bpmn2:incoming>Flow_1y1s5dn</bpmn2:incoming>
       <bpmn2:outgoing>Flow_15ktg1j</bpmn2:outgoing>

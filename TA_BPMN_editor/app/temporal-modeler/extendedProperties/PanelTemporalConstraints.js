@@ -233,19 +233,19 @@ export default function (group, element, translate) {
     set_group_minDuration(group, validateMinDuration_sequenceFlow, " (default: 0)");
     set_group_maxDuration(group, validateMaxDuration_sequenceFlow, " (default: ∞)");
 
-    if (element.businessObject.sourceRef.$type.includes('ExclusiveGateway')) {
-      if (element.businessObject.sourceRef.gatewaySplitJoin === 'split') {
-        group.entries.push(entryFactory.selectBox(translate, {
-          id: 'pLiteralValue',
-          description: 'Select the value true or false',
-          label: 'Value',
-          modelProperty: 'pLiteralValue',
-          // Default configuration, the property is not created id it does not change/click
-          // TODO force to create the property in the XML file
-          selectOptions: [{ name: '', value: '' }, { name: 'True', value: 'true' }, { name: 'False', value: 'false' }]
-        }));
-      }
-    }
+    // if (element.businessObject.sourceRef.$type.includes('ExclusiveGateway')) {
+    //   if (element.businessObject.sourceRef.gatewaySplitJoin === 'split') {
+    //     group.entries.push(entryFactory.selectBox(translate, {
+    //       id: 'isTrueBranch',
+    //       description: 'Select the value true or false',
+    //       label: 'Value',
+    //       modelProperty: 'isTrueBranch',
+    //       // Default configuration, the property is not created id it does not change/click
+    //       // TODO force to create the property in the XML file
+    //       selectOptions: [{ name: '', value: '' }, { name: 'True', value: 'true' }, { name: 'False', value: 'false' }]
+    //     }));
+    //   }
+    // }
   }
 
 
@@ -302,7 +302,7 @@ export default function (group, element, translate) {
       group.entries.push(entryFactory.textField(translate, {
         id: 'observedProposition',
         description: 'Type one letter to be used as proposition',
-        label: 'Observed proposition',
+        label: 'Letter representing the boolean condition',
         modelProperty: 'observedProposition'
       }));
     }

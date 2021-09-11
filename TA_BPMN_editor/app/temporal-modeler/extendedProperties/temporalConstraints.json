@@ -55,7 +55,7 @@
       "extends": ["bpmn:SequenceFlow"],
       "properties": [
         {
-          "name": "pLiteralValue",
+          "name": "isTrueBranch",
           "isAttr": true,
           "type": "String"
         }
@@ -84,7 +84,7 @@
       ]
     },
     {
-      "name": "intertask",
+      "name": "Intertask",
       "superClass": ["Element"],
       "properties": [
         {
@@ -94,6 +94,11 @@
         },
         {
           "name": "id_intertask",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "name",
           "isAttr": true,
           "type": "String"
         },
