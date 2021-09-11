@@ -9,7 +9,6 @@ import { debounce } from 'min-dash';
 
 import diagramXML from '../resources/newDiagram.bpmn';
 
-
 const fileSelector = document.getElementById('inputFile_bpmn');
 fileSelector.addEventListener('change', (event) => {
   const fileList = event.target.files;
@@ -23,27 +22,9 @@ fileSelector.addEventListener('change', (event) => {
       openDiagram(xml);
     };
     reader.readAsText(file);
-    $('#js-download-diagram').removeClass('active');
-    $('#js-download-svg').removeClass('active');
-    $('#js-download-intertasks').removeClass('active');
-  }
-  else {
-    window.alert("Format not valid: " + ext);
-  }
-});
-
-const customSelector = document.getElementById('inputFile_intertasks');
-customSelector.addEventListener('change', (event) => {
-  const fileList = event.target.files;
-  var file = fileList[0];
-  var ext = file.name.split('.').pop().toLowerCase();
-  if (ext === 'json') {
-    var reader = new FileReader();
-    reader.onload = function (e) {
-      var customElements = e.target.result;
-      bpmnModeler.addCustomElements(JSON.parse(customElements));
-    };
-    reader.readAsText(file);
+    // $('#js-download-diagram').removeClass('active');
+    // $('#js-download-svg').removeClass('active');
+    // $('#js-download-intertasks').removeClass('active');
   }
   else {
     window.alert("Format not valid: " + ext);
@@ -51,10 +32,10 @@ customSelector.addEventListener('change', (event) => {
 });
 
 
+let commandStack_changed = false;
+let container = $('#js-drop-zone');
 
-var container = $('#js-drop-zone');
-
-var bpmnModeler = new CustomModeler({
+let bpmnModeler = new CustomModeler({
   container: '#canvas',
   propertiesPanel: {
     parent: '#js-properties-panel'
@@ -76,20 +57,18 @@ function createNewDiagram() {
   openDiagram(diagramXML);
 }
 
-
-async function openDiagram(xml, cElements) {
+async function openDiagram(xml) {
   try {
     await bpmnModeler.importXML(xml);
     bpmnModeler.cleanCustomElements();
     bpmnModeler.loadCustomElementsFromXML();
 
-    if (cElements) {
-      bpmnModeler.addCustomElements(cElements);
-    }
-
     container
       .removeClass('with-error')
       .addClass('with-diagram');
+
+    bpmnModeler.setTCEvaluationsModulesButtons();
+
   } catch (err) {
 
     container
@@ -152,11 +131,13 @@ $(function () {
     createNewDiagram();
   });
 
-  var downloadLink = $('#js-download-diagram');
-  var downloadSvgLink = $('#js-download-svg');
-  var downloadIntertasksLink = $('#js-download-intertasks');
+  // var downloadLink = $('#js-download-diagram');
+  // var downloadSvgLink = $('#js-download-svg');
+  // var downloadIntertasksLink = $('#js-download-intertasks');
   var myButton = $('#myButton');
   var myButton2 = $('#myButton2');
+  var buttonDownloadDiagram = $('#button-download-diagram');
+  var buttonDownloadSVG = $('#button-download-svg');
 
   myButton.click(function(e){
     bpmnModeler.getDefinitionsWithIntertaskAsExtensionElements()
@@ -165,9 +146,29 @@ $(function () {
     bpmnModeler.loadCustomElementsFromXML()
   });
 
-  bpmnModeler.setTCEvaluationsModulesButtons();
+  buttonDownloadDiagram.click(async function(e){        
+    try {
+      let definitions = bpmnModeler.getDefinitionsWithIntertaskAsExtensionElements();      
+      let { xml } = await bpmnModeler._moddle.toXML(definitions, { format: true });
+      downloadBPMN('diagram.bpmn', xml);
 
-  
+    } catch (err) {
+      console.error('Error happened saving diagram: ', err);
+      setEncoded(downloadLink, 'diagram.bpmn', null);
+    }
+  });
+
+  function downloadBPMN(filename, dataInput) {
+
+    let element = document.createElement('a');
+    // element.setAttribute('href','data:text/plain;charset=utf-8, ' + encodeURIComponent(dataInput));
+    element.setAttribute('href','data:application/bpmn20-xml;charset=UTF-8, ' + encodeURIComponent(dataInput));
+    element.setAttribute('download', filename);
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+}
+
 
   $('.buttons a').click(function (e) {
     if (!$(this).is('.active')) {
@@ -176,51 +177,54 @@ $(function () {
     }
   });
 
-  function setEncoded(link, name, data) {
-    var encodedData = encodeURIComponent(data);
+  // function setEncoded(link, name, data) {
+  //   var encodedData = encodeURIComponent(data);
 
-    if (data) {
-      link.addClass('active').attr({
-        'href': 'data:application/bpmn20-xml;charset=UTF-8,' + encodedData,
-        'download': name
-      });
-    } else {
-      link.removeClass('active');
-    }
-  }
+  //   if (data) {
+  //     link.addClass('active').attr({
+  //       'href': 'data:application/bpmn20-xml;charset=UTF-8,' + encodedData,
+  //       'download': name
+  //     });
+  //   } else {
+  //     link.removeClass('active');
+  //   }
+  // }
 
   var exportArtifacts = debounce(async function () {
 
-    try {
-      const { svg } = await bpmnModeler.saveSVG();
-      setEncoded(downloadSvgLink, 'diagram.svg', svg);
+    commandStack_changed = true;
 
-    } catch (err) {
-      console.error('Error happened saving SVG: ', err);
-      setEncoded(downloadSvgLink, 'diagram.svg', null);
-    }
+    // try {
+    //   const { svg } = await bpmnModeler.saveSVG();
+    //   setEncoded(downloadSvgLink, 'diagram.svg', svg);
 
-    try {
-      let customElements = bpmnModeler.getCustomElements();
-      let myJson = JSON.stringify(customElements, null, '\t');
-      setEncoded(downloadIntertasksLink, 'intertasks.json', myJson);
+    // } catch (err) {
+    //   console.error('Error happened saving SVG: ', err);
+    //   setEncoded(downloadSvgLink, 'diagram.svg', null);
+    // }
 
-    } catch (err) {
-      console.error('Error happened saving intertasks: ', err);
-      setEncoded(downloadIntertasksLink, 'intertasks.json', null);
-    }
+    // try {
+    //   let customElements = bpmnModeler.getCustomElements();
+    //   let myJson = JSON.stringify(customElements, null, '\t');
+    //   setEncoded(downloadIntertasksLink, 'intertasks.json', myJson);
 
-    try {
-      // let definitions = bpmnModeler.getDefinitionsWithIntertaskAsExtensionElements();
-      let definitions = bpmnModeler.getDefinitions();
-      // definitions = bpmnModeler.setIntertaskAsExtensionElement();
-      let { xml } = await bpmnModeler._moddle.toXML(definitions, { format: true });
-      setEncoded(downloadLink, 'diagram.bpmn', xml);
+    // } catch (err) {
+    //   console.error('Error happened saving intertasks: ', err);
+    //   setEncoded(downloadIntertasksLink, 'intertasks.json', null);
+    // }
 
-    } catch (err) {
-      console.error('Error happened saving diagram: ', err);
-      setEncoded(downloadLink, 'diagram.bpmn', null);
-    }
+    // try {
+    //   console.log('In function');
+    //   // let definitions = bpmnModeler.getDefinitionsWithIntertaskAsExtensionElements();
+    //   let definitions = bpmnModeler.getDefinitions();
+    //   // definitions = bpmnModeler.setIntertaskAsExtensionElement();
+    //   let { xml } = await bpmnModeler._moddle.toXML(definitions, { format: true });
+    //   setEncoded(downloadLink, 'diagram.bpmn', xml);
+
+    // } catch (err) {
+    //   console.error('Error happened saving diagram: ', err);
+    //   setEncoded(downloadLink, 'diagram.bpmn', null);
+    // }
 
   }, 500);
 
