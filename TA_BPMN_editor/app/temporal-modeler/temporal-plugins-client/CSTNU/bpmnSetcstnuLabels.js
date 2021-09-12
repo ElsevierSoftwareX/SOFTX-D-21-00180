@@ -371,6 +371,7 @@ function processSequenceFlow(params) {
             return;
           }
 
+          myObjs['arrows'][idArrow].isTrueBranch = tempElement.businessObject.isTrueBranch;
           try {
             modeling.updateLabel(tempElement, tempElement.businessObject.name);
             eventBus.fire('element.changed', { element: tempElement });
@@ -400,6 +401,7 @@ function processSequenceFlow(params) {
           return;
         }
 
+        myObjs['arrows'][idArrow].isTrueBranch = tempElement.businessObject.isTrueBranch;
         try {
           modeling.updateLabel(tempElement, tempElement.businessObject.name);
           eventBus.fire('element.changed', { element: tempElement });
