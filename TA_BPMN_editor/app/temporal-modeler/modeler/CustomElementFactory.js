@@ -51,7 +51,7 @@ export default function CustomElementFactory(bpmnFactory, moddle) {
           // https://forum.bpmn.io/t/customelements-autogenerate-id/3505
           
           assign(attrs.businessObject, {
-            id: 'InterTask_' + RENDERER_IDS.next()
+            id: 'InterTask_' + RENDERER_IDS.next().substring(0,4)
           });
         }
       }
