@@ -1,6 +1,6 @@
 {
   "name": "timeawarebpmn-js",
-  "version": "0.0.0",
+  "version": "0.6.0",
   "description": "NodeJS app that uses the TimeAwareBPMN-js Web editor and desktop applications added as plug-ins to verify temporal properties of the models",
   "main": "serverNodeJS.js",
   "dependencies": {
