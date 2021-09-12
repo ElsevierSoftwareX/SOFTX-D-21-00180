@@ -330,6 +330,7 @@ function processSequenceFlow(params) {
 
   let eventBus = window.bpmnjs.get('eventBus');
   let elementRegistry = window.bpmnjs.get('elementRegistry');
+  let modeling = window.bpmnjs.get('modeling');
 
   //Get cstnuId of the connected nodes
   let source = element.attributes.sourceRef.value;
@@ -371,6 +372,7 @@ function processSequenceFlow(params) {
           }
 
           try {
+            modeling.updateLabel(tempElement, tempElement.businessObject.name);
             eventBus.fire('element.changed', { element: tempElement });
 
           } catch (error) {
@@ -389,7 +391,7 @@ function processSequenceFlow(params) {
         }
         else if (myObjs[source].obsFalseArrow == undefined) {
           tempElement.businessObject.isTrueBranch = 'false';
-          tempElement.businessObject.name = 'Talse';
+          tempElement.businessObject.name = 'False';
           myObjs[source].obsFalseArrow = idArrow;
         }
         else {
@@ -399,6 +401,7 @@ function processSequenceFlow(params) {
         }
 
         try {
+          modeling.updateLabel(tempElement, tempElement.businessObject.name);
           eventBus.fire('element.changed', { element: tempElement });
         } catch (error) {
           console.log('Error when fire element.changed ' + tempElement.businessObject.id);
