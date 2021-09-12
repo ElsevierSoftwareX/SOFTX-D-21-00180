@@ -64,17 +64,17 @@ function createNewDiagram() {
 async function openDiagram(xml) {
   try {
 
-    
+
     await bpmnModeler.importXML(xml);
     bpmnModeler.cleanCustomElements();
     bpmnModeler.loadCustomElementsFromXML();
-    
+
     container
       .removeClass('with-error')
       .addClass('with-diagram');
-    
+
     bpmnModeler.setTCEvaluationsModulesButtons();
-    
+
     document.getElementById('button-download-diagram').disabled = false;
     document.getElementById('button-download-svg').disabled = false;
 
@@ -142,34 +142,41 @@ $(function () {
     createNewDiagram();
   });
 
-  
+
   let buttonDownloadDiagram = $('#button-download-diagram');
   let buttonDownloadSVG = $('#button-download-svg');
 
 
-  buttonDownloadDiagram.click(async function(e){        
+  buttonDownloadDiagram.click(async function (e) {
     try {
-      if(commandStack_changed){
-        let definitions = bpmnModeler.getDefinitionsWithIntertaskAsExtensionElements();      
-        let { xml } = await bpmnModeler._moddle.toXML(definitions, { format: true });
-        downloadBPMN('diagram.bpmn', xml);
-      }
+      let definitions = bpmnModeler.getDefinitionsWithIntertaskAsExtensionElements();
+      let { xml } = await bpmnModeler._moddle.toXML(definitions, { format: true });
+      downloadBPMN('diagram.bpmn', xml);
 
     } catch (err) {
       console.error('Error happened saving diagram: ', err);
-      setEncoded(downloadLink, 'diagram.bpmn', null);
+    }
+  });
+
+  buttonDownloadSVG.click(async function (e) {
+    try {
+      let { svg } = await bpmnModeler.saveSVG();
+      downloadBPMN('diagram.svg', svg);
+
+    } catch (err) {
+      console.error('Error happened saving SVG: ', err);
     }
   });
 
   function downloadBPMN(filename, dataInput) {
 
-      let element = document.createElement('a');
-      // element.setAttribute('href','data:text/plain;charset=utf-8, ' + encodeURIComponent(dataInput));
-      element.setAttribute('href','data:application/bpmn20-xml;charset=UTF-8, ' + encodeURIComponent(dataInput));
-      element.setAttribute('download', filename);
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
+    let element = document.createElement('a');
+    // element.setAttribute('href','data:text/plain;charset=utf-8, ' + encodeURIComponent(dataInput));
+    element.setAttribute('href', 'data:application/bpmn20-xml;charset=UTF-8, ' + encodeURIComponent(dataInput));
+    element.setAttribute('download', filename);
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
   }
 
   $('.buttons a').click(function (e) {
@@ -181,7 +188,7 @@ $(function () {
 
   var exportArtifacts = debounce(async function () {
 
-    commandStack_changed = true;    
+    commandStack_changed = true;
 
   }, 500);
 
