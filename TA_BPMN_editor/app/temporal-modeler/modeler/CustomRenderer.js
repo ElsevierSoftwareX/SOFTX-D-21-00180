@@ -484,11 +484,8 @@ function drawRect(parentNode, width, height, borderRadius, strokeColor) {
   });
   let rectElement = svgAppend(parentNode, rect);
 
-  // debugger;
-
   return { rect, rectElement };
 }
-
 
 function drawShape_contingent(
   parentNode,
@@ -578,7 +575,7 @@ function drawShape_contingent(
   svgAttr(rectSmall, {
     transform: "translate(" + temWidth + ", -10)",
   });
-  // debugger;
+
   let strText = minD + "-" + maxD;
   // if (element.businessObject.propositionalLabel)
   //   strText += ', ' + element.businessObject.propositionalLabel;
@@ -591,15 +588,11 @@ function drawShape_contingent(
   temWidth = 25;
   if (is(element, "bpmn:Gateway")) {
     temWidth = -25;
-    // debugger;
   }
   if (is(element, "bpmn:IntermediateCatchEvent")) {
     temWidth = -40;
-    // debugger;
   }
-  // else{
-  //   debugger;
-  // }
+  
   svgAttr(text, {
     transform: "translate(" + temWidth + ", -7)",
   });
