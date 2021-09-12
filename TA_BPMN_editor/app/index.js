@@ -22,6 +22,8 @@ fileSelector.addEventListener('change', (event) => {
       openDiagram(xml);
     };
     reader.readAsText(file);
+
+    fileSelector.disabled = true;
   }
   else {
     window.alert("Format not valid: " + ext);
@@ -31,6 +33,9 @@ fileSelector.addEventListener('change', (event) => {
 
 let commandStack_changed = false;
 let container = $('#js-drop-zone');
+document.getElementById('button-download-diagram').disabled = true;
+document.getElementById('button-download-svg').disabled = true;
+
 
 
 let bpmnModeler = new CustomModeler({
@@ -51,16 +56,19 @@ let bpmnModeler = new CustomModeler({
   }
 });
 
+
 function createNewDiagram() {
   openDiagram(diagramXML);
 }
 
 async function openDiagram(xml) {
   try {
+
+    
     await bpmnModeler.importXML(xml);
     bpmnModeler.cleanCustomElements();
     bpmnModeler.loadCustomElementsFromXML();
-
+    
     container
       .removeClass('with-error')
       .addClass('with-diagram');
@@ -69,6 +77,8 @@ async function openDiagram(xml) {
     
     document.getElementById('button-download-diagram').disabled = false;
     document.getElementById('button-download-svg').disabled = false;
+
+
 
   } catch (err) {
 
@@ -139,9 +149,11 @@ $(function () {
 
   buttonDownloadDiagram.click(async function(e){        
     try {
-      let definitions = bpmnModeler.getDefinitionsWithIntertaskAsExtensionElements();      
-      let { xml } = await bpmnModeler._moddle.toXML(definitions, { format: true });
-      downloadBPMN('diagram.bpmn', xml);
+      if(commandStack_changed){
+        let definitions = bpmnModeler.getDefinitionsWithIntertaskAsExtensionElements();      
+        let { xml } = await bpmnModeler._moddle.toXML(definitions, { format: true });
+        downloadBPMN('diagram.bpmn', xml);
+      }
 
     } catch (err) {
       console.error('Error happened saving diagram: ', err);
@@ -166,7 +178,6 @@ $(function () {
       e.stopPropagation();
     }
   });
-
 
   var exportArtifacts = debounce(async function () {
 
