@@ -294,7 +294,7 @@ function sendCSTNUtoEvaluate(cstnuXml, myObjs) {
                     //Extract information about the node with the negative loop 
                     let strNodeId = jsonEvaluation.negativeLoopNode.replace("❮", "").replace("❯", "");
                     let strNodeIdArg = strNodeId.split("_");
-                    let elementType = strNodeIdArg.slice(-2)[0], elementTypeNumber = strNodeIdArg.slice(-1)[0];
+                    let elementType = strNodeIdArg.slice(-3)[0], elementTypeNumber = strNodeIdArg.slice(-2)[0];
                     let currentObj;
 
                     let myKeys = Object.keys(myObjs);
@@ -307,9 +307,9 @@ function sendCSTNUtoEvaluate(cstnuXml, myObjs) {
                         }
                         currentObj = undefined;
                     }
-
                     divModalContent.innerText = "The given network is NOT dynamic controllable.";
                     if (currentObj) {
+                        
                         divModalContent.innerText += "\nNegative loop in node: " + strNodeId + " (" + currentObj.id + ").";
                         window.elementsError.push(currentObj.id);
                         let tempElement = window.bpmnjs.get('elementRegistry').get(currentObj.id);

@@ -78,6 +78,7 @@ export default function bpmn2cstnu(bpmn, customElements, fileName) {
   if (countObjs.elementsWithWarning > 0)
     divModalContent.innerText += '\n' + myLogObj.warnings;
 
+    console.log(myObjs);
   return { xmlString, myLogObj, countObjs, myObjs, textMessage };
 }
 
@@ -495,12 +496,14 @@ function setTwoNodesToEdges(params) {
         propositionalLabel = element.attributes["tempcon:propositionalLabel"].value;
 
     // Nodes
-    let node = graph.ele("node", { id: "S_" + elementType + "_" + elementTypeNumber }, "");
+    let id_s = "S_" + elementType + "_" + elementTypeNumber + "_" + element.attributes.id.value;
+    let id_e = "E_" + elementType + "_" + elementTypeNumber + "_" + element.attributes.id.value;
+    let node = graph.ele("node", { id: id_s }, "");
     node.ele("data", { key: "x" }, Number(x) + Number(elementTypeNumber) - 25);
     node.ele("data", { key: "y" }, Number(y) + Number(elementTypeNumber));
     node.ele("data", { key: "Label" }, propositionalLabel);
 
-    node = graph.ele("node", { id: "E_" + elementType + "_" + elementTypeNumber }, "");
+    node = graph.ele("node", { id: id_e }, "");
     node.ele("data", { key: "x" }, Number(x) - Number(elementTypeNumber) + 25);
     node.ele("data", { key: "y" }, Number(y) - Number(elementTypeNumber));
     node.ele("data", { key: "Label" }, propositionalLabel);
@@ -512,10 +515,10 @@ function setTwoNodesToEdges(params) {
         countObjs.nObservedProposition += 1;
       }
     }
-    myObjs[element.attributes.id.value].cstnuNodeIds = ["S_" + elementType + "_" + elementTypeNumber, "E_" + elementType + "_" + elementTypeNumber];
+    myObjs[element.attributes.id.value].cstnuNodeIds = [id_s, id_e];
 
     // Edges
-    let edgeId = "S_" + elementType + "_" + elementTypeNumber + "-E_" + elementType + "_" + elementTypeNumber;
+    let edgeId = id_s + "-" + id_e;
     let countOccurrences = '';
     if (myObjs['edges_ids'][edgeId] === undefined) {
       myObjs['edges_ids'][edgeId] = { elementIds: [element.id], occurrences: 1 };
@@ -532,8 +535,8 @@ function setTwoNodesToEdges(params) {
       "edge",
       {
         id: edgeId,
-        source: "S_" + elementType + "_" + elementTypeNumber,
-        target: "E_" + elementType + "_" + elementTypeNumber,
+        source: id_s,
+        target: id_e,
       },
       ""
     );
@@ -543,7 +546,7 @@ function setTwoNodesToEdges(params) {
 
     if (Number(minD) != 0) minD = -Number(minD);
 
-    edgeId = "E_" + elementType + "_" + elementTypeNumber + "-S_" + elementType + "_" + elementTypeNumber;
+    edgeId = id_e + "-" + id_s;
     countOccurrences = '';
     if (myObjs['edges_ids'][edgeId] === undefined) {
       myObjs['edges_ids'][edgeId] = { elementIds: [element.id], occurrences: 1 };
@@ -559,8 +562,8 @@ function setTwoNodesToEdges(params) {
       "edge",
       {
         id: edgeId,
-        source: "E_" + elementType + "_" + elementTypeNumber,
-        target: "S_" + elementType + "_" + elementTypeNumber,
+        source: id_e,
+        target: id_s,
       },
       ""
     );
@@ -635,7 +638,9 @@ function createOneNode(params) {
     if (element.attributes.name != undefined) myObjs[element.attributes.id.value].name = element.attributes.name.value.replace(/(\r\n|\n|\r)/gm, "") + ' ';
 
     // Nodes
-    let node = graph.ele("node", { id: elementType + '_' + elementTypeNumber }, "");
+    let id_node = elementType + "_" + elementTypeNumber + "_" + element.attributes.id.value;
+
+    let node = graph.ele("node", { id: id_node }, "");
     node.ele("data", { key: "x" }, Number(x) + Number(elementTypeNumber));
     node.ele("data", { key: "y" }, Number(y) + Number(elementTypeNumber));
     node.ele("data", { key: "Label" }, nodeLabel);
@@ -682,19 +687,19 @@ function setTwoEdges_sequenceFlow(params) {
 
   if (myObjs[source] != undefined) {
     if (myObjs[source].elementType === 'START' || myObjs[source].elementType === 'END') {
-      sourceTaskId = myObjs[source].elementType + "_" + myObjs[source].elementTypeNumber;
+      sourceTaskId = myObjs[source].elementType + "_" + myObjs[source].elementTypeNumber + "_" + source;
     }
     else {
-      sourceTaskId = 'E_' + myObjs[source].elementType + "_" + myObjs[source].elementTypeNumber;
+      sourceTaskId = 'E_' + myObjs[source].elementType + "_" + myObjs[source].elementTypeNumber + "_" + source;
     }
 
   }
   if (myObjs[target] != undefined) {
     if (myObjs[target].elementType === 'START' || myObjs[target].elementType === 'END') {
-      targetTaskId = myObjs[target].elementType + '_' + myObjs[target].elementTypeNumber;
+      targetTaskId = myObjs[target].elementType + '_' + myObjs[target].elementTypeNumber + "_" + target;
     }
     else {
-      targetTaskId = 'S_' + myObjs[target].elementType + '_' + myObjs[target].elementTypeNumber;
+      targetTaskId = 'S_' + myObjs[target].elementType + '_' + myObjs[target].elementTypeNumber + "_" + target;
     }
 
   }
@@ -821,11 +826,11 @@ function setTwoEdges_intertask(params) {
     if (myObjs[source].type === 'START' || myObjs[source].type === 'END') {
       // Check if this is valid 
     }
-    else {
+    else {      
       if (connFrom == undefined || connFrom === 'end')
-        sourceTaskId = "E_" + myObjs[source].elementType + "_" + myObjs[source].elementTypeNumber;
+        sourceTaskId = "E_" + myObjs[source].elementType + "_" + myObjs[source].elementTypeNumber + "_" + source;
       else
-        sourceTaskId = "S_" + myObjs[source].elementType + "_" + myObjs[source].elementTypeNumber;
+        sourceTaskId = "S_" + myObjs[source].elementType + "_" + myObjs[source].elementTypeNumber + "_" + source;
     }
 
   }
@@ -835,16 +840,15 @@ function setTwoEdges_intertask(params) {
     }
     else {
       if (connTo == undefined || connTo === 'start')
-        targetTaskId = "S_" + myObjs[target].elementType + '_' + myObjs[target].elementTypeNumber;
+        targetTaskId = "S_" + myObjs[target].elementType + '_' + myObjs[target].elementTypeNumber + "_" + target;
       else
-        targetTaskId = "E_" + myObjs[target].elementType + '_' + myObjs[target].elementTypeNumber;
+        targetTaskId = "E_" + myObjs[target].elementType + '_' + myObjs[target].elementTypeNumber + "_" + target;
     }
-
   }
 
   // If they are not there, do not create the edges
   if (targetTaskId === undefined || sourceTaskId === undefined) {
-    myLogObj.errors += "\n Edges " + element.nodeName;
+    myLogObj.errors += "\n Edges " + element.id;
 
     myLogObj.errors += "\n\t source_Id " + source + ' (' + sourceTaskId + ') ';
     if (sourceTaskId != undefined)
@@ -857,14 +861,14 @@ function setTwoEdges_intertask(params) {
     countObjs.elementsWithError += 1;
     return;
   }
-
+  
   // Edges
   let edgeId = '';
   let countOccurrences = '';
   let edge;
 
   if (maxD != Infinity) { // maxD = '∞';
-    edgeId = sourceTaskId + "-" + targetTaskId;
+    edgeId = sourceTaskId + "-" + targetTaskId + "-" + element.id;
     countOccurrences = '';
     if (myObjs['edges_ids'][edgeId] === undefined) {
       myObjs['edges_ids'][edgeId] = { elementIds: [element.id], occurrences: 1 };
@@ -892,7 +896,7 @@ function setTwoEdges_intertask(params) {
 
   }
 
-  edgeId = targetTaskId + "-" + sourceTaskId;
+  edgeId = targetTaskId + "-" + sourceTaskId + "-" + element.id;
   countOccurrences = '';
   if (myObjs['edges_ids'][edgeId] === undefined) {
     myObjs['edges_ids'][edgeId] = { elementIds: [element.id], occurrences: 1 };
