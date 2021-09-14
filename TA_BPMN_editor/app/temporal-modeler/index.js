@@ -181,59 +181,59 @@ CustomModeler.prototype.cleanCustomElements = function () {
 };
 
 CustomModeler.prototype.loadCustomElementsFromXML = function () {
- 
+
   const elementRegistry = this.get('elementRegistry');
   const modeling = this.get('modeling');
   const moddle = this.get('moddle');
 
   let connections = [];
 
-  elementRegistry.getAll().forEach(function(element) {
+  elementRegistry.getAll().forEach(function (element) {
     let businessObject = getBusinessObject(element);
     let extensionElements = businessObject.extensionElements;
 
-    if(extensionElements){
+    if (extensionElements) {
       let intertasks = getExtensionElement(businessObject, 'tempcon:Intertask');
 
-      intertasks.forEach(function(intertask){
-        let customElement  =  {
-          type : intertask.type,
-          id : intertask.id_intertask,
-          name : intertask.name,
-          waypoints : JSON.parse(intertask.waypoints),
-          source : intertask.source,
-          target : intertask.target,
-          minDuration : intertask.minDuration,
-          maxDuration : intertask.maxDuration,
-          propositionalLabel : intertask.propositionalLabel,
-          intertaskConnFrom : intertask.intertaskConnFrom,
-          intentaskConnTo : intertask.intertaskConnTo
+      intertasks.forEach(function (intertask) {
+        let customElement = {
+          type: intertask.type,
+          id: intertask.id_intertask,
+          name: intertask.name,
+          waypoints: JSON.parse(intertask.waypoints),
+          source: intertask.source,
+          target: intertask.target,
+          minDuration: intertask.minDuration,
+          maxDuration: intertask.maxDuration,
+          propositionalLabel: intertask.propositionalLabel,
+          intertaskConnFrom: intertask.intertaskConnFrom,
+          intentaskConnTo: intertask.intertaskConnTo
         };
         connections.push(customElement);
-      });  
+      });
     }
   });
   connections.forEach(this._addCustomConnection, this);
 };
 
 
-CustomModeler.prototype.getDefinitionsWithIntertaskAsExtensionElements = function(){
+CustomModeler.prototype.getDefinitionsWithIntertaskAsExtensionElements = function () {
   // Update ectensionElements tempcon:Intertask
   const elementRegistry = this.get('elementRegistry');
   const modeling = this.get('modeling');
   const moddle = this.get('moddle');
 
   // If there are inter-task elements remover them 
-  elementRegistry.getAll().forEach(function(element) {
+  elementRegistry.getAll().forEach(function (element) {
     let businessObject = getBusinessObject(element);
     let extensionElements = businessObject.extensionElements;
 
-    if(extensionElements){
+    if (extensionElements) {
       let intertasks = getExtensionElement(businessObject, 'tempcon:Intertask');
 
-      if(intertasks){
-        intertasks.forEach(function(intertask){
-          businessObject.extensionElements.values = businessObject.extensionElements.values.filter(function(item){
+      if (intertasks) {
+        intertasks.forEach(function (intertask) {
+          businessObject.extensionElements.values = businessObject.extensionElements.values.filter(function (item) {
             return item != intertask;
           });
         });
@@ -242,31 +242,31 @@ CustomModeler.prototype.getDefinitionsWithIntertaskAsExtensionElements = functio
   });
 
   // for each customConnection, create an intertask extensionElement
-  this._customElements.forEach(function(customConnection){
+  this._customElements.forEach(function (customConnection) {
     let sourceElement = elementRegistry.get(customConnection.source);
     let businessObject = getBusinessObject(sourceElement);
-    
+
     let extensionElements = businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
 
-      let intertask = moddle.create('tempcon:Intertask');
-      extensionElements.get('values').push(intertask);
-          
-      intertask.type = customConnection.type;
-      intertask.id_intertask = customConnection.id;
-      intertask.name = customConnection.name;
-      intertask.waypoints = JSON.stringify(customConnection.waypoints);
-      intertask.source = customConnection.source;
-      intertask.target = customConnection.target;
-      intertask.minDuration = customConnection.minDuration;
-      intertask.maxDuration = customConnection.maxDuration;
-      intertask.propositionalLabel = customConnection.propositionalLabel;
-      intertask.intertaskConnFrom = customConnection.intertaskConnFrom;
-      intertask.intentaskConnTo = customConnection.intertaskConnTo;
-  
-      modeling.updateProperties(sourceElement, {extensionElements});
+    let intertask = moddle.create('tempcon:Intertask');
+    extensionElements.get('values').push(intertask);
 
-  } );
-     
+    intertask.type = customConnection.type;
+    intertask.id_intertask = customConnection.id;
+    intertask.name = customConnection.name;
+    intertask.waypoints = JSON.stringify(customConnection.waypoints);
+    intertask.source = customConnection.source;
+    intertask.target = customConnection.target;
+    intertask.minDuration = customConnection.minDuration;
+    intertask.maxDuration = customConnection.maxDuration;
+    intertask.propositionalLabel = customConnection.propositionalLabel;
+    intertask.intertaskConnFrom = customConnection.intertaskConnFrom;
+    intertask.intertaskConnTo = customConnection.intertaskConnTo;
+
+    modeling.updateProperties(sourceElement, { extensionElements });
+
+  });
+
   let definitions = this.getDefinitions();
 
   return definitions;
@@ -276,7 +276,7 @@ function isCustomConnection(element) {
   return element.type === 'custom:connection';
 }
 
-function setIntertaskAsExtensionElement(){
+function setIntertaskAsExtensionElement() {
 
 
 }
