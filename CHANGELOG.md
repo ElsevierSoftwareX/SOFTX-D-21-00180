@@ -2,9 +2,10 @@
 
 ## TimeAwareBPMN-js
 
-v0.5.4 - 20210912
+v0.5.4 - 20210914
 
 - Change, inter-task are saved as extensionElements 
+- Change, Added line command configuration for CSTNU no-logging
 
 v0.5.4 - 20210907
 
