@@ -6,6 +6,7 @@ v0.5.4 - 20210914
 
 - Change, inter-task are saved as extensionElements 
 - Change, Added line command configuration for CSTNU no-logging
+- Change, inter-task for relative constraint
 
 v0.5.4 - 20210907
 

@@ -28,10 +28,32 @@ The temporal properties, like `tempcon:minDuration`, will be persisted as an ext
 </bpmn2:definitions>
 ```
 
-### Inter-task constraint
+### Relative constraint
 
-We created a custom connection called `inter-task` that sets temporal constraints between any pair of elements in the diagram. These relative constraints are a general concept in temporal verification methods, but they are not part of the BPMN standard. Because of this, we implemented it as a custom object independent of the BPMN model. It is kept in a different file and can be used to generate temporal constraints models.
-The editor loads and saves files with the information of the inter-tasks.
+We created a custom connection that sets relative temporal constraints between any pair of elements in the diagram. These relative constraints are a general concept in temporal verification methods. We implemented them as a custom objects and save them as extension elements in the BPMN model. 
+The editor loads and saves BPMN XML files with the information of the relative constraints. 
+
+The attributes of relative constraint elements are: type ("custom:connection"), id_relative, waypoints, source, target, From (default: end), To (default: start), and propositionalLabel. 
+We save the realtive constraints as extension element of the element where the connection starts. This is an example of a relative constraint. 
+
+```xml
+<bpmn2:extensionElements>
+	<tempcon:relative type = "custom:connection"
+	id_relative = "RelativeConstraint_01" 	
+	source = "T1" 
+	target = "T4" 
+	minDuration = "1" 
+	maxDuration = "2" 
+	propositionalLabel = "R" 
+	From = "start"
+	To = "end"
+	waypoints = "[{&#34;x&#34;:220,&#34;y&#34;:220},
+		{&#34;x&#34;:220,&#34;y&#34;:370},
+		{&#34;x&#34;:560,&#34;y&#34;:370},
+		{&#34;x&#34;:560,&#34;y&#34;:220}]" />
+</bpmn2:extensionElements>
+```
+
 
 ### Toolbar to select the verification tool
 

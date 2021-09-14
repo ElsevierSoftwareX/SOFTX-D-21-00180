@@ -19,7 +19,7 @@
  * 
  * The module exports an object moduleInfo, that contains 
  * information about the module and allows the tool the execution  
- * functions that receive the string bpmnXML and intertasksJSON. 
+ * functions that receive the string bpmnXML and relativeConstraints. 
  * This information is processed to generate a CSTNU XML string that is sent 
  * in an HTTP POST request to the url server/moduleURL/functionURL
  * to perform the functionality implemented in functionURL. 
@@ -45,7 +45,7 @@ import bpmnSetcstnuLabels from './bpmnSetcstnuLabels';
 import cstnuChecked from './cstnuChecked';
 
 // Contains the name of the Module and the function to be executed 
-// the functions receive 2 parameters, the bpmnXML and intertasksJSON
+// the functions receive 2 parameters, the bpmnXML and relativeConstraints
 // TODO Change to accept different parameters? 
 const moduleInfo = {
     name: 'CSTNU',
@@ -309,7 +309,7 @@ function sendCSTNUtoEvaluate(cstnuXml, myObjs) {
                     }
                     divModalContent.innerText = "The given network is NOT dynamic controllable.";
                     if (currentObj) {
-                        
+
                         divModalContent.innerText += "\nNegative loop in node: " + strNodeId + " (" + currentObj.id + ").";
                         window.elementsError.push(currentObj.id);
                         let tempElement = window.bpmnjs.get('elementRegistry').get(currentObj.id);

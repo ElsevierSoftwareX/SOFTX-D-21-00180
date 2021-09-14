@@ -84,7 +84,7 @@
       ]
     },
     {
-      "name": "Intertask",
+      "name": "Relative",
       "superClass": ["Element"],
       "properties": [
         {
@@ -93,7 +93,7 @@
           "type": "String"
         },
         {
-          "name": "id_intertask",
+          "name": "id_relative",
           "isAttr": true,
           "type": "String"
         },
@@ -133,12 +133,12 @@
           "type": "String"
         },
         {
-          "name": "intertaskConnFrom",
+          "name": "From",
           "isAttr": true,
           "type": "String"
         },
         {
-          "name": "intertaskConnTo",
+          "name": "To",
           "isAttr": true,
           "type": "String"
         }

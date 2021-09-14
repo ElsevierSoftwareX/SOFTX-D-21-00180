@@ -22,10 +22,10 @@ export default function CustomContextPadProvider(injector, connect, translate) {
     var actions = cached(element);
 
     var businessObject = element.businessObject;
-    window.creatingIntertask = undefined;
+    window.creatingRelativeConstraint = undefined;
 
     function startConnect(event, element, autoActivate) {
-      window.creatingIntertask = true;
+      window.creatingRelativeConstraint = true;
       connect.start(event, element, autoActivate);
     }
     if (isAny(businessObject, ['custom:triangle', 'custom:circle'])) {
@@ -52,12 +52,12 @@ export default function CustomContextPadProvider(injector, connect, translate) {
         }
       });
     }
-    if (isAny(businessObject, ['bpmn:Task', 'bpmn:Gateway', 'bpmn:IntermediateCatchEvent','bpmn:StartEvent','bpmn:EndEvent']) && !element.labelTarget) {
+    if (isAny(businessObject, ['bpmn:Task', 'bpmn:Gateway', 'bpmn:IntermediateCatchEvent', 'bpmn:StartEvent', 'bpmn:EndEvent']) && !element.labelTarget) {
       assign(actions, {
-        'intertask': {
-          group: 'intertask',
-          className: 'bpmn-icon-connection', // 'icon-custom-intertask',
-          title: translate('Connect using intertask'),
+        'relativeConstraint': {
+          group: 'relativeConstraint',
+          className: 'bpmn-icon-connection',
+          title: translate('Connect using relativeConstraint'),
           action: {
             click: startConnect,
             dragstart: startConnect

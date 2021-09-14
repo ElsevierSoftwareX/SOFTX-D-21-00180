@@ -20,7 +20,7 @@ export default function bpmn2cstnu(bpmn, customElements, fileName) {
   // The nodes are elements (keys) in the dictionary, 
   // the edges will be stores in the element (key) arrows
   let myObjs = {};
-  myObjs['intertask'] = { datainput: [], dataoutput: [] }; // To recover the connections 
+  myObjs['relative'] = { datainput: [], dataoutput: [] }; // To recover the relative connection 
   myObjs['edges_ids'] = {};  // To avoid duplicated ids
   myObjs['arrows'] = {};  // To create the graph 
   myObjs['nodeObservation'] = ['P', 'Q', 'R', 'S', 'T', 'U', 'V',];  // pLabels 
@@ -78,7 +78,7 @@ export default function bpmn2cstnu(bpmn, customElements, fileName) {
   if (countObjs.elementsWithWarning > 0)
     divModalContent.innerText += '\n' + myLogObj.warnings;
 
-    console.log(myObjs);
+  console.log(myObjs);
   return { xmlString, myLogObj, countObjs, myObjs, textMessage };
 }
 
@@ -217,7 +217,7 @@ function checkMinMax_sequenceFlow(element, logObj, edgeType) {
       currentErrors += "\n\tminDuration (" + minDuration + ") should be >= 0 ";
       okVals = false;
     }
-    else if (edgeType != "normal" && edgeType != "contingent" && edgeType != "intertask") {
+    else if (edgeType != "normal" && edgeType != "contingent" && edgeType != "relative") {
       currentErrors += "\n\tunknown edgeType (" + edgeType + ")";
       okVals = false;
     }
@@ -240,11 +240,11 @@ function checkMinMax_sequenceFlow(element, logObj, edgeType) {
         okVals = false;
 
       }
-      else if ((edgeType === "normal" || edgeType === "intertask") && Number(maxDuration) < Number(minDuration)) {
+      else if ((edgeType === "normal" || edgeType === "relative") && Number(maxDuration) < Number(minDuration)) {
         currentErrors += "\n\tmaxDuration (" + maxDuration + ") should be >= minDuration (" + minDuration + ")";
         okVals = false;
       }
-      else if (edgeType != "normal" && edgeType != "contingent" && edgeType != "intertask") {
+      else if (edgeType != "normal" && edgeType != "contingent" && edgeType != "relative") {
         currentErrors += "\n\tunknown edgeType (" + edgeType + ")";
         okVals = false;
       }
@@ -264,12 +264,12 @@ function checkMinMax_sequenceFlow(element, logObj, edgeType) {
  * @param {*} edgeType 
  * @returns {Object} { minDuration, maxDuration, okVals }
  */
-function checkMinMax_intertask(element, logObj, edgeType) {
+function checkMinMax_relativeConstraint(element, logObj, edgeType) {
   let minDuration, maxDuration, okVals = true;
   let currentErrors = '', nodeName = '';
 
   if (element.id === undefined) {
-    currentErrors += '\nIntertask without Id ';
+    currentErrors += '\nRelativeConstraint without Id ';
     okVals = false;
     return { minDuration, maxDuration, okVals };
   }
@@ -311,7 +311,7 @@ function checkMinMax_intertask(element, logObj, edgeType) {
     currentErrors += "\n\tminDuration (" + minDuration + ") should be >= 0 ";
     okVals = false;
   }
-  else if (edgeType != "normal" && edgeType != "contingent" && edgeType != "intertask") {
+  else if (edgeType != "normal" && edgeType != "contingent" && edgeType != "relative") {
     currentErrors += "\n\tunknown edgeType (" + edgeType + ")";
     okVals = false;
   }
@@ -334,11 +334,11 @@ function checkMinMax_intertask(element, logObj, edgeType) {
       okVals = false;
 
     }
-    else if ((edgeType === "normal" || edgeType === "intertask") && Number(maxDuration) < Number(minDuration)) {
+    else if ((edgeType === "normal" || edgeType === "relative") && Number(maxDuration) < Number(minDuration)) {
       currentErrors += "\n\tmaxDuration (" + maxDuration + ") should be >= minDuration (" + minDuration + ")";
       okVals = false;
     }
-    else if (edgeType != "normal" && edgeType != "contingent" && edgeType != "intertask") {
+    else if (edgeType != "normal" && edgeType != "contingent" && edgeType != "relative") {
       currentErrors += "\n\tunknown edgeType (" + edgeType + ")";
       okVals = false;
     }
@@ -790,7 +790,7 @@ function setTwoEdges_sequenceFlow(params) {
   myObjs['arrows'][idArrow].cstnuEdgeIds.push(edgeId);
 }
 
-function setTwoEdges_intertask(params) {
+function setTwoEdges_relativeConstraint(params) {
   let { element, // element to transform
     graph,        // node to add the element transformed
     edgeType,     // contingent or normal
@@ -800,7 +800,7 @@ function setTwoEdges_intertask(params) {
   } = params;
 
 
-  let tmpObj = checkMinMax_intertask(element, myLogObj, edgeType);
+  let tmpObj = checkMinMax_relativeConstraint(element, myLogObj, edgeType);
   let minD = tmpObj.minDuration;
   let maxD = tmpObj.maxDuration;
   let okVals = tmpObj.okVals;
@@ -814,8 +814,8 @@ function setTwoEdges_intertask(params) {
   //Get cstnuId of the connected nodes
   let source = element.source;
   let target = element.target;
-  let connFrom = element.intertaskConnFrom;
-  let connTo = element.intertaskConnTo;
+  let connFrom = element.From;
+  let connTo = element.To;
   let sourceTaskId, targetTaskId;
 
   let propositionalLabel = "⊡";
@@ -826,7 +826,7 @@ function setTwoEdges_intertask(params) {
     if (myObjs[source].type === 'START' || myObjs[source].type === 'END') {
       // Check if this is valid 
     }
-    else {      
+    else {
       if (connFrom == undefined || connFrom === 'end')
         sourceTaskId = "E_" + myObjs[source].elementType + "_" + myObjs[source].elementTypeNumber + "_" + source;
       else
@@ -861,7 +861,7 @@ function setTwoEdges_intertask(params) {
     countObjs.elementsWithError += 1;
     return;
   }
-  
+
   // Edges
   let edgeId = '';
   let countOccurrences = '';
@@ -1156,11 +1156,11 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
       }
     }
   }
-  // Intertasks 
+  // RelativeConstraints 
   for (i = 0; i < customElements.length; i++) {
     let element = customElements[i];
-    let paramsIntertask = { element, graph, bpmnPlane, "edgeType": "intertask", myLogObj, countObjs, myObjs };
-    setTwoEdges_intertask(paramsIntertask);
+    let paramsRelativeConstraint = { element, graph, bpmnPlane, "edgeType": "relative", myLogObj, countObjs, myObjs };
+    setTwoEdges_relativeConstraint(paramsRelativeConstraint);
   }
   //Check edges 
   let keys = Object.keys(myObjs['edges_ids']);

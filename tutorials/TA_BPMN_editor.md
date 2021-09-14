@@ -58,34 +58,30 @@ Added attributes | minDuration, maxDuration, propositionalLabel, gatewaySplitJoi
 Added attributes | minDuration (default: 0), maxDuration (default: Inf), and isTrueBranch
 | Example | `tempcon:minDuration="1" tempcon:maxDuration="2" tempcon:isTrueBranch="true"` |
 
-### Inter-task constraint
+### Relative constraint
 
-We created a custom connection called `inter-task` that sets temporal constraints between any pair of elements in the diagram. These relative constraints are a general concept in temporal verification methods, but they are not part of the BPMN standard. Because of this, we implemented it as a custom object independent of the BPMN model. It is kept in a different file and can be used to generate temporal constraints models.  
-The editor loads and saves files with the information of the inter-tasks. 
+We created a custom connection that sets relative temporal constraints between any pair of elements in the diagram. These relative constraints are a general concept in temporal verification methods. We implemented them as a custom objects and save them as extension elements in the BPMN model. 
+The editor loads and saves BPMN XML files with the information of the relative constraints. 
 
-The attributes of inter-task elements are: type ("custom:connection"), id, waypoints, source, target, intertaskConnFrom (default: end), intertaskConnTo (default: start), and propositionalLabel. 
-This is an example of an inter-task JSON file. 
+The attributes of relative constraint elements are: type ("custom:connection"), id_relative, waypoints, source, target, From (default: end), To (default: start), and propositionalLabel. 
+We save the realtive constraints as extension element of the element where the connection starts. This is an example of a relative constraint. 
 
-```
-[
-	{
-		"type": "custom:connection",
-		"id": "InterTask_7y18aromoa7loumv4omkrjz6e",
-		"waypoints": [
-			{"x": 220, "y": 220},
-			{"x": 220, "y": 360},
-			{"x": 580, "y": 360},
-			{"x": 580, "y": 220}
-		],
-		"source": "T1",
-		"target": "T4",
-		"minDuration": "2",
-		"maxDuration": "18",
-		"propositionalLabel": "S",
-		"intertaskConnFrom": "start",
-		"intertaskConnTo": "end"
-	}
-]
+```xml
+<bpmn2:extensionElements>
+	<tempcon:relative type = "custom:connection"
+	id_relative = "RelativeConstraint_01" 	
+	source = "T1" 
+	target = "T4" 
+	minDuration = "1" 
+	maxDuration = "2" 
+	propositionalLabel = "R" 
+	From = "start"
+	To = "end"
+	waypoints = "[{&#34;x&#34;:220,&#34;y&#34;:220},
+		{&#34;x&#34;:220,&#34;y&#34;:370},
+		{&#34;x&#34;:560,&#34;y&#34;:370},
+		{&#34;x&#34;:560,&#34;y&#34;:220}]" />
+</bpmn2:extensionElements>
 ```
 
 ### Toolbar to select the verification tool

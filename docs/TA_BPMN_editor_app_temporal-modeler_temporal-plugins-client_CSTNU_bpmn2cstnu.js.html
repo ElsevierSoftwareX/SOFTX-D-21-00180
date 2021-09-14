@@ -48,7 +48,7 @@ export default function bpmn2cstnu(bpmn, customElements, fileName) {
   // The nodes are elements (keys) in the dictionary, 
   // the edges will be stores in the element (key) arrows
   let myObjs = {};
-  myObjs['intertask'] = { datainput: [], dataoutput: [] }; // To recover the connections 
+  myObjs['relative'] = { datainput: [], dataoutput: [] }; // To recover the relative connection 
   myObjs['edges_ids'] = {};  // To avoid duplicated ids
   myObjs['arrows'] = {};  // To create the graph 
   myObjs['nodeObservation'] = ['P', 'Q', 'R', 'S', 'T', 'U', 'V',];  // pLabels 
@@ -106,6 +106,7 @@ export default function bpmn2cstnu(bpmn, customElements, fileName) {
   if (countObjs.elementsWithWarning > 0)
     divModalContent.innerText += '\n' + myLogObj.warnings;
 
+  console.log(myObjs);
   return { xmlString, myLogObj, countObjs, myObjs, textMessage };
 }
 
@@ -244,7 +245,7 @@ function checkMinMax_sequenceFlow(element, logObj, edgeType) {
       currentErrors += "\n\tminDuration (" + minDuration + ") should be >= 0 ";
       okVals = false;
     }
-    else if (edgeType != "normal" &amp;&amp; edgeType != "contingent" &amp;&amp; edgeType != "intertask") {
+    else if (edgeType != "normal" &amp;&amp; edgeType != "contingent" &amp;&amp; edgeType != "relative") {
       currentErrors += "\n\tunknown edgeType (" + edgeType + ")";
       okVals = false;
     }
@@ -267,11 +268,11 @@ function checkMinMax_sequenceFlow(element, logObj, edgeType) {
         okVals = false;
 
       }
-      else if ((edgeType === "normal" || edgeType === "intertask") &amp;&amp; Number(maxDuration) &lt; Number(minDuration)) {
+      else if ((edgeType === "normal" || edgeType === "relative") &amp;&amp; Number(maxDuration) &lt; Number(minDuration)) {
         currentErrors += "\n\tmaxDuration (" + maxDuration + ") should be >= minDuration (" + minDuration + ")";
         okVals = false;
       }
-      else if (edgeType != "normal" &amp;&amp; edgeType != "contingent" &amp;&amp; edgeType != "intertask") {
+      else if (edgeType != "normal" &amp;&amp; edgeType != "contingent" &amp;&amp; edgeType != "relative") {
         currentErrors += "\n\tunknown edgeType (" + edgeType + ")";
         okVals = false;
       }
@@ -291,7 +292,7 @@ function checkMinMax_sequenceFlow(element, logObj, edgeType) {
  * @param {*} edgeType 
  * @returns {Object} { minDuration, maxDuration, okVals }
  */
-function checkMinMax_intertask(element, logObj, edgeType) {
+function checkMinMax_relativeConstraint(element, logObj, edgeType) {
   let minDuration, maxDuration, okVals = true;
   let currentErrors = '', nodeName = '';
 
@@ -338,7 +339,7 @@ function checkMinMax_intertask(element, logObj, edgeType) {
     currentErrors += "\n\tminDuration (" + minDuration + ") should be >= 0 ";
     okVals = false;
   }
-  else if (edgeType != "normal" &amp;&amp; edgeType != "contingent" &amp;&amp; edgeType != "intertask") {
+  else if (edgeType != "normal" &amp;&amp; edgeType != "contingent" &amp;&amp; edgeType != "relative") {
     currentErrors += "\n\tunknown edgeType (" + edgeType + ")";
     okVals = false;
   }
@@ -361,11 +362,11 @@ function checkMinMax_intertask(element, logObj, edgeType) {
       okVals = false;
 
     }
-    else if ((edgeType === "normal" || edgeType === "intertask") &amp;&amp; Number(maxDuration) &lt; Number(minDuration)) {
+    else if ((edgeType === "normal" || edgeType === "relative") &amp;&amp; Number(maxDuration) &lt; Number(minDuration)) {
       currentErrors += "\n\tmaxDuration (" + maxDuration + ") should be >= minDuration (" + minDuration + ")";
       okVals = false;
     }
-    else if (edgeType != "normal" &amp;&amp; edgeType != "contingent" &amp;&amp; edgeType != "intertask") {
+    else if (edgeType != "normal" &amp;&amp; edgeType != "contingent" &amp;&amp; edgeType != "relative") {
       currentErrors += "\n\tunknown edgeType (" + edgeType + ")";
       okVals = false;
     }
@@ -436,11 +437,11 @@ function checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs) {
           return false;
         }
         if (element.nodeName.includes("exclusiveGateway")) {
-          if (element.attributes['tempcon:observed_proposition'] != undefined) {
-            myObjs[element.attributes.id.value].observed_proposition = element.attributes['tempcon:observed_proposition'].value;
+          if (element.attributes['tempcon:observedProposition'] != undefined) {
+            myObjs[element.attributes.id.value].observedProposition = element.attributes['tempcon:observedProposition'].value;
           }
           else {
-            myLogObj.errors += '\n' + element.nodeName + ' (' + element.attributes.id.value + ')' + ' observed_proposition not defined \n';
+            myLogObj.errors += '\n' + element.nodeName + ' (' + element.attributes.id.value + ')' + ' observedProposition not defined \n';
             countObjs.elementsWithError += 1;
             return false;
           }
@@ -517,33 +518,35 @@ function setTwoNodesToEdges(params) {
     if (!checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs))
       return;
 
-    let propositional_label = "⊡";
-    if (element.attributes["tempcon:propositional_label"] != undefined)
-      if (element.attributes["tempcon:propositional_label"].value != '')
-        propositional_label = element.attributes["tempcon:propositional_label"].value;
+    let propositionalLabel = "⊡";
+    if (element.attributes["tempcon:propositionalLabel"] != undefined)
+      if (element.attributes["tempcon:propositionalLabel"].value != '')
+        propositionalLabel = element.attributes["tempcon:propositionalLabel"].value;
 
     // Nodes
-    let node = graph.ele("node", { id: "S_" + elementType + "_" + elementTypeNumber }, "");
+    let id_s = "S_" + elementType + "_" + elementTypeNumber + "_" + element.attributes.id.value;
+    let id_e = "E_" + elementType + "_" + elementTypeNumber + "_" + element.attributes.id.value;
+    let node = graph.ele("node", { id: id_s }, "");
     node.ele("data", { key: "x" }, Number(x) + Number(elementTypeNumber) - 25);
     node.ele("data", { key: "y" }, Number(y) + Number(elementTypeNumber));
-    node.ele("data", { key: "Label" }, propositional_label);
+    node.ele("data", { key: "Label" }, propositionalLabel);
 
-    node = graph.ele("node", { id: "E_" + elementType + "_" + elementTypeNumber }, "");
+    node = graph.ele("node", { id: id_e }, "");
     node.ele("data", { key: "x" }, Number(x) - Number(elementTypeNumber) + 25);
     node.ele("data", { key: "y" }, Number(y) - Number(elementTypeNumber));
-    node.ele("data", { key: "Label" }, propositional_label);
+    node.ele("data", { key: "Label" }, propositionalLabel);
 
     if (myObjs[element.attributes.id.value].obs) {
       if (myObjs[element.attributes.id.value].obs === 'split') {
-        node.ele("data", { key: "Obs" }, element.attributes['tempcon:observed_proposition'].value);
-        myObjs[element.attributes.id.value].observed_proposition = element.attributes['tempcon:observed_proposition'].value;
+        node.ele("data", { key: "Obs" }, element.attributes['tempcon:observedProposition'].value);
+        myObjs[element.attributes.id.value].observedProposition = element.attributes['tempcon:observedProposition'].value;
         countObjs.nObservedProposition += 1;
       }
     }
-    myObjs[element.attributes.id.value].cstnuNodeIds = ["S_" + elementType + "_" + elementTypeNumber, "E_" + elementType + "_" + elementTypeNumber];
+    myObjs[element.attributes.id.value].cstnuNodeIds = [id_s, id_e];
 
     // Edges
-    let edgeId = "S_" + elementType + "_" + elementTypeNumber + "-E_" + elementType + "_" + elementTypeNumber;
+    let edgeId = id_s + "-" + id_e;
     let countOccurrences = '';
     if (myObjs['edges_ids'][edgeId] === undefined) {
       myObjs['edges_ids'][edgeId] = { elementIds: [element.id], occurrences: 1 };
@@ -560,8 +563,8 @@ function setTwoNodesToEdges(params) {
       "edge",
       {
         id: edgeId,
-        source: "S_" + elementType + "_" + elementTypeNumber,
-        target: "E_" + elementType + "_" + elementTypeNumber,
+        source: id_s,
+        target: id_e,
       },
       ""
     );
@@ -571,7 +574,7 @@ function setTwoNodesToEdges(params) {
 
     if (Number(minD) != 0) minD = -Number(minD);
 
-    edgeId = "E_" + elementType + "_" + elementTypeNumber + "-S_" + elementType + "_" + elementTypeNumber;
+    edgeId = id_e + "-" + id_s;
     countOccurrences = '';
     if (myObjs['edges_ids'][edgeId] === undefined) {
       myObjs['edges_ids'][edgeId] = { elementIds: [element.id], occurrences: 1 };
@@ -587,8 +590,8 @@ function setTwoNodesToEdges(params) {
       "edge",
       {
         id: edgeId,
-        source: "E_" + elementType + "_" + elementTypeNumber,
-        target: "S_" + elementType + "_" + elementTypeNumber,
+        source: id_e,
+        target: id_s,
       },
       ""
     );
@@ -663,7 +666,9 @@ function createOneNode(params) {
     if (element.attributes.name != undefined) myObjs[element.attributes.id.value].name = element.attributes.name.value.replace(/(\r\n|\n|\r)/gm, "") + ' ';
 
     // Nodes
-    let node = graph.ele("node", { id: elementType + '_' + elementTypeNumber }, "");
+    let id_node = elementType + "_" + elementTypeNumber + "_" + element.attributes.id.value;
+
+    let node = graph.ele("node", { id: id_node }, "");
     node.ele("data", { key: "x" }, Number(x) + Number(elementTypeNumber));
     node.ele("data", { key: "y" }, Number(y) + Number(elementTypeNumber));
     node.ele("data", { key: "Label" }, nodeLabel);
@@ -710,19 +715,19 @@ function setTwoEdges_sequenceFlow(params) {
 
   if (myObjs[source] != undefined) {
     if (myObjs[source].elementType === 'START' || myObjs[source].elementType === 'END') {
-      sourceTaskId = myObjs[source].elementType + "_" + myObjs[source].elementTypeNumber;
+      sourceTaskId = myObjs[source].elementType + "_" + myObjs[source].elementTypeNumber + "_" + source;
     }
     else {
-      sourceTaskId = 'E_' + myObjs[source].elementType + "_" + myObjs[source].elementTypeNumber;
+      sourceTaskId = 'E_' + myObjs[source].elementType + "_" + myObjs[source].elementTypeNumber + "_" + source;
     }
 
   }
   if (myObjs[target] != undefined) {
     if (myObjs[target].elementType === 'START' || myObjs[target].elementType === 'END') {
-      targetTaskId = myObjs[target].elementType + '_' + myObjs[target].elementTypeNumber;
+      targetTaskId = myObjs[target].elementType + '_' + myObjs[target].elementTypeNumber + "_" + target;
     }
     else {
-      targetTaskId = 'S_' + myObjs[target].elementType + '_' + myObjs[target].elementTypeNumber;
+      targetTaskId = 'S_' + myObjs[target].elementType + '_' + myObjs[target].elementTypeNumber + "_" + target;
     }
 
   }
@@ -813,7 +818,7 @@ function setTwoEdges_sequenceFlow(params) {
   myObjs['arrows'][idArrow].cstnuEdgeIds.push(edgeId);
 }
 
-function setTwoEdges_intertask(params) {
+function setTwoEdges_relativeConstraint(params) {
   let { element, // element to transform
     graph,        // node to add the element transformed
     edgeType,     // contingent or normal
@@ -823,7 +828,7 @@ function setTwoEdges_intertask(params) {
   } = params;
 
 
-  let tmpObj = checkMinMax_intertask(element, myLogObj, edgeType);
+  let tmpObj = checkMinMax_relativeConstraint(element, myLogObj, edgeType);
   let minD = tmpObj.minDuration;
   let maxD = tmpObj.maxDuration;
   let okVals = tmpObj.okVals;
@@ -837,10 +842,13 @@ function setTwoEdges_intertask(params) {
   //Get cstnuId of the connected nodes
   let source = element.source;
   let target = element.target;
-  let connFrom = element.intertaskConnFrom;
-  let connTo = element.intertaskConnTo;
+  let connFrom = element.From;
+  let connTo = element.To;
   let sourceTaskId, targetTaskId;
 
+  let propositionalLabel = "⊡";
+  if (element.propositionalLabel != undefined)
+    propositionalLabel = element.propositionalLabel;
 
   if (myObjs[source] != undefined) {
     if (myObjs[source].type === 'START' || myObjs[source].type === 'END') {
@@ -848,9 +856,9 @@ function setTwoEdges_intertask(params) {
     }
     else {
       if (connFrom == undefined || connFrom === 'end')
-        sourceTaskId = "E_" + myObjs[source].elementType + "_" + myObjs[source].elementTypeNumber;
+        sourceTaskId = "E_" + myObjs[source].elementType + "_" + myObjs[source].elementTypeNumber + "_" + source;
       else
-        sourceTaskId = "S_" + myObjs[source].elementType + "_" + myObjs[source].elementTypeNumber;
+        sourceTaskId = "S_" + myObjs[source].elementType + "_" + myObjs[source].elementTypeNumber + "_" + source;
     }
 
   }
@@ -860,16 +868,15 @@ function setTwoEdges_intertask(params) {
     }
     else {
       if (connTo == undefined || connTo === 'start')
-        targetTaskId = "S_" + myObjs[target].elementType + '_' + myObjs[target].elementTypeNumber;
+        targetTaskId = "S_" + myObjs[target].elementType + '_' + myObjs[target].elementTypeNumber + "_" + target;
       else
-        targetTaskId = "E_" + myObjs[target].elementType + '_' + myObjs[target].elementTypeNumber;
+        targetTaskId = "E_" + myObjs[target].elementType + '_' + myObjs[target].elementTypeNumber + "_" + target;
     }
-
   }
 
   // If they are not there, do not create the edges
   if (targetTaskId === undefined || sourceTaskId === undefined) {
-    myLogObj.errors += "\n Edges " + element.nodeName;
+    myLogObj.errors += "\n Edges " + element.id;
 
     myLogObj.errors += "\n\t source_Id " + source + ' (' + sourceTaskId + ') ';
     if (sourceTaskId != undefined)
@@ -887,8 +894,9 @@ function setTwoEdges_intertask(params) {
   let edgeId = '';
   let countOccurrences = '';
   let edge;
+
   if (maxD != Infinity) { // maxD = '∞';
-    edgeId = sourceTaskId + "-" + targetTaskId;
+    edgeId = sourceTaskId + "-" + targetTaskId + "-" + element.id;
     countOccurrences = '';
     if (myObjs['edges_ids'][edgeId] === undefined) {
       myObjs['edges_ids'][edgeId] = { elementIds: [element.id], occurrences: 1 };
@@ -905,6 +913,7 @@ function setTwoEdges_intertask(params) {
         id: edgeId,
         source: sourceTaskId,
         target: targetTaskId,
+        Label: propositionalLabel
       },
       ""
     );
@@ -915,7 +924,7 @@ function setTwoEdges_intertask(params) {
 
   }
 
-  edgeId = targetTaskId + "-" + sourceTaskId;
+  edgeId = targetTaskId + "-" + sourceTaskId + "-" + element.id;
   countOccurrences = '';
   if (myObjs['edges_ids'][edgeId] === undefined) {
     myObjs['edges_ids'][edgeId] = { elementIds: [element.id], occurrences: 1 };
@@ -933,6 +942,7 @@ function setTwoEdges_intertask(params) {
       id: edgeId,
       source: targetTaskId,
       target: sourceTaskId,
+      Label: propositionalLabel
     },
     ""
   );
@@ -1177,8 +1187,8 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
   // Intertasks 
   for (i = 0; i &lt; customElements.length; i++) {
     let element = customElements[i];
-    let paramsIntertask = { element, graph, bpmnPlane, "edgeType": "intertask", myLogObj, countObjs, myObjs };
-    setTwoEdges_intertask(paramsIntertask);
+    let paramsIntertask = { element, graph, bpmnPlane, "edgeType": "relative", myLogObj, countObjs, myObjs };
+    setTwoEdges_relativeConstraint(paramsIntertask);
   }
   //Check edges 
   let keys = Object.keys(myObjs['edges_ids']);
@@ -1224,7 +1234,7 @@ function getProcessName(xmlDoc) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sun Sep 05 2021 15:14:53 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Sep 15 2021 00:12:34 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

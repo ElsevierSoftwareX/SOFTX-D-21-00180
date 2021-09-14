@@ -149,7 +149,7 @@ $(function () {
 
   buttonDownloadDiagram.click(async function (e) {
     try {
-      let definitions = bpmnModeler.getDefinitionsWithIntertaskAsExtensionElements();
+      let definitions = bpmnModeler.getDefinitionsWithRelativeConstraintAsExtensionElements();
       let { xml } = await bpmnModeler._moddle.toXML(definitions, { format: true });
       downloadBPMN('diagram.bpmn', xml);
 

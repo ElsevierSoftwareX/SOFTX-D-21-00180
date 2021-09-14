@@ -75,7 +75,7 @@ var validateMinDuration_sequenceFlow = function (element, values, node) {
   }
   return !isNaN(val) && Number(val) >= 0;
 };
-var validateMinDuration_intertask = function (element, values, node) {
+var validateMinDuration_relativeConstraint = function (element, values, node) {
   let val = values.minDuration;
 
   if (node.childElementCount > 0) {
@@ -200,17 +200,17 @@ export default function (group, element, translate) {
 
 
   function set_group_propositionalLabel(group, disabled) {
-    
-    if(disabled===undefined)
+
+    if (disabled === undefined)
       disabled = true;
-    else 
+    else
       disabled = false;
     group.entries.push(entryFactory.textField(translate, {
       id: 'propositionalLabel',
       description: 'Label created with propositions of XORs',
       label: 'Propositional label',
-      modelProperty: 'propositionalLabel', 
-      disabled: function(){ return disabled;}
+      modelProperty: 'propositionalLabel',
+      disabled: function () { return disabled; }
     }));
   }
 
@@ -334,18 +334,18 @@ export default function (group, element, translate) {
 
 
 
-  // ---------- Intertask ------------
+  // ---------- RelativeConstraint ------------
   if (is(element, 'custom:connection')) {
 
     group.entries.push(entryFactory.label({
-      id: 'lblIntertaskFrom',
+      id: 'lblRelativeConstraintFrom',
       labelText: 'From: ' + element.businessObject.source
     }));
     group.entries.push(entryFactory.selectBox(translate, {
-      id: 'intertaskConnFrom',
+      id: 'From',
       description: 'Select the start or end of the element',
       label: 'Connected from',
-      modelProperty: 'intertaskConnFrom',
+      modelProperty: 'From',
       // Default configuration, the property is not created id it does not change/click
       // TODO force to create the property in the XML file
       selectOptions: [{ name: 'End', value: 'end' }, { name: 'Start', value: 'start' }]
@@ -353,20 +353,20 @@ export default function (group, element, translate) {
 
 
     group.entries.push(entryFactory.label({
-      id: 'lblIntertaskTo',
+      id: 'lblRelativeConstraintTo',
       labelText: 'To: ' + element.businessObject.target
     }));
     group.entries.push(entryFactory.selectBox(translate, {
-      id: 'intertaskConnTo',
+      id: 'To',
       description: 'Select the start or end of the element',
       label: 'Connected to',
-      modelProperty: 'intertaskConnTo',
+      modelProperty: 'To',
       // Default configuration, the property is not created id it does not change/click
       // TODO force to create the property in the XML file
       selectOptions: [{ name: 'Start', value: 'start' }, { name: 'End', value: 'end' }]
     }));
 
-    set_group_minDuration(group, validateMinDuration_intertask, " (default: 0)");
+    set_group_minDuration(group, validateMinDuration_relativeConstraint, " (default: 0)");
     set_group_maxDuration(group, validateMaxDuration_sequenceFlow, " (default: ∞)");
 
     set_group_propositionalLabel(group, false);
