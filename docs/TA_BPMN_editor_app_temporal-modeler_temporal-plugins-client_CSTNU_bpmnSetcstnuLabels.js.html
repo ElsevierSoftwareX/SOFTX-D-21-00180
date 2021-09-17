@@ -43,8 +43,8 @@
  */
 export default function bpmnSetcstnuLabels(bpmn) {
 
-  let eventBus = window.bpmnjs.get('eventBus');
-
+  const eventBus = window.bpmnjs.get('eventBus');
+  const elementRegistry = window.bpmnjs.get('elementRegistry');
   let parser = new DOMParser();
   let xmlDoc = parser.parseFromString(bpmn, "text/xml");
 
@@ -90,7 +90,7 @@ export default function bpmnSetcstnuLabels(bpmn) {
         if (myObjs[node.id].obs != undefined) {
           if (myObjs[node.id].obs === 'join') {
 
-            let tempElement = window.bpmnjs.get('elementRegistry').get(node.id);
+            let tempElement = elementRegistry.get(node.id);
             tempElement.businessObject.gatewaySplitJoin = 'join';
             try {
               eventBus.fire('element.changed', { element: tempElement });
@@ -106,15 +106,15 @@ export default function bpmnSetcstnuLabels(bpmn) {
             }
           }
           if (myObjs[node.id].obs === 'split') {
-            let tempElement = window.bpmnjs.get('elementRegistry').get(node.id);
+            let tempElement = elementRegistry.get(node.id);
             tempElement.businessObject.gatewaySplitJoin = 'split';
 
-            if (myObjs[node.id].observed_proposition)
-              tempProposition = myObjs[node.id].observed_proposition;
+            if (myObjs[node.id].observedProposition)
+              tempProposition = myObjs[node.id].observedProposition;
             else {
               if (myObjs['nodeObservation'].length > 0) {
                 tempProposition = myObjs['nodeObservation'].shift();
-                tempElement.businessObject.observed_proposition = tempProposition;
+                tempElement.businessObject.observedProposition = tempProposition;
               }
               else {
                 myLogObj.errors += '\nMax number of observations reached \n';
@@ -132,8 +132,8 @@ export default function bpmnSetcstnuLabels(bpmn) {
 
         }
         //Update element in BPMN diagram
-        let tempElement = window.bpmnjs.get('elementRegistry').get(node.id);
-        tempElement.businessObject.propositional_label = Array.from(node.cps).join("");
+        let tempElement = elementRegistry.get(node.id);
+        tempElement.businessObject.propositionalLabel = Array.from(node.cps).join("");
         eventBus.fire('element.changed', { element: tempElement });
 
 
@@ -141,7 +141,7 @@ export default function bpmnSetcstnuLabels(bpmn) {
           cps = Array.from(node.cps);
           if (isSplit) {
             let prefx = '';
-            if (myObjs.arrows[adj].pLiteralValue === 'false') {
+            if (myObjs.arrows[adj].isTrueBranch === 'false') {
               prefx = '¬';
             }
             cps.push(prefx + tempProposition);
@@ -230,17 +230,17 @@ function processElements(params) {
           }
           if (element.nodeName.includes("exclusiveGateway")) {
 
-            if (element.attributes['tempcon:observed_proposition'] != undefined) {
-              myObjs[element.attributes.id.value].observed_proposition = element.attributes['tempcon:observed_proposition'].value.trim().charAt(0);
+            if (element.attributes['tempcon:observedProposition'] != undefined) {
+              myObjs[element.attributes.id.value].observedProposition = element.attributes['tempcon:observedProposition'].value.trim().charAt(0);
               // Check and remove from array of possible letters 
-              const index = myObjs['nodeObservation'].indexOf(myObjs[element.attributes.id.value].observed_proposition);
+              const index = myObjs['nodeObservation'].indexOf(myObjs[element.attributes.id.value].observedProposition);
               if (index > -1) {
                 myObjs['nodeObservation'].splice(index, 1);
               }
               countObjs.nObservedProposition += 1;
             }
             else {
-              myObjs[element.attributes.id.value].observed_proposition = undefined; // This will be set when the labels are created            
+              myObjs[element.attributes.id.value].observedProposition = undefined; // This will be set when the labels are created            
             }
             myObjs[element.attributes.id.value].obs = 'split';
           }
@@ -262,17 +262,17 @@ function processElements(params) {
 
           if (element.nodeName.includes("exclusiveGateway")) {
 
-            if (element.attributes['tempcon:observed_proposition'] != undefined) {
-              myObjs[element.attributes.id.value].observed_proposition = element.attributes['tempcon:observed_proposition'].value.trim().charAt(0);
+            if (element.attributes['tempcon:observedProposition'] != undefined) {
+              myObjs[element.attributes.id.value].observedProposition = element.attributes['tempcon:observedProposition'].value.trim().charAt(0);
               // Check and remove from array of possible letters 
-              const index = myObjs['nodeObservation'].indexOf(myObjs[element.attributes.id.value].observed_proposition);
+              const index = myObjs['nodeObservation'].indexOf(myObjs[element.attributes.id.value].observedProposition);
               if (index > -1) {
                 myObjs['nodeObservation'].splice(index, 1);
               }
               countObjs.nObservedProposition += 1;
             }
             else {
-              myObjs[element.attributes.id.value].observed_proposition = undefined; // This will be set when the labes are created            
+              myObjs[element.attributes.id.value].observedProposition = undefined; // This will be set when the labes are created            
             }
           }
         }
@@ -357,6 +357,8 @@ function processSequenceFlow(params) {
   } = params;
 
   let eventBus = window.bpmnjs.get('eventBus');
+  let elementRegistry = window.bpmnjs.get('elementRegistry');
+  let modeling = window.bpmnjs.get('modeling');
 
   //Get cstnuId of the connected nodes
   let source = element.attributes.sourceRef.value;
@@ -369,10 +371,10 @@ function processSequenceFlow(params) {
   myObjs[target].inputs.push(idArrow);
   if (myObjs[source].obs != undefined) {
     if (myObjs[source].obs === 'split') {
-      if (element.attributes['tempcon:pLiteralValue'] != undefined) {
-        if (element.attributes['tempcon:pLiteralValue'].value != '') {
-          myObjs['arrows'][idArrow].pLiteralValue = element.attributes['tempcon:pLiteralValue'].value;
-          if (myObjs['arrows'][idArrow].pLiteralValue == 'true')
+      if (element.attributes['tempcon:isTrueBranch'] != undefined) {
+        if (element.attributes['tempcon:isTrueBranch'].value != '') {
+          myObjs['arrows'][idArrow].isTrueBranch = element.attributes['tempcon:isTrueBranch'].value;
+          if (myObjs['arrows'][idArrow].isTrueBranch == 'true')
             myObjs[source].obsTrueArrow = idArrow;
           else
             myObjs[source].obsFalseArrow = idArrow;
@@ -380,13 +382,15 @@ function processSequenceFlow(params) {
         }
         else {
 
-          let tempElement = window.bpmnjs.get('elementRegistry').get(idArrow);
+          let tempElement = elementRegistry.get(idArrow);
           if (myObjs[source].obsTrueArrow == undefined) {
-            tempElement.businessObject.pLiteralValue = 'true';
+            tempElement.businessObject.isTrueBranch = 'true';
+            tempElement.businessObject.name = 'True';
             myObjs[source].obsTrueArrow = idArrow;
           }
           else if (myObjs[source].obsFalseArrow == undefined) {
-            tempElement.businessObject.pLiteralValue = 'false';
+            tempElement.businessObject.isTrueBranch = 'false';
+            tempElement.businessObject.name = 'False';
             myObjs[source].obsFalseArrow = idArrow;
           }
           else {
@@ -395,7 +399,9 @@ function processSequenceFlow(params) {
             return;
           }
 
+          myObjs['arrows'][idArrow].isTrueBranch = tempElement.businessObject.isTrueBranch;
           try {
+            modeling.updateLabel(tempElement, tempElement.businessObject.name);
             eventBus.fire('element.changed', { element: tempElement });
 
           } catch (error) {
@@ -405,14 +411,16 @@ function processSequenceFlow(params) {
       }
       else {
 
-        let tempElement = window.bpmnjs.get('elementRegistry').get(idArrow);
+        let tempElement = elementRegistry.get(idArrow);
 
         if (myObjs[source].obsTrueArrow == undefined) {
-          tempElement.businessObject.pLiteralValue = 'true';
+          tempElement.businessObject.isTrueBranch = 'true';
+          tempElement.businessObject.name = 'True';
           myObjs[source].obsTrueArrow = idArrow;
         }
         else if (myObjs[source].obsFalseArrow == undefined) {
-          tempElement.businessObject.pLiteralValue = 'false';
+          tempElement.businessObject.isTrueBranch = 'false';
+          tempElement.businessObject.name = 'False';
           myObjs[source].obsFalseArrow = idArrow;
         }
         else {
@@ -421,7 +429,9 @@ function processSequenceFlow(params) {
           return;
         }
 
+        myObjs['arrows'][idArrow].isTrueBranch = tempElement.businessObject.isTrueBranch;
         try {
+          modeling.updateLabel(tempElement, tempElement.businessObject.name);
           eventBus.fire('element.changed', { element: tempElement });
         } catch (error) {
           console.log('Error when fire element.changed ' + tempElement.businessObject.id);
@@ -593,7 +603,7 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sun Sep 05 2021 15:14:53 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Sep 15 2021 00:12:34 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

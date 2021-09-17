@@ -56,16 +56,10 @@ CustomRules.prototype.init = function () {
     //   return;
     // }
 
-    if (window.creatingIntertask) {
-      // debugger;
-      // window.creatingIntertask = undefined;
-      // console.log('Creating intertask ');
-      // return { type: 'custom:connection' };
-    
-      // return { type: 'custom:connection' };
+    if (window.creatingRelativeConstraint) {
 
       // allow connection between tasks
-      let allowedElements = ['bpmn:UserTask','bpmn:ServiceTask','bpmn:ScriptTask','bpmn:SendTask','bpmn:ReceiveTask','bpmn:ExclusiveGateway','bpmn:ParallelGateway','bpmn:IntermediateCatchEvent','bpmn:StartEvent','bpmn:EndEvent'];
+      let allowedElements = ['bpmn:UserTask', 'bpmn:ServiceTask', 'bpmn:ScriptTask', 'bpmn:SendTask', 'bpmn:ReceiveTask', 'bpmn:ExclusiveGateway', 'bpmn:ParallelGateway', 'bpmn:IntermediateCatchEvent', 'bpmn:StartEvent', 'bpmn:EndEvent'];
       if (isAny(source, allowedElements) && !source.labelTarget) {
         if (isAny(target, allowedElements) && !target.labelTarget) {
           return { type: 'custom:connection' };
@@ -128,7 +122,7 @@ CustomRules.prototype.init = function () {
   this.addRule('connection.create', HIGH_PRIORITY, function (context) {
     var source = context.source,
       target = context.target;
-    // debugger;
+
     return canConnect(source, target);
   });
 
@@ -136,7 +130,6 @@ CustomRules.prototype.init = function () {
     var connection = context.connection,
       source = context.hover || context.source,
       target = connection.target;
-    // debugger;
 
     return canConnect(source, target, connection);
   });

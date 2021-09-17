@@ -54,9 +54,6 @@
     <li>
       BPMN model <input type="file" id="inputFile_bpmn" accept=".bpmn">
     </li>
-    <li>
-      Inter-tasks <input type="file" id="inputFile_intertasks" accept=".json">
-    </li>
   </ul>
 
 
@@ -65,19 +62,10 @@
       Save
     </li>
     <li>
-      <a id="js-download-diagram" title="download BPMN diagram">
-        BPMN model
-      </a>
-    </li>    
-    <li>
-      <a id="js-download-intertasks" title="download intertasks">
-        Intertasks
-      </a>
+      <button id="button-download-diagram" disabled="true">BPMN model</button>
     </li>
     <li style="visibility: hidden">
-      <a id="js-download-svg" title="download as SVG image" >
-        SVG image
-      </a>
+      <button id="button-download-svg" disabled="true">BPMN image</button>
     </li>
   </ul>
 

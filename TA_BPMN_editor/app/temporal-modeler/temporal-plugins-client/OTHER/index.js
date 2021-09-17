@@ -12,11 +12,11 @@ const moduleInfo = {
     ]
 };
 
-function setLabelsOther(bpmnXml, intertasks) {
+function setLabelsOther(bpmnXml, relativeConstraints) {
     window.alert('In set labels setLabelsOther');
 }
 
-function bpmn2cstnuOther(bpmnXml, intertasks) {
+function bpmn2cstnuOther(bpmnXml, relativeConstraints) {
     window.alert('In set labels bpmn2cstnuOther');
 }
 

@@ -9,6 +9,9 @@ import inherits from 'inherits';
 
 import CustomModule from './modeler';
 import TCEvaluations from './temporal-plugins-client';
+import { getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
+import { getWaypointsMid } from 'bpmn-js/lib/util/LabelUtil';
+
 
 export default function CustomModeler(options) {
   Modeler.call(this, options);
@@ -84,12 +87,12 @@ function selectTCEvaluationModule() {
     li.innerHTML = "No module was loaded";
     ulButtons.appendChild(li);
   }
-
 }
 
 // async function because the function toXML is a promise
 async function callExternalFunction(idxFunction) {
-  let definitions = window.bpmnjs.getDefinitions();
+  // let definitions = window.bpmnjs.getDefinitions();
+  let definitions = window.bpmnjs.getDefinitionsWithRelativeConstraintAsExtensionElements();
   let { xml } = await window.bpmnjs._moddle.toXML(definitions, { format: true });
   let customElements = window.bpmnjs.getCustomElements();
 
@@ -98,9 +101,7 @@ async function callExternalFunction(idxFunction) {
   let selectedModule = window.bpmnjs._evaluationModels[Number(selectTCE.value)];
 
   selectedModule.moduleInfo.buttonFunctions[idxFunction].function(xml, customElements);
-
 }
-
 
 /**
  * Add a single custom element to the underlying diagram
@@ -117,7 +118,6 @@ CustomModeler.prototype._addCustomShape = function (customElement) {
   let customShape = elementFactory.create('shape', customAttrs);
 
   return canvas.addShape(customShape);
-
 };
 
 CustomModeler.prototype._addCustomConnection = function (customElement) {
@@ -137,7 +137,6 @@ CustomModeler.prototype._addCustomConnection = function (customElement) {
     elementRegistry.get(customElement.source).parent);
 
   return canvas.addConnection(connection);
-
 };
 
 /**
@@ -181,7 +180,107 @@ CustomModeler.prototype.cleanCustomElements = function () {
   this._customElements = [];
 };
 
+CustomModeler.prototype.loadCustomElementsFromXML = function () {
+
+  const elementRegistry = this.get('elementRegistry');
+
+  let connections = [];
+
+  elementRegistry.getAll().forEach(function (element) {
+    let businessObject = getBusinessObject(element);
+    let extensionElements = businessObject.extensionElements;
+
+    if (extensionElements) {
+      let relativeConstraints = getExtensionElement(businessObject, 'tempcon:Relative');
+
+      relativeConstraints.forEach(function (relativeConstraint) {
+        let customElement = {
+          type: relativeConstraint.type,
+          id: relativeConstraint.id_relative,
+          name: relativeConstraint.name,
+          waypoints: JSON.parse(relativeConstraint.waypoints),
+          source: relativeConstraint.source,
+          target: relativeConstraint.target,
+          minDuration: relativeConstraint.minDuration,
+          maxDuration: relativeConstraint.maxDuration,
+          propositionalLabel: relativeConstraint.propositionalLabel,
+          relativeConstraintConnFrom: relativeConstraint.From,
+          intentaskConnTo: relativeConstraint.To
+        };
+        connections.push(customElement);
+      });
+    }
+  });
+  connections.forEach(this._addCustomConnection, this);
+};
+
+
+CustomModeler.prototype.getDefinitionsWithRelativeConstraintAsExtensionElements = function () {
+  // Update ectensionElements tempcon:Relative
+  const elementRegistry = this.get('elementRegistry');
+  const modeling = this.get('modeling');
+  const moddle = this.get('moddle');
+
+  // If there are inter-task elements remover them 
+  elementRegistry.getAll().forEach(function (element) {
+    let businessObject = getBusinessObject(element);
+    let extensionElements = businessObject.extensionElements;
+
+    if (extensionElements) {
+      let relativeConstraints = getExtensionElement(businessObject, 'tempcon:Relative');
+
+      if (relativeConstraints) {
+        relativeConstraints.forEach(function (relativeConstraint) {
+          businessObject.extensionElements.values = businessObject.extensionElements.values.filter(function (item) {
+            return item != relativeConstraint;
+          });
+        });
+      }
+    }
+  });
+
+  // for each customConnection, create an relativeConstraint extensionElement
+  this._customElements.forEach(function (customConnection) {
+    let sourceElement = elementRegistry.get(customConnection.source);
+    let businessObject = getBusinessObject(sourceElement);
+
+    let extensionElements = businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
+
+    let relativeConstraint = moddle.create('tempcon:Relative');
+    extensionElements.get('values').push(relativeConstraint);
+
+    relativeConstraint.type = customConnection.type;
+    relativeConstraint.id_relative = customConnection.id;
+    relativeConstraint.name = customConnection.name;
+    relativeConstraint.waypoints = JSON.stringify(customConnection.waypoints);
+    relativeConstraint.source = customConnection.source;
+    relativeConstraint.target = customConnection.target;
+    relativeConstraint.minDuration = customConnection.minDuration;
+    relativeConstraint.maxDuration = customConnection.maxDuration;
+    relativeConstraint.propositionalLabel = customConnection.propositionalLabel;
+    relativeConstraint.From = customConnection.From;
+    relativeConstraint.To = customConnection.To;
+
+    modeling.updateProperties(sourceElement, { extensionElements });
+
+  });
+
+  let definitions = this.getDefinitions();
+
+  return definitions;
+};
 
 function isCustomConnection(element) {
   return element.type === 'custom:connection';
+}
+
+
+function getExtensionElement(element, type) {
+  if (!element.extensionElements) {
+    return;
+  }
+
+  return element.extensionElements.values.filter((extensionElement) => {
+    return extensionElement.$instanceOf(type);
+  });
 }

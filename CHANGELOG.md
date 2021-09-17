@@ -2,6 +2,13 @@
 
 ## TimeAwareBPMN-js
 
+v0.5.4 - 20210917
+
+- Change, inter-task are saved as extensionElements 
+- Added line command configuration for CSTNU no-logging
+- Change inter-task for relative constraint
+- Add XML schema difinition (xsd)
+
 v0.5.4 - 20210907
 
 - Add CustomReplaceConnectionBehavior to manage the movement of inter-tasks' endpoints and do not change the to sequenceFlow. TODO the while the dagging the connector looks like a sequenceFlow, and when it finishes only the ending points are kept. See how this can be fixed.  

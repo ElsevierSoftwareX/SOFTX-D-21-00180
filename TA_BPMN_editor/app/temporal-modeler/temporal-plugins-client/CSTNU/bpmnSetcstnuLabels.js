@@ -113,7 +113,7 @@ export default function bpmnSetcstnuLabels(bpmn) {
           cps = Array.from(node.cps);
           if (isSplit) {
             let prefx = '';
-            if (myObjs.arrows[adj].pLiteralValue === 'false') {
+            if (myObjs.arrows[adj].isTrueBranch === 'false') {
               prefx = '¬';
             }
             cps.push(prefx + tempProposition);
@@ -329,6 +329,8 @@ function processSequenceFlow(params) {
   } = params;
 
   let eventBus = window.bpmnjs.get('eventBus');
+  let elementRegistry = window.bpmnjs.get('elementRegistry');
+  let modeling = window.bpmnjs.get('modeling');
 
   //Get cstnuId of the connected nodes
   let source = element.attributes.sourceRef.value;
@@ -341,10 +343,10 @@ function processSequenceFlow(params) {
   myObjs[target].inputs.push(idArrow);
   if (myObjs[source].obs != undefined) {
     if (myObjs[source].obs === 'split') {
-      if (element.attributes['tempcon:pLiteralValue'] != undefined) {
-        if (element.attributes['tempcon:pLiteralValue'].value != '') {
-          myObjs['arrows'][idArrow].pLiteralValue = element.attributes['tempcon:pLiteralValue'].value;
-          if (myObjs['arrows'][idArrow].pLiteralValue == 'true')
+      if (element.attributes['tempcon:isTrueBranch'] != undefined) {
+        if (element.attributes['tempcon:isTrueBranch'].value != '') {
+          myObjs['arrows'][idArrow].isTrueBranch = element.attributes['tempcon:isTrueBranch'].value;
+          if (myObjs['arrows'][idArrow].isTrueBranch == 'true')
             myObjs[source].obsTrueArrow = idArrow;
           else
             myObjs[source].obsFalseArrow = idArrow;
@@ -354,11 +356,13 @@ function processSequenceFlow(params) {
 
           let tempElement = elementRegistry.get(idArrow);
           if (myObjs[source].obsTrueArrow == undefined) {
-            tempElement.businessObject.pLiteralValue = 'true';
+            tempElement.businessObject.isTrueBranch = 'true';
+            tempElement.businessObject.name = 'True';
             myObjs[source].obsTrueArrow = idArrow;
           }
           else if (myObjs[source].obsFalseArrow == undefined) {
-            tempElement.businessObject.pLiteralValue = 'false';
+            tempElement.businessObject.isTrueBranch = 'false';
+            tempElement.businessObject.name = 'False';
             myObjs[source].obsFalseArrow = idArrow;
           }
           else {
@@ -367,7 +371,9 @@ function processSequenceFlow(params) {
             return;
           }
 
+          myObjs['arrows'][idArrow].isTrueBranch = tempElement.businessObject.isTrueBranch;
           try {
+            modeling.updateLabel(tempElement, tempElement.businessObject.name);
             eventBus.fire('element.changed', { element: tempElement });
 
           } catch (error) {
@@ -380,11 +386,13 @@ function processSequenceFlow(params) {
         let tempElement = elementRegistry.get(idArrow);
 
         if (myObjs[source].obsTrueArrow == undefined) {
-          tempElement.businessObject.pLiteralValue = 'true';
+          tempElement.businessObject.isTrueBranch = 'true';
+          tempElement.businessObject.name = 'True';
           myObjs[source].obsTrueArrow = idArrow;
         }
         else if (myObjs[source].obsFalseArrow == undefined) {
-          tempElement.businessObject.pLiteralValue = 'false';
+          tempElement.businessObject.isTrueBranch = 'false';
+          tempElement.businessObject.name = 'False';
           myObjs[source].obsFalseArrow = idArrow;
         }
         else {
@@ -393,7 +401,9 @@ function processSequenceFlow(params) {
           return;
         }
 
+        myObjs['arrows'][idArrow].isTrueBranch = tempElement.businessObject.isTrueBranch;
         try {
+          modeling.updateLabel(tempElement, tempElement.businessObject.name);
           eventBus.fire('element.changed', { element: tempElement });
         } catch (error) {
           console.log('Error when fire element.changed ' + tempElement.businessObject.id);

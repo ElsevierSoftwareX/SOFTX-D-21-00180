@@ -418,21 +418,21 @@ CustomRenderer.prototype.drawConnection = function (p, element) {
       (maxD != Infinity && !Number.isInteger(parseFloat(maxD)))) colorFrame = "#cc0000";
 
 
-    //pLiteralValue : true or false pLiteralValue
-    try {
-      if (element.businessObject.sourceRef) {
-        if (element.businessObject.sourceRef.$type.includes('ExclusiveGateway')) {
-          if (element.businessObject.sourceRef.gatewaySplitJoin != undefined) {
-            if (element.businessObject.sourceRef.gatewaySplitJoin === 'split') {
-              let pLiteralValue = element.businessObject.pLiteralValue;
-              if (pLiteralValue === undefined || pLiteralValue === "") colorFrame = "#cc0000";
-            }
-          }
-        }
-      }
-    } catch (error) {
-      console.log('Error in sequenceFlow connected to exclusiveGateway');
-    }
+    // //isTrueBranch : true or false isTrueBranch
+    // try {
+    //   if (element.businessObject.sourceRef) {
+    //     if (element.businessObject.sourceRef.$type.includes('ExclusiveGateway')) {
+    //       if (element.businessObject.sourceRef.gatewaySplitJoin != undefined) {
+    //         if (element.businessObject.sourceRef.gatewaySplitJoin === 'split') {
+    //           let isTrueBranch = element.businessObject.isTrueBranch;
+    //           if (isTrueBranch === undefined || isTrueBranch === "") colorFrame = "#cc0000";
+    //         }
+    //       }
+    //     }
+    //   }
+    // } catch (error) {
+    //   console.log('Error in sequenceFlow connected to exclusiveGateway');
+    // }
 
     try {
       if (element.businessObject.targetRef) {
@@ -484,11 +484,8 @@ function drawRect(parentNode, width, height, borderRadius, strokeColor) {
   });
   let rectElement = svgAppend(parentNode, rect);
 
-  // debugger;
-
   return { rect, rectElement };
 }
-
 
 function drawShape_contingent(
   parentNode,
@@ -578,7 +575,7 @@ function drawShape_contingent(
   svgAttr(rectSmall, {
     transform: "translate(" + temWidth + ", -10)",
   });
-  // debugger;
+
   let strText = minD + "-" + maxD;
   // if (element.businessObject.propositionalLabel)
   //   strText += ', ' + element.businessObject.propositionalLabel;
@@ -591,15 +588,11 @@ function drawShape_contingent(
   temWidth = 25;
   if (is(element, "bpmn:Gateway")) {
     temWidth = -25;
-    // debugger;
   }
   if (is(element, "bpmn:IntermediateCatchEvent")) {
     temWidth = -40;
-    // debugger;
   }
-  // else{
-  //   debugger;
-  // }
+  
   svgAttr(text, {
     transform: "translate(" + temWidth + ", -7)",
   });

@@ -26,7 +26,7 @@ This object must contain the elements `name`, which contains the name of the plu
 
 In the actual version, all the functions receive as parameters 
 1. the BPMN model mapped to an XML string according to the standard and 
-2. the JSON string with the information of the inter-task objects. 
+2. the JSON string with the information of the relative constraint objects. 
 
 By using this signature it is possible the dynamic creation of a set of buttons in the interface that are linked to functions in the plug-in. This set of buttons will depend on the functions in the JavaScript object exported by the plug-in. 
 

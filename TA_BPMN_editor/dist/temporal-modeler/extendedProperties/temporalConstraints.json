@@ -1,7 +1,7 @@
 {
   "name": "TemporalConstraints",
   "prefix": "tempcon",
-  "uri": "https://gitlab.com/univr.di/TimeAwareBPMN",
+  "uri": "https://gitlab.com/univr.di/TimeAwareBPMN/model TABPMN20.xsd",
   "xml": {
     "tagAlias": "lowerCase"
   },
@@ -55,7 +55,7 @@
       "extends": ["bpmn:SequenceFlow"],
       "properties": [
         {
-          "name": "pLiteralValue",
+          "name": "isTrueBranch",
           "isAttr": true,
           "type": "String"
         }
@@ -78,6 +78,67 @@
       "properties": [
         {
           "name": "observedProposition",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    },
+    {
+      "name": "Relative",
+      "superClass": ["Element"],
+      "properties": [
+        {
+          "name": "type",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "id_relative",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "name",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "waypoints",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "source",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "target",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "minDuration",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "maxDuration",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "propositionalLabel",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "From",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "To",
           "isAttr": true,
           "type": "String"
         }

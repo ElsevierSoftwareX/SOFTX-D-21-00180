@@ -33,7 +33,7 @@
 time-aware BPMN processes. This is the client of the <strong>TimeAwareBPMN-js</strong> tool, a Node.JS application to perform temporal verifications of BPMN models.</p>
 <h2>About</h2>
 <p>The <strong>TimeAwareBPMN-editor</strong> enables the edition of process models enriched with temporal constraints defined on BPMN elements. It contains a toolbar that allows the user to choose how to verify the process models with respect to their temporal constraints.</p>
-<p>This verification is done in the server-side of the tool TimeAwareBPMN-js.
+<p>This verification is done on the server-side of the tool TimeAwareBPMN-js.
 The tool was designed to be extended, by adding verification programs as plug-ins.
 This version contains a plug-in that connects with the Java tool CSTNU to evaluate the dynamic controllability.</p>
 <p>This implementation is based on the examples: <a href="https://github.com/bpmn-io/bpmn-js-examples/tree/master/properties-panel-extension">properties-panel-extension with custom properties</a> and <a href="https://github.com/bpmn-io/bpmn-js-examples/tree/master/custom-elements">custom-elements</a>.</p>
@@ -48,9 +48,119 @@ The temporal properties, like <code>tempcon:minDuration</code>, will be persiste
   ...
 &lt;/bpmn2:definitions>
 </code></pre>
-<h3>Inter-task constraint</h3>
-<p>We created a custom connection called <code>inter-task</code> that sets temporal constraints between any pair of elements in the diagram. These relative constraints are a general concept in temporal verification methods, but they are not part of the BPMN standard. Because of this, we implemented it as a custom object independent of the BPMN model. It is kept in a different file and can be used to generate temporal constraints models.<br>
-The editor loads and saves files with the information of the inter-tasks.</p>
+<p>See an <a href="examples/diagram.bpmn">example</a>.</p>
+<p>Here we list the enhanced elements and the added attributes with examples.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Activities</strong></th>
+<th>(User Task, Service Task, Script Task, Send Task, and Receive Task)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Added attributes</td>
+<td>minDuration (default: 0), maxDuration (default: Inf), and propositionalLabel</td>
+</tr>
+<tr>
+<td>Example</td>
+<td><code>tempcon:minDuration=&quot;1&quot; tempcon:maxDuration=&quot;6&quot; tempcon:propositionalLabel=&quot;R&quot;</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><strong>Intermediate catching events</strong></th>
+<th>(Timer, Message, and Signal)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Added attributes</td>
+<td>minDuration, maxDuration, and propositionalLabel</td>
+</tr>
+<tr>
+<td>Example</td>
+<td><code>tempcon:minDuration=&quot;1&quot; tempcon:maxDuration=&quot;4&quot; tempcon:propositionalLabel=&quot;¬R&quot;</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><strong>Parallel gateways</strong></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Added attributes</td>
+<td>minDuration, maxDuration, propositionalLabel, and gatewaySplitJoin</td>
+</tr>
+<tr>
+<td>Example</td>
+<td><code>tempcon:minDuration=&quot;2&quot; tempcon:maxDuration=&quot;4&quot; tempcon:propositionalLabel=&quot;&quot; tempcon:gatewaySplitJoin=&quot;split&quot; </code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><strong>Exclusive gateways</strong></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Added attributes</td>
+<td>minDuration, maxDuration, propositionalLabel, gatewaySplitJoin, and observedProposition</td>
+</tr>
+<tr>
+<td>Example</td>
+<td><code>tempcon:minDuration=&quot;2&quot; tempcon:maxDuration=&quot;4&quot; tempcon:propositionalLabel=&quot;&quot; tempcon:gatewaySplitJoin=&quot;split&quot; tempcon:observedProposition=&quot;R&quot; </code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><strong>Sequence flow</strong></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Added attributes</td>
+<td>minDuration (default: 0), maxDuration (default: Inf), and isTrueBranch</td>
+</tr>
+<tr>
+<td>Example</td>
+<td><code>tempcon:minDuration=&quot;1&quot; tempcon:maxDuration=&quot;2&quot; tempcon:isTrueBranch=&quot;true&quot;</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Relative constraint</h3>
+<p>We created a custom connection that sets relative temporal constraints between any pair of elements in the diagram. These relative constraints are a general concept in temporal verification methods. We implemented them as a custom objects and save them as extension elements in the BPMN model.
+The editor loads and saves BPMN XML files with the information of the relative constraints.</p>
+<p>The attributes of relative constraint elements are: type (&quot;custom:connection&quot;), id_relative, waypoints, source, target, From (default: end), To (default: start), and propositionalLabel.
+We save the realtive constraints as extension element of the element where the connection starts. This is an example of a relative constraint.</p>
+<pre class="prettyprint source lang-xml"><code>&lt;bpmn2:extensionElements>
+	&lt;tempcon:relative type = &quot;custom:connection&quot;
+	id_relative = &quot;RelativeConstraint_01&quot; 	
+	source = &quot;T1&quot; 
+	target = &quot;T4&quot; 
+	minDuration = &quot;1&quot; 
+	maxDuration = &quot;2&quot; 
+	propositionalLabel = &quot;R&quot; 
+	From = &quot;start&quot;
+	To = &quot;end&quot;
+	waypoints = &quot;[{&#34;x&#34;:220,&#34;y&#34;:220},
+		{&#34;x&#34;:220,&#34;y&#34;:370},
+		{&#34;x&#34;:560,&#34;y&#34;:370},
+		{&#34;x&#34;:560,&#34;y&#34;:220}]&quot; />
+&lt;/bpmn2:extensionElements>
+</code></pre>
 <h3>Toolbar to select the verification tool</h3>
 <p>We created a toolbar that loads and exposes the plug-ins, that communicate with the corresponding plug-in in the server, which can interact with desktop applications to perform the verifications of the models.</p>
 <h2>Running the Example</h2>
@@ -80,7 +190,7 @@ The editor loads and saves files with the information of the inter-tasks.</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sun Sep 05 2021 15:14:53 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Sep 15 2021 00:12:35 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>
