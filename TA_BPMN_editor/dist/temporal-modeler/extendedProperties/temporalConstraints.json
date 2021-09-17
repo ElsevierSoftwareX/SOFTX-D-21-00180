@@ -1,7 +1,7 @@
 {
   "name": "TemporalConstraints",
   "prefix": "tempcon",
-  "uri": "https://gitlab.com/univr.di/TimeAwareBPMN",
+  "uri": "https://gitlab.com/univr.di/TimeAwareBPMN/model TABPMN20.xsd",
   "xml": {
     "tagAlias": "lowerCase"
   },

@@ -1,0 +1,28 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="https://gitlab.com/univr.di/TimeAwareBPMN/model TABPMN20.xsd"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="relative">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute type="xs:string" name="type"/>
+					<xs:attribute type="xs:string" name="id_relative"/>
+					<xs:attribute type="xs:string" name="waypoints"/>
+					<xs:attribute type="xs:string" name="source"/>
+					<xs:attribute type="xs:string" name="target"/>
+					<xs:attribute type="xs:integer" name="minDuration"/>
+					<xs:attribute type="xs:integer" name="maxDuration"/>
+					<xs:attribute type="xs:string" name="propositionalLabel"/>
+					<xs:attribute type="xs:string" name="From"/>
+					<xs:attribute type="xs:string" name="To"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:attribute name="minDuration" type="xs:integer"/>
+	<xs:attribute name="maxDuration" type="xs:integer"/>
+	<xs:attribute name="propositionalLabel" type="xs:string"/>
+	<xs:attribute name="gatewaySplitJoin" type="xs:string"/>
+	<xs:attribute name="observedProposition" type="xs:string"/>
+	<xs:attribute name="isTrueBranch" type="xs:string"/>
+</xs:schema>
+
