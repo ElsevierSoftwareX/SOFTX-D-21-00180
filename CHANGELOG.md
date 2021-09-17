@@ -5,8 +5,9 @@
 v0.5.4 - 20210914
 
 - Change, inter-task are saved as extensionElements 
-- Change, Added line command configuration for CSTNU no-logging
-- Change, inter-task for relative constraint
+- Added line command configuration for CSTNU no-logging
+- Change inter-task for relative constraint
+- Add XML schema difinition (xsd)
 
 v0.5.4 - 20210907
 
