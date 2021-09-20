@@ -209,8 +209,8 @@ export default function (group, element, translate) {
       id: 'propositionalLabel',
       description: 'Label created with propositions of XORs',
       label: 'Propositional label',
-      modelProperty: 'propositionalLabel',
-      disabled: function () { return disabled; }
+      modelProperty: 'propositionalLabel'
+      // disabled: function () { return disabled; }
     }));
   }
 
