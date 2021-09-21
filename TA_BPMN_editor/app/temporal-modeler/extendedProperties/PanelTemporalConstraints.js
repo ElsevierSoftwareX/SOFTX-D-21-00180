@@ -1,7 +1,11 @@
 import entryFactory from 'bpmn-js-properties-panel/lib/factory/EntryFactory';
+import cmdHelper from "bpmn-js-properties-panel/lib/helper/CmdHelper";
+import extHelper from "bpmn-js-properties-panel/lib/helper/ExtensionElementsHelper";
+import elementHelper from "bpmn-js-properties-panel/lib/helper/ElementHelper";
+
 
 import {
-  is
+  is, getBusinessObject
 } from 'bpmn-js/lib/util/ModelUtil';
 
 
@@ -178,13 +182,90 @@ var validateMaxDuration_sequenceFlow = function (element, values, node) {
 
 export default function (group, element, translate) {
 
+  const getValue = function (businessObject, prefix, typeName, property) {
+    return function (element) {
+      let extensions = extHelper.getExtensionElements(
+        businessObject,
+        prefix + ":" + typeName
+      );
+      let returnObject = {};
+      if (extensions) {
+        returnObject[property] = extensions[0][property];
+      } else {
+        returnObject[property] = "";
+      }
+      return returnObject;
+    };
+  };
+
+  
+  const setValue = function (businessObject, prefix, typeName, property) {
+    return function (element, values) {
+      let newMailElement;
+      let prefixTypeElement = prefix + ":" + typeName;
+      if (
+        !businessObject.get("extensionElements") &&
+        !extHelper.getExtensionElements(businessObject, prefixTypeElement)
+      ) {
+        newMailElement = elementHelper.createElement(
+          prefixTypeElement,
+          values,
+          businessObject,
+          bpmnFactory
+        );
+        let extensionAddResult = extHelper.addEntry(
+          businessObject,
+          element,
+          newMailElement,
+          bpmnFactory
+        );
+        return cmdHelper.updateBusinessObject(
+          element,
+          getBusinessObject(element),
+          extensionAddResult
+        );
+      } else {
+        let extendionElements = extHelper.getExtensionElements(
+          businessObject,
+          prefixTypeElement
+        );
+        if (extendionElements) {
+          extendionElements[0][property] = values[property];
+          return cmdHelper.updateBusinessObject(
+            element,
+            getBusinessObject(element),
+            extendionElements
+          );
+        } else {
+          newMailElement = elementHelper.createElement(
+            prefixTypeElement,
+            values,
+            businessObject,
+            bpmnFactory
+          );
+          return extHelper.addEntry(
+            businessObject,
+            element,
+            newMailElement,
+            bpmnFactory
+          );
+        }
+      }
+    };
+  };
+
+
+
   function set_group_minDuration(group, comparisonFunction, strComment = "") {
     group.entries.push(entryFactory.textField(translate, {
       id: 'minDuration',
       description: 'Min duration  (Integer value)',
       label: 'Min duration' + strComment,
       modelProperty: 'minDuration',
-      validate: comparisonFunction
+      validate: comparisonFunction,
+      get: getValue(getBusinessObject(element), "tempcon", "TDuration", "minDuration"),
+      set: setValue(getBusinessObject(element), "tempcon", "TDuration", "minDuration")
+      
     }));
   }
 
@@ -194,7 +275,9 @@ export default function (group, element, translate) {
       description: 'Max duration (Integer value)',
       label: 'Max duration' + strComment,
       modelProperty: 'maxDuration',
-      validate: comparisonFunction
+      validate: comparisonFunction,
+      get: getValue(getBusinessObject(element), "tempcon", "TDuration", "maxDuration"),
+      set: setValue(getBusinessObject(element), "tempcon", "TDuration", "maxDuration")
     }));
   }
 
@@ -209,7 +292,9 @@ export default function (group, element, translate) {
       id: 'propositionalLabel',
       description: 'Label created with propositions of XORs',
       label: 'Propositional label',
-      modelProperty: 'propositionalLabel'
+      modelProperty: 'propositionalLabel',
+      get: getValue(getBusinessObject(element),  "tempcon", "TDuration", "propositionalLabel"),
+      set: setValue(getBusinessObject(element),  "tempcon", "TDuration", "propositionalLabel")
       // disabled: function () { return disabled; }
     }));
   }
@@ -297,13 +382,18 @@ export default function (group, element, translate) {
     //   // TODO force to create the property in the XML file
     //   selectOptions: [{ name: '', value: '' }, { name: 'Split', value: 'split' }, { name: 'Join', value: 'join' }],
     // }));
-
-    if (element.businessObject.gatewaySplitJoin == 'split') {
+    debugger;
+    // if (element.businessObject.gatewaySplitJoin == 'split') {
+      let test = getValue(getBusinessObject(element),  "tempcon", "TGatewaySplitJoin", "gatewaySplitJoin");
+    console.log(test);
+    if (getValue(getBusinessObject(element),  "tempcon", "TGatewaySplitJoin", "gatewaySplitJoin")(element)['gatewaySplitJoin'] == 'split') {
       group.entries.push(entryFactory.textField(translate, {
         id: 'observedProposition',
         description: 'Type one letter to be used as proposition',
         label: 'Letter representing the boolean condition',
-        modelProperty: 'observedProposition'
+        modelProperty: 'observedProposition',
+        get: getValue(getBusinessObject(element),  "tempcon", "TXorProposition", "observedProposition"),
+        set: setValue(getBusinessObject(element),  "tempcon", "TXorProposition", "observedProposition")
       }));
     }
 
