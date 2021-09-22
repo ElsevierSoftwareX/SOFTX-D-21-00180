@@ -61,11 +61,13 @@ export default function (group, element, translate) {
         );
         if (extensionElements) {
           extensionElements[0][property] = values[property];
-          return cmdHelper.updateBusinessObject(
-            element,
-            getBusinessObject(element),
-            extensionElements
-          );
+          // return cmdHelper.updateBusinessObject(
+          //   element,
+          //   getBusinessObject(element),
+          //   extensionElements
+          // );
+          // modeling.updateProperties(element, { extensionElements:extensionElements });
+          eventBus.fire('element.changed', { element: element });
         } else {
           newMailElement = elementHelper.createElement(
             prefixTypeElement,

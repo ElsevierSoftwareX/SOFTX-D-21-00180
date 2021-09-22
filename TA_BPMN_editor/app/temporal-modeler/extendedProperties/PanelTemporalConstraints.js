@@ -201,7 +201,6 @@ export default function (group, element, bpmnFactory, translate) {
   };
 
   function setValue4(businessObject, prefix, typeName, property, element, values) {
-    debugger
     var b_obj = getBusinessObject(element);
     var selectedValues = {};
     selectedValues = values;
@@ -256,9 +255,13 @@ export default function (group, element, bpmnFactory, translate) {
 
   const setValue = function (businessObject, prefix, typeName, property) {
     return function (element, values) {
-      
       let newMailElement;
       let prefixTypeElement = prefix + ":" + typeName;
+
+      const moddle = window.bpmnjs.get('moddle');
+      const modeling = window.bpmnjs.get('modeling');
+      const eventBus = window.bpmnjs.get('eventBus');
+
       if (
         !businessObject.get("extensionElements") &&
         !extHelper.getExtensionElements(businessObject, prefixTypeElement)
@@ -287,11 +290,13 @@ export default function (group, element, bpmnFactory, translate) {
         );
         if (extensionElements && extensionElements.length > 0) {
           extensionElements[0][property] = values[property];
-          return cmdHelper.updateBusinessObject(
-            element,
-            getBusinessObject(element),
-            extensionElements
-          );
+          // return cmdHelper.updateBusinessObject(
+          //   element,
+          //   getBusinessObject(element),
+          //   extensionElements
+          // );
+          // modeling.updateProperties(element, { extensionElements:extensionElements });
+          eventBus.fire('element.changed', { element: element });
         } else {
           newMailElement = elementHelper.createElement(
             prefixTypeElement,
@@ -306,9 +311,7 @@ export default function (group, element, bpmnFactory, translate) {
           //   bpmnFactory
           // );
           //TODO first time the value is not saved
-          const moddle = window.bpmnjs.get('moddle');
-          const modeling = window.bpmnjs.get('modeling');
-          const eventBus = window.bpmnjs.get('eventBus');
+          
           let newExtensionElements = businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
 
           let relativeConstraint = moddle.create(prefixTypeElement);
