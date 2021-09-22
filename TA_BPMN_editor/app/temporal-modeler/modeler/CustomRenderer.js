@@ -1,5 +1,7 @@
 import inherits from 'inherits';
 
+import extHelper from "bpmn-js-properties-panel/lib/helper/ExtensionElementsHelper";
+
 import BaseRenderer from 'diagram-js/lib/draw/BaseRenderer';
 
 import {
@@ -222,6 +224,8 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
 
     let minD = "";
     let maxD = "";
+    
+    
     if (element.businessObject.minDuration != undefined)
       minD = element.businessObject.minDuration;
     if (element.businessObject.maxDuration != undefined)
@@ -398,11 +402,12 @@ CustomRenderer.prototype.drawConnection = function (p, element) {
     // Information about min max duration
     let minD = "";
     let maxD = "";
-    if (element.businessObject.minDuration != undefined)
-      minD = element.businessObject.minDuration;
-    if (element.businessObject.maxDuration != undefined)
-      maxD = element.businessObject.maxDuration;
-
+    // debugger;
+    if ( getExtensionElementValue(element, 'TDuration', 'minDuration') != undefined)
+      minD = getExtensionElementValue(element, 'TDuration', 'minDuration') ;
+    if (getExtensionElementValue(element, 'TDuration', 'maxDuration')  != undefined)
+      maxD = getExtensionElementValue(element, 'TDuration', 'maxDuration') ;
+      
     // Default values for a norma connection 
     if (minD === "") minD = 0;
     if (maxD === "") maxD = Infinity;
@@ -434,19 +439,19 @@ CustomRenderer.prototype.drawConnection = function (p, element) {
     //   console.log('Error in sequenceFlow connected to exclusiveGateway');
     // }
 
-    try {
-      if (element.businessObject.targetRef) {
-        if (element.businessObject.targetRef.$type.includes('ParallelGateway')) {
-          if (element.businessObject.targetRef.gatewaySplitJoin != undefined) {
-            if (element.businessObject.targetRef.gatewaySplitJoin === 'join') {
-              if (maxD != Infinity) colorFrame = "#cc0000";
-            }
-          }
-        }
-      }
-    } catch (error) {
-      console.log('Error in sequenceFlow connected to parallelGateway');
-    }
+    // try {
+    //   if (element.businessObject.targetRef) {
+    //     if (element.businessObject.targetRef.$type.includes('ParallelGateway')) {
+    //       if (element.businessObject.targetRef.gatewaySplitJoin != undefined) {
+    //         if (element.businessObject.targetRef.gatewaySplitJoin === 'join') {
+    //           if (maxD != Infinity) colorFrame = "#cc0000";
+    //         }
+    //       }
+    //     }
+    //   }
+    // } catch (error) {
+    //   console.log('Error in sequenceFlow connected to parallelGateway');
+    // }
 
     if (colorFrame != undefined) {
       shape.style.stroke = colorFrame;
@@ -502,10 +507,10 @@ function drawShape_contingent(
 
   // Information about min max duration and isContingent
   let minD = "", maxD = "";
-  if (element.businessObject.minDuration != undefined)
-    minD = element.businessObject.minDuration;
-  if (element.businessObject.maxDuration != undefined)
-    maxD = element.businessObject.maxDuration;
+  if ( getExtensionElementValue(element, 'TDuration', 'minDuration') != undefined)
+    minD = getExtensionElementValue(element, 'TDuration', 'minDuration') ;
+  if (getExtensionElementValue(element, 'TDuration', 'maxDuration')  != undefined)
+    maxD = getExtensionElementValue(element, 'TDuration', 'maxDuration') ;
 
   let colorFrame = "#00cc00";
   if (isContingent) colorFrame = "#0000cc";
@@ -537,7 +542,9 @@ function drawShape_contingent(
   }
   if (isAny(element, ["bpmn:ExclusiveGateway", "bpmn:ParallelGateway"])) {
     //Check it has a type: split or join 
-    let gatewaySplitJoin = element.businessObject.gatewaySplitJoin;
+    // let gatewaySplitJoin = element.businessObject.gatewaySplitJoin;
+    let gatewaySplitJoin = getExtensionElementValue(element, "TGatewaySplitJoin", "gatewaySplitJoin");
+    debugger;
     if (gatewaySplitJoin === undefined) {
       colorFrame = "#cc0000";
     }
@@ -597,3 +604,19 @@ function drawShape_contingent(
     transform: "translate(" + temWidth + ", -7)",
   });
 }
+
+function getExtensionElementValue(element, typeName, property) {  
+    let extensions = extHelper.getExtensionElements(
+      element.businessObject,
+      "tempcon:" + typeName
+    );
+    let returnValue;
+    // console.log(element);
+    if (extensions) {
+      if (extensions.length>0){
+        returnValue = extensions[0][property];
+      }  
+    } 
+    return returnValue;
+  
+};
