@@ -402,7 +402,6 @@ CustomRenderer.prototype.drawConnection = function (p, element) {
     // Information about min max duration
     let minD = "";
     let maxD = "";
-    // debugger;
     if ( getExtensionElementValue(element, 'TDuration', 'minDuration') != undefined)
       minD = getExtensionElementValue(element, 'TDuration', 'minDuration') ;
     if (getExtensionElementValue(element, 'TDuration', 'maxDuration')  != undefined)
@@ -544,7 +543,6 @@ function drawShape_contingent(
     //Check it has a type: split or join 
     // let gatewaySplitJoin = element.businessObject.gatewaySplitJoin;
     let gatewaySplitJoin = getExtensionElementValue(element, "TGatewaySplitJoin", "gatewaySplitJoin");
-    debugger;
     if (gatewaySplitJoin === undefined) {
       colorFrame = "#cc0000";
     }
