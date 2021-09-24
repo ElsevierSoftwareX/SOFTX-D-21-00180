@@ -193,7 +193,7 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
   function marker(type, fill, stroke) {
 
     var id = type + '-' + colorEscape(fill) + '-' + colorEscape(stroke) + '-' + rendererId;
-
+    console.log(id);
     if (!markers[id]) {
       createMarker(id, type, fill, stroke);
     }
@@ -245,7 +245,7 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
     var attrs = computeStyle(attrs, {
       stroke: colorFrame, //COLOR_GREEN,
       strokeWidth: 2,
-      strokeDasharray: '6',
+      strokeDasharray: '20,10,5,5,5,10',
       strokeLinecap: 'square',
       // strokeLinecap: 'round',
       markerEnd: marker('sequenceflow-end', 'white', colorFrame),
