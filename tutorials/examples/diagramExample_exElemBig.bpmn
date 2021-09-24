@@ -77,11 +77,13 @@
     <bpmn2:sequenceFlow id="Flow_1umbt9n" name="True" sourceRef="G1" targetRef="T2">
       <bpmn2:extensionElements>
         <tempcon:tDuration minDuration="1" maxDuration="2" propositionalLabel="R" />
+        <tempcon:tPLiteralValue isTrueBranch="true" />
       </bpmn2:extensionElements>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="Flow_0mfbyxi" name="False" sourceRef="G1" targetRef="T3">
       <bpmn2:extensionElements>
         <tempcon:tDuration minDuration="1" maxDuration="2" propositionalLabel="R" />
+        <tempcon:tPLiteralValue isTrueBranch="false" />
       </bpmn2:extensionElements>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="Flow_1r3f5sv" sourceRef="G2" targetRef="G3" />
@@ -145,13 +147,13 @@
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="112" y="162" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="128" y="205" width="6" height="14" />
+          <dc:Bounds x="128" y="205" width="7" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0iaxns3_di" bpmnElement="G2" isMarkerVisible="true">
         <dc:Bounds x="445" y="155" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="492.5" y="205" width="15" height="14" />
+          <dc:Bounds x="493" y="205" width="15" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1h69eb3_di" bpmnElement="Flow_1h69eb3">
@@ -186,7 +188,7 @@
       <bpmndi:BPMNShape id="Event_0061b0u_di" bpmnElement="IE1">
         <dc:Bounds x="452" y="32" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="430" y="-14" width="79" height="27" />
+          <dc:Bounds x="431" y="-14" width="77" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1ihqlbg_di" bpmnElement="T1">
@@ -202,7 +204,7 @@
       <bpmndi:BPMNShape id="Gateway_0s4sc6g_di" bpmnElement="G1" isMarkerVisible="true">
         <dc:Bounds x="295" y="155" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="342" y="170" width="75" height="27" />
+          <dc:Bounds x="343" y="170" width="73" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0aync76_di" bpmnElement="Flow_0aync76">
