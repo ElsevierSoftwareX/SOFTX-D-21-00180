@@ -110,7 +110,8 @@ var validateMinDuration_relativeConstraint = function (element, values, node) {
 /** Check minDuration < maxDuration */
 var validateMaxDuration_contingent = function (element, values, node) {
   let val = values.maxDuration;
-  let valMinDuration = element.businessObject.minDuration;
+  // let valMinDuration = element.businessObject.minDuration;
+  let valMinDuration  = getExtensionElementValue(element, 'TDuration', 'minDuration');
 
   if (node.childElementCount > 0) {
     if (node.childNodes[2].className.includes("bpp-field-description")) {
@@ -132,7 +133,8 @@ var validateMaxDuration_contingent = function (element, values, node) {
 /** Check minDuration <= maxDuration */
 var validateMaxDuration_noContingent = function (element, values, node) {
   let val = values.maxDuration;
-  let valMinDuration = element.businessObject.minDuration;
+  // let valMinDuration = element.businessObject.minDuration;
+  let valMinDuration  = getExtensionElementValue(element, 'TDuration', 'minDuration');
 
   if (node.childElementCount > 0) {
     if (node.childNodes[2].className.includes("bpp-field-description")) {
@@ -153,6 +155,35 @@ var validateMaxDuration_noContingent = function (element, values, node) {
 };
 /** Check minDuration <= maxDuration or inf */
 var validateMaxDuration_sequenceFlow = function (element, values, node) {
+  let val = values.maxDuration;
+  // let valMinDuration = element.businessObject.minDuration;
+  let valMinDuration  = getExtensionElementValue(element, 'TDuration', 'minDuration');
+  if (valMinDuration === undefined) valMinDuration = 0;
+
+  if (node.childElementCount > 0) {
+    if (node.childNodes[2].className.includes("bpp-field-description")) {
+      node.childNodes[2].innerHTML = '&nbsp;';
+      node.childNodes[1].style.border = '';
+    }
+  }
+  if (val === undefined) {
+    // Default valur is Inf
+  }
+  else {
+    // val = val.replace(/\s/g, '');
+    if (val != '')
+      if ((isNaN(val) || Number(val) < Number(valMinDuration)) || !Number.isInteger(parseFloat(val)))
+        if (node.childElementCount > 0)
+          if (node.childNodes[2].className.includes("bpp-field-description")) {
+            node.childNodes[2].innerText = 'Max duration should be a number bigger or equal than min duration';
+            node.childNodes[1].style.border = '2px solid red';
+          }
+  }
+
+  return !isNaN(val) && Number(val) > 0;
+};
+
+var validateMaxDuration_relative = function (element, values, node) {
   let val = values.maxDuration;
   let valMinDuration = element.businessObject.minDuration;
   if (valMinDuration === undefined) valMinDuration = 0;
@@ -179,6 +210,7 @@ var validateMaxDuration_sequenceFlow = function (element, values, node) {
 
   return !isNaN(val) && Number(val) > 0;
 };
+
 
 
 
@@ -664,7 +696,7 @@ function getExtensionElement(element, type) {
     }));
 
     set_group_minDuration_asProperty(group, validateMinDuration_relativeConstraint, " (default: 0)");
-    set_group_maxDuration_asProperty(group, validateMaxDuration_sequenceFlow, " (default: ∞)");
+    set_group_maxDuration_asProperty(group, validateMaxDuration_relative, " (default: ∞)");
 
     set_group_propositionalLabel_asProperty(group, false);
 
