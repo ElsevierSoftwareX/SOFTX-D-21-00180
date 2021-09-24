@@ -65,7 +65,10 @@ function removeNotesUpdatedError() {
     const eventBus = window.bpmnjs.get('eventBus');
     const elementRegistry = window.bpmnjs.get('elementRegistry');
     // Remove notes/color of elements updated or with error  
-    window.elementsUpdated.forEach(elementId => {
+
+    let elementsUpdatedTmp = [...window.elementsUpdated];
+    window.elementsUpdated = [];
+    elementsUpdatedTmp.forEach(elementId => {
 
         let tempElement = elementRegistry.get(elementId);
         // Using this insted of modeling.updateProperties, this does not produce ctr+z
@@ -74,7 +77,6 @@ function removeNotesUpdatedError() {
 
     });
     let elementsErrorTmp = [...window.elementsError];
-    window.elementsUpdated = [];
     window.elementsError = [];
 
     elementsErrorTmp.forEach(elementId => {
