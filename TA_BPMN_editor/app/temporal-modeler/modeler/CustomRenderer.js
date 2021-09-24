@@ -516,8 +516,10 @@ function drawShape_contingent(
 
   // console.log(element.businessObject.updated);
 
-  if (window.elementsUpdated.indexOf(element.businessObject.id) >= 0 &&
-    element.businessObject.updated) colorFrame = "#FFFF00";
+  // if (window.elementsUpdated.indexOf(element.businessObject.id) >= 0 &&
+  //   element.businessObject.updated) colorFrame = "#FFFF00";
+  if (window.elementsUpdated.indexOf(element.businessObject.id) >= 0 )
+     colorFrame = "#FFFF00";
   // console.log(window.elementsError.indexOf(element.businessObject.id));
 
   if (window.elementsError.indexOf(element.businessObject.id) >= 0) colorFrame = "#cc00cc";
