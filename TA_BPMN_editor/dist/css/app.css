@@ -75,62 +75,65 @@ a:link {
 }
 /* line 82, styles/app.less */
 .buttonsDownloadFiles {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  padding: 0;
+  padding: 5px;
   margin: 0;
   list-style: none;
 }
-/* line 91, styles/app.less */
+/* line 88, styles/app.less */
 .buttonsDownloadFiles > li {
   display: inline-block;
   margin-right: 10px;
 }
-/* line 95, styles/app.less */
+/* line 92, styles/app.less */
 .buttonsDownloadFiles > li > a {
   background: #DDD;
   border: solid 1px #666;
   display: inline-block;
   padding: 5px;
 }
-/* line 103, styles/app.less */
+/* line 100, styles/app.less */
 .buttonsDownloadFiles a {
   opacity: 0.3;
 }
-/* line 107, styles/app.less */
+/* line 104, styles/app.less */
 .buttonsDownloadFiles a.active {
   opacity: 1.0;
 }
-/* line 115, styles/app.less */
+/* line 112, styles/app.less */
 .buttonsLoadFiles {
-  position: fixed;
-  bottom: 65px;
-  left: 20px;
-  padding: 0;
+  padding: 5px;
   margin: 0;
   list-style: none;
 }
-/* line 124, styles/app.less */
+/* line 118, styles/app.less */
 .buttonsLoadFiles > li {
   display: inline-block;
   margin-right: 10px;
 }
-/* line 131, styles/app.less */
+/* line 125, styles/app.less */
 .buttonsTCEvaluation {
-  position: fixed;
-  bottom: 100px;
-  left: 20px;
-  padding: 0;
+  padding: 5px;
   margin: 0;
   list-style: none;
 }
-/* line 140, styles/app.less */
+/* line 132, styles/app.less */
 .buttonsTCEvaluation > li {
   display: inline-block;
   margin-right: 10px;
 }
-/* line 146, styles/app.less */
+/* line 141, styles/app.less */
+.toolbar {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  padding: 5px;
+  margin: 10px;
+  background: var(--palette-background-color);
+  border: solid 1px black;
+  border-radius: 8px;
+  width: 97%;
+}
+/* line 156, styles/app.less */
 #js-properties-panel {
   position: absolute;
   top: 0;
@@ -141,17 +144,17 @@ a:link {
   border-left: 1px solid #ccc;
   overflow: auto;
 }
-/* line 155, styles/app.less */
+/* line 165, styles/app.less */
 #js-properties-panel:empty {
   display: none;
 }
-/* line 158, styles/app.less */
+/* line 168, styles/app.less */
 #js-properties-panel > .djs-properties-panel {
   padding-bottom: 70px;
   min-height: 100%;
 }
 /* The Modal (background) */
-/* line 173, styles/app.less */
+/* line 183, styles/app.less */
 .modal {
   display: none;
   /* Hidden by default */
@@ -175,7 +178,7 @@ a:link {
   /* Black w/ opacity */
 }
 /* Modal Content */
-/* line 188, styles/app.less */
+/* line 198, styles/app.less */
 .modal-content {
   position: relative;
   background-color: #fefefe;
@@ -190,39 +193,39 @@ a:link {
   animation-duration: 0.4s;
 }
 /* The Close Button */
-/* line 214, styles/app.less */
+/* line 224, styles/app.less */
 .close {
   color: white;
   float: right;
   font-size: 28px;
   font-weight: bold;
 }
-/* line 221, styles/app.less */
+/* line 231, styles/app.less */
 .close:hover,
 .close:focus {
   color: #000;
   text-decoration: none;
   cursor: pointer;
 }
-/* line 228, styles/app.less */
+/* line 238, styles/app.less */
 .modal-header {
   padding: 2px 16px;
   background-color: #d5d5d5;
   color: black;
 }
-/* line 234, styles/app.less */
+/* line 244, styles/app.less */
 .modal-body {
   padding: 2px 16px;
   height: 250px;
   overflow: auto;
 }
-/* line 240, styles/app.less */
+/* line 250, styles/app.less */
 .modal-footer {
   padding: 2px 16px;
   background-color: #fefefe;
   color: black;
 }
-/* line 248, styles/app.less */
+/* line 258, styles/app.less */
 .loader {
   border: 16px solid #f3f3f3;
   /* Light grey */
@@ -238,11 +241,11 @@ a:link {
   /* Sit on top */
 }
 @keyframes spin {
-  /* line 261, styles/app.less */
+  /* line 271, styles/app.less */
   0% {
     transform: rotate(0deg);
   }
-  /* line 262, styles/app.less */
+  /* line 272, styles/app.less */
   100% {
     transform: rotate(360deg);
   }
