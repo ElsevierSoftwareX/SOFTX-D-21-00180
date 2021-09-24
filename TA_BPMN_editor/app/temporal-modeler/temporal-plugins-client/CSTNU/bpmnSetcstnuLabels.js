@@ -369,7 +369,7 @@ function processSequenceFlow(params) {
     if (myObjs[source].obs === 'split' && myObjs[source].nodeName.includes("exclusiveGateway") ) {
 
       tempElement = elementRegistry.get(element.attributes.id.value);
-      isTrueBranchTmp = getExtensionElementValue(tempElement, "tPLiteralValue", "isTrueBranch")
+      isTrueBranchTmp = getExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch")
 
       // if (element.attributes['tempcon:isTrueBranch'] != undefined) {
       //   if (element.attributes['tempcon:isTrueBranch'].value != '') {
@@ -389,13 +389,13 @@ function processSequenceFlow(params) {
           let tempElement = elementRegistry.get(idArrow);
           if (myObjs[source].obsTrueArrow == undefined) {
             tempElement.businessObject.isTrueBranch = 'true';
-            setExtensionElementValue(tempElement, "tPLiteralValue", "isTrueBranch", "true")
+            setExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch", "true")
             tempElement.businessObject.name = 'True';
             myObjs[source].obsTrueArrow = idArrow;
           }
           else if (myObjs[source].obsFalseArrow == undefined) {
             tempElement.businessObject.isTrueBranch = 'false';
-            setExtensionElementValue(tempElement, "tPLiteralValue", "isTrueBranch", "false")
+            setExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch", "false")
             tempElement.businessObject.name = 'False';
             myObjs[source].obsFalseArrow = idArrow;
           }
@@ -406,7 +406,7 @@ function processSequenceFlow(params) {
           }
 
           // myObjs['arrows'][idArrow].isTrueBranch = tempElement.businessObject.isTrueBranch;
-          myObjs['arrows'][idArrow].isTrueBranch = getExtensionElementValue(tempElement, "tPLiteralValue", "isTrueBranch");
+          myObjs['arrows'][idArrow].isTrueBranch = getExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch");
           try {
             modeling.updateLabel(tempElement, tempElement.businessObject.name);
             eventBus.fire('element.changed', { element: tempElement });
@@ -422,13 +422,13 @@ function processSequenceFlow(params) {
 
         if (myObjs[source].obsTrueArrow == undefined) {
           tempElement.businessObject.isTrueBranch = 'true';
-            setExtensionElementValue(tempElement, "tPLiteralValue", "isTrueBranch", "true")
+            setExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch", "true")
             tempElement.businessObject.name = 'True';
           myObjs[source].obsTrueArrow = idArrow;
         }
         else if (myObjs[source].obsFalseArrow == undefined) {
           tempElement.businessObject.isTrueBranch = 'false';
-            setExtensionElementValue(tempElement, "tPLiteralValue", "isTrueBranch", "false")
+            setExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch", "false")
             tempElement.businessObject.name = 'False';
           myObjs[source].obsFalseArrow = idArrow;
         }
@@ -439,7 +439,7 @@ function processSequenceFlow(params) {
         }
 
         // myObjs['arrows'][idArrow].isTrueBranch = tempElement.businessObject.isTrueBranch;
-        myObjs['arrows'][idArrow].isTrueBranch = getExtensionElementValue(tempElement, "tPLiteralValue", "isTrueBranch");
+        myObjs['arrows'][idArrow].isTrueBranch = getExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch");
         try {
           modeling.updateLabel(tempElement, tempElement.businessObject.name);
           eventBus.fire('element.changed', { element: tempElement });

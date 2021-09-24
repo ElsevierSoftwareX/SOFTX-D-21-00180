@@ -180,6 +180,27 @@ var validateMaxDuration_sequenceFlow = function (element, values, node) {
   return !isNaN(val) && Number(val) > 0;
 };
 
+
+
+function getExtensionElementValue(element, typeName, property) {  
+let bo = element.businessObject || element;
+
+  let extensions = extHelper.getExtensionElements(
+    bo,
+    "tempcon:" + typeName
+  );
+  let returnValue;
+  if (extensions) {
+    if (extensions.length>0){
+      returnValue = extensions[0][property];
+    }  
+  } 
+  
+  // console.log('Return ' + property + ' ' + returnValue );
+  return returnValue;
+
+}
+
 export default function (group, element, bpmnFactory, translate) {
 
   const getValue = function (businessObject, prefix, typeName, property) {
@@ -252,7 +273,35 @@ export default function (group, element, bpmnFactory, translate) {
       return getBusinessObject(element);
     }
   }
+  
 
+  const setValue_isTrueBranch = function (businessObject, prefix, typeName, property) {
+    return function (element, values) {
+      const moddle = window.bpmnjs.get('moddle');
+      const eventBus = window.bpmnjs.get('eventBus');
+      const modeling = window.bpmnjs.get('modeling');
+
+
+      let prefixTypeElement = "tempcon:" + typeName;
+
+
+      const extensionElements = element.businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
+      let analysisDetails = getExtensionElement(element.businessObject, prefixTypeElement);
+
+      if (!analysisDetails) {
+        analysisDetails = moddle.create(prefixTypeElement);
+      
+        extensionElements.get('values').push(analysisDetails);
+      }
+
+      analysisDetails[property] =  values[property];
+      modeling.updateProperties(element, {
+            extensionElements,
+            name:values[property].charAt(0).toUpperCase() + values[property].slice(1)
+          });
+      
+    }
+  }
   
   const setValue = function (businessObject, prefix, typeName, property) {
     return function (element, values) {
@@ -280,6 +329,8 @@ export default function (group, element, bpmnFactory, translate) {
       
     }
   }
+
+
 
   
 function getExtensionElement(element, type) {
@@ -465,23 +516,29 @@ function getExtensionElement(element, type) {
       modelProperty: 'toLabel',
       labelText: 'To: ' + element.businessObject.targetRef.id
     }));
-
+ 
     set_group_minDuration(group, validateMinDuration_sequenceFlow, " (default: 0)");
     set_group_maxDuration(group, validateMaxDuration_sequenceFlow, " (default: ∞)");
-
+    
     // if (element.businessObject.sourceRef.$type.includes('ExclusiveGateway')) {
     //   if (element.businessObject.sourceRef.gatewaySplitJoin === 'split') {
-    //     group.entries.push(entryFactory.selectBox(translate, {
-    //       id: 'isTrueBranch',
-    //       description: 'Select the value true or false',
-    //       label: 'Value',
-    //       modelProperty: 'isTrueBranch',
-    //       // Default configuration, the property is not created id it does not change/click
-    //       // TODO force to create the property in the XML file
-    //       selectOptions: [{ name: '', value: '' }, { name: 'True', value: 'true' }, { name: 'False', value: 'false' }]
-    //     }));
-    //   }
-    // }
+      // debugger
+    if (element.businessObject.sourceRef.$type.includes('ExclusiveGateway')) {      
+      if (getExtensionElementValue(element.businessObject.sourceRef, 'TGatewaySplitJoin', 'gatewaySplitJoin') === 'split') {
+        group.entries.push(entryFactory.selectBox(translate, {
+          id: 'isTrueBranch',
+          description: 'Select the value true or false',
+          label: 'Value',
+          modelProperty: 'isTrueBranch',
+          // Default configuration, the property is not created id it does not change/click
+          // TODO force to create the property in the XML file
+          get: getValue(getBusinessObject(element), "tempcon", "TPLiteralValue", "isTrueBranch"),
+          set: setValue_isTrueBranch(getBusinessObject(element), "tempcon", "TPLiteralValue", "isTrueBranch"),
+          selectOptions: [{ name: '', value: '' }, { name: 'True', value: 'true' }, { name: 'False', value: 'false' }]
+          
+        }));
+      }
+    }
   }
 
 
