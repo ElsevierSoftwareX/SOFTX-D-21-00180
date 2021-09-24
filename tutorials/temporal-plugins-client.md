@@ -11,7 +11,7 @@ The plug-ins are connected by a JavaScript object called `moduleInfo` that conta
 const moduleInfo = {
     name: `CSTNU',
     buttonFunctions: [
-        { label: `Set conditions', 
+        { label: `Propagate conditions', 
           function: setCSTNULabels },
         { label: `Temporal verification', 
           function: evaluateCSTNU },
