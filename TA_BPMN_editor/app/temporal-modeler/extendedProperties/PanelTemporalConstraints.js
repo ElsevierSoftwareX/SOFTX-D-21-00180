@@ -253,7 +253,49 @@ export default function (group, element, bpmnFactory, translate) {
     }
   }
 
+  
   const setValue = function (businessObject, prefix, typeName, property) {
+    return function (element, values) {
+      const moddle = window.bpmnjs.get('moddle');
+      const eventBus = window.bpmnjs.get('eventBus');
+      const modeling = window.bpmnjs.get('modeling');
+
+
+      let prefixTypeElement = "tempcon:" + typeName;
+
+
+      const extensionElements = element.businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
+      let analysisDetails = getExtensionElement(element.businessObject, prefixTypeElement);
+
+      if (!analysisDetails) {
+        analysisDetails = moddle.create(prefixTypeElement);
+      
+        extensionElements.get('values').push(analysisDetails);
+      }
+
+      analysisDetails[property] =  values[property];
+      modeling.updateProperties(element, {
+            extensionElements
+          });
+      
+    }
+  }
+
+  
+function getExtensionElement(element, type) {
+  if (!element.extensionElements) {
+    return;
+  }
+
+  return element.extensionElements.values.filter((extensionElement) => {
+    return extensionElement.$instanceOf(type);
+  })[0];
+}
+
+
+
+
+  const setValue6 = function (businessObject, prefix, typeName, property) {
     return function (element, values) {
       let newMailElement;
       let prefixTypeElement = prefix + ":" + typeName;
@@ -366,6 +408,44 @@ export default function (group, element, bpmnFactory, translate) {
       modelProperty: 'propositionalLabel',
       get: getValue(getBusinessObject(element),  "tempcon", "TDuration", "propositionalLabel"),
       set: setValue(getBusinessObject(element),  "tempcon", "TDuration", "propositionalLabel")
+      // disabled: function () { return disabled; }
+    }));
+  }
+
+  
+  function set_group_minDuration_asProperty(group, comparisonFunction, strComment = "") {
+    group.entries.push(entryFactory.textField(translate, {
+      id: 'minDuration',
+      description: 'Min duration  (Integer value)',
+      label: 'Min duration' + strComment,
+      modelProperty: 'minDuration',
+      validate: comparisonFunction
+      
+    }));
+  }
+
+  function set_group_maxDuration_asProperty(group, comparisonFunction, strComment = "") {
+    group.entries.push(entryFactory.textField(translate, {
+      id: 'maxDuration',
+      description: 'Max duration (Integer value)',
+      label: 'Max duration' + strComment,
+      modelProperty: 'maxDuration',
+      validate: comparisonFunction
+    }));
+  }
+
+
+  function set_group_propositionalLabel_asProperty(group, disabled) {
+
+    if (disabled === undefined)
+      disabled = true;
+    else
+      disabled = false;
+    group.entries.push(entryFactory.textField(translate, {
+      id: 'propositionalLabel',
+      description: 'Label created with propositions of XORs',
+      label: 'Propositional label',
+      modelProperty: 'propositionalLabel'
       // disabled: function () { return disabled; }
     }));
   }
@@ -526,10 +606,10 @@ export default function (group, element, bpmnFactory, translate) {
       selectOptions: [{ name: 'Start', value: 'start' }, { name: 'End', value: 'end' }]
     }));
 
-    set_group_minDuration(group, validateMinDuration_relativeConstraint, " (default: 0)");
-    set_group_maxDuration(group, validateMaxDuration_sequenceFlow, " (default: ∞)");
+    set_group_minDuration_asProperty(group, validateMinDuration_relativeConstraint, " (default: 0)");
+    set_group_maxDuration_asProperty(group, validateMaxDuration_sequenceFlow, " (default: ∞)");
 
-    set_group_propositionalLabel(group, false);
+    set_group_propositionalLabel_asProperty(group, false);
 
   }
 
