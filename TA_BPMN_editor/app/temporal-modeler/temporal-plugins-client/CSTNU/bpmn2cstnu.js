@@ -80,7 +80,7 @@ export default function bpmn2cstnu(bpmn, customElements, fileName) {
   if (countObjs.elementsWithWarning > 0)
     divModalContent.innerText += '\n' + myLogObj.warnings;
 
-  console.log(myObjs);
+  // console.log(myObjs);
   return { xmlString, myLogObj, countObjs, myObjs, textMessage };
 }
 
