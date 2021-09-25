@@ -2,6 +2,11 @@
 
 ## TimeAwareBPMN-js
 
+v0.6.0 - 20210924
+
+- Change, tempcon attributes are saved as extensionElements
+- Update XML schema definition 
+
 v0.5.4 - 20210917
 
 - Change, inter-task are saved as extensionElements 

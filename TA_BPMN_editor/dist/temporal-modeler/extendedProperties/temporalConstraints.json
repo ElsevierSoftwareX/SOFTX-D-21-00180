@@ -1,29 +1,15 @@
 {
   "name": "TemporalConstraints",
   "prefix": "tempcon",
-  "uri": "https://gitlab.com/univr.di/TimeAwareBPMN",
+  "uri": "https://gitlab.com/univr.di/TimeAwareBPMN/-/tree/main/ TABPMN20.xsd",
   "xml": {
     "tagAlias": "lowerCase"
   },
   "associations": [],
   "types": [
     {
-      "name": "tcnDuration",
-      "extends": [
-        "bpmn:Task",
-        "bpmn:UserTask",
-        "bpmn:ServiceTask",
-        "bpmn:ScriptTask",
-        "bpmn:SendTask",
-        "bpmn:ReceiveTask",
-        "bpmn:ParallelGateway",
-        "bpmn:ExclusiveGateway",
-        "bpmn:EventBasedGateway",
-        "bpmn:IntermediateCatchEvent",
-        "bpmn:BoundaryEvent",
-        "bpmn:SequenceFlow",
-        "bpmn:DataObjectReference"
-      ],
+      "name": "TDuration",
+      "superClass": ["Element"],
       "properties": [
         {
           "name": "minDuration",
@@ -51,8 +37,8 @@
       ]
     },
     {
-      "name": "tcnPLiteralValue",
-      "extends": ["bpmn:SequenceFlow"],
+      "name": "TPLiteralValue",
+      "superClass": ["Element"],
       "properties": [
         {
           "name": "isTrueBranch",
@@ -62,8 +48,8 @@
       ]
     },
     {
-      "name": "tcnGatewaySplitJoin",
-      "extends": ["bpmn:ExclusiveGateway", "bpmn:ParallelGateway"],
+      "name": "TGatewaySplitJoin",
+      "superClass": ["Element"],
       "properties": [
         {
           "name": "gatewaySplitJoin",
@@ -73,8 +59,8 @@
       ]
     },
     {
-      "name": "tcnXorProposition",
-      "extends": ["bpmn:ExclusiveGateway"],
+      "name": "TXorProposition",
+      "superClass": ["Element"],
       "properties": [
         {
           "name": "observedProposition",

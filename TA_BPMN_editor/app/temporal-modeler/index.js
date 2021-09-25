@@ -185,30 +185,30 @@ CustomModeler.prototype.loadCustomElementsFromXML = function () {
   const elementRegistry = this.get('elementRegistry');
 
   let connections = [];
-
   elementRegistry.getAll().forEach(function (element) {
     let businessObject = getBusinessObject(element);
     let extensionElements = businessObject.extensionElements;
 
     if (extensionElements) {
       let relativeConstraints = getExtensionElement(businessObject, 'tempcon:Relative');
-
-      relativeConstraints.forEach(function (relativeConstraint) {
-        let customElement = {
-          type: relativeConstraint.type,
-          id: relativeConstraint.id_relative,
-          name: relativeConstraint.name,
-          waypoints: JSON.parse(relativeConstraint.waypoints),
-          source: relativeConstraint.source,
-          target: relativeConstraint.target,
-          minDuration: relativeConstraint.minDuration,
-          maxDuration: relativeConstraint.maxDuration,
-          propositionalLabel: relativeConstraint.propositionalLabel,
-          relativeConstraintConnFrom: relativeConstraint.From,
-          intentaskConnTo: relativeConstraint.To
-        };
-        connections.push(customElement);
-      });
+      if(relativeConstraints){
+        relativeConstraints.forEach(function (relativeConstraint) {
+          let customElement = {
+            type: relativeConstraint.type,
+            id: relativeConstraint.id_relative,
+            name: relativeConstraint.name,
+            waypoints: JSON.parse(relativeConstraint.waypoints),
+            source: relativeConstraint.source,
+            target: relativeConstraint.target,
+            minDuration: relativeConstraint.minDuration,
+            maxDuration: relativeConstraint.maxDuration,
+            propositionalLabel: relativeConstraint.propositionalLabel,
+            relativeConstraintConnFrom: relativeConstraint.From,
+            intentaskConnTo: relativeConstraint.To
+          };
+          connections.push(customElement);
+        });
+      }
     }
   });
   connections.forEach(this._addCustomConnection, this);
@@ -280,7 +280,9 @@ function getExtensionElement(element, type) {
     return;
   }
 
-  return element.extensionElements.values.filter((extensionElement) => {
-    return extensionElement.$instanceOf(type);
-  });
+  if(element.extensionElements.values){
+    return element.extensionElements.values.filter((extensionElement) => {
+      return extensionElement.$instanceOf(type);
+    });
+  }
 }

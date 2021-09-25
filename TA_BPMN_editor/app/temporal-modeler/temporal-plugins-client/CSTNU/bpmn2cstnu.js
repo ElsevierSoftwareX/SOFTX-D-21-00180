@@ -3,6 +3,8 @@
  * Performs the translation of a XML string of the BPMN model to CSTNU XML string.
  */
 
+import extHelper from "bpmn-js-properties-panel/lib/helper/ExtensionElementsHelper";
+
 const builder = require("xmlbuilder");
 
 /** @function bpmn2cstnu
@@ -78,7 +80,7 @@ export default function bpmn2cstnu(bpmn, customElements, fileName) {
   if (countObjs.elementsWithWarning > 0)
     divModalContent.innerText += '\n' + myLogObj.warnings;
 
-  console.log(myObjs);
+  // console.log(myObjs);
   return { xmlString, myLogObj, countObjs, myObjs, textMessage };
 }
 
@@ -93,22 +95,33 @@ function checkMinMax(element, logObj, edgeType) {
   let minDuration, maxDuration, okVals = true;
   let currentErrors = '';
   let nodeName = element.nodeName + ' ';
+
+  const elementRegistry = window.bpmnjs.get('elementRegistry');
+  let tempElement = elementRegistry.get(element.attributes.id.value);
+
   if (element.attributes.name != undefined) nodeName += element.attributes.name.value.replace(/(\r\n|\n|\r)/gm, " ") + ' ';
   if (element.attributes.id != undefined) nodeName += ' (' + element.attributes.id.value + ') ';
   logObj.log += "\n " + nodeName + " ";
 
-  if (element.attributes["tempcon:minDuration"] === undefined) {
+   
+
+  // if (element.attributes["tempcon:minDuration"] === undefined) {
+  if (getExtensionElementValue(tempElement, "TDuration", "minDuration")  === undefined) {
     currentErrors += '\n\tminDuration undefined';
     okVals = false;
   }
-  if (element.attributes["tempcon:maxDuration"] === undefined) {
+  // if (element.attributes["tempcon:maxDuration"] === undefined) {
+    if (getExtensionElementValue(tempElement, "TDuration", "maxDuration")  === undefined) {
     currentErrors += '\n\tmaxDuration undefined';
     okVals = false;
   }
 
   if (okVals) {
-    minDuration = element.attributes["tempcon:minDuration"].value;
-    maxDuration = element.attributes["tempcon:maxDuration"].value;
+    // minDuration = element.attributes["tempcon:minDuration"].value;
+    // maxDuration = element.attributes["tempcon:maxDuration"].value;
+
+    minDuration = getExtensionElementValue(tempElement, "TDuration", "minDuration") ;
+    maxDuration = getExtensionElementValue(tempElement, "TDuration", "maxDuration") ;
 
     if (minDuration === undefined) {
       currentErrors += "\n\tminDuration undefined ";
@@ -182,19 +195,26 @@ function checkMinMax_sequenceFlow(element, logObj, edgeType) {
   let minDuration, maxDuration, okVals = true;
   let currentErrors = '';
   let nodeName = element.nodeName + ' ';
+  const elementRegistry = window.bpmnjs.get('elementRegistry');
+  let tempElement = elementRegistry.get(element.attributes.id.value);  
+  
   if (element.attributes.name != undefined) nodeName += element.attributes.name.value.replace(/(\r\n|\n|\r)/gm, " ") + ' ';
   if (element.attributes.id != undefined) nodeName += '\n[' + element.attributes.id.value + '] ';
   logObj.log += "\n " + nodeName + " ";
 
-  if (element.attributes["tempcon:minDuration"] === undefined)
+  // if (element.attributes["tempcon:minDuration"] === undefined)
+  if (getExtensionElementValue(tempElement, "TDuration", "minDuration") === undefined)
     minDuration = 0;
   else
-    minDuration = element.attributes["tempcon:minDuration"].value;
+    minDuration = getExtensionElementValue(tempElement, "TDuration", "minDuration");
+    // minDuration = element.attributes["tempcon:minDuration"].value;
 
-  if (element.attributes["tempcon:maxDuration"] === undefined)
+  // if (element.attributes["tempcon:maxDuration"] === undefined)
+  if (getExtensionElementValue(tempElement, "TDuration", "maxDuration") === undefined)
     maxDuration = Infinity;
   else
-    maxDuration = element.attributes["tempcon:maxDuration"].value;
+    maxDuration = getExtensionElementValue(tempElement, "TDuration", "maxDuration");
+    // maxDuration = element.attributes["tempcon:maxDuration"].value;
 
   if (okVals) {
 
@@ -400,8 +420,15 @@ function checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs) {
         nOutgoing++;
       }
     }
-    if (element.attributes['tempcon:gatewaySplitJoin'] != undefined) {
-      if (element.attributes['tempcon:gatewaySplitJoin'].value.includes('split')) {
+    const elementRegistry = window.bpmnjs.get('elementRegistry');
+    let tempElement = elementRegistry.get(element.attributes.id.value);
+    let gatewaySplitJoinTmp = getExtensionElementValue(tempElement, "TGatewaySplitJoin", "gatewaySplitJoin")
+
+
+    // if (element.attributes['tempcon:gatewaySplitJoin'] != undefined) {
+    //   if (element.attributes['tempcon:gatewaySplitJoin'].value.includes('split')) {
+      if (gatewaySplitJoinTmp != undefined) { //Read it
+        if (gatewaySplitJoinTmp.includes('split')) {
         // if split, it should have 1 input and 2 outputs
         if (nIncoming != 1 || nOutgoing != 2) {
           myLogObj.errors += '\n' + element.nodeName + ' (' + element.attributes.id.value + ')' + ' invalid number of incoming/outcoming arrows \n';
@@ -409,8 +436,14 @@ function checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs) {
           return false;
         }
         if (element.nodeName.includes("exclusiveGateway")) {
-          if (element.attributes['tempcon:observedProposition'] != undefined) {
-            myObjs[element.attributes.id.value].observedProposition = element.attributes['tempcon:observedProposition'].value;
+          let tmpElement = elementRegistry.get(element.attributes.id.value);
+          let observedPropositionTmp = getExtensionElementValue(tmpElement, "TXorProposition", "observedProposition");
+
+          // if (element.attributes['tempcon:observedProposition'] != undefined) {
+          //   myObjs[element.attributes.id.value].observedProposition = element.attributes['tempcon:observedProposition'].value;
+          // }
+          if (observedPropositionTmp != undefined) {
+            myObjs[element.attributes.id.value].observedProposition = observedPropositionTmp;
           }
           else {
             myLogObj.errors += '\n' + element.nodeName + ' (' + element.attributes.id.value + ')' + ' observedProposition not defined \n';
@@ -420,7 +453,8 @@ function checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs) {
           myObjs[element.attributes.id.value].obs = 'split';
         }
       }
-      if (element.attributes['tempcon:gatewaySplitJoin'].value.includes('join')) {
+      // if (element.attributes['tempcon:gatewaySplitJoin'].value.includes('join')) {
+        else if (gatewaySplitJoinTmp.includes('join')) {
         // if join, it should have 2 inputs and 1 output
         if (nIncoming != 2 || nOutgoing != 1) {
           myLogObj.errors += '\n' + element.nodeName + ' (' + element.attributes.id.value + ')' + ' invalid number of incoming/outcoming arrows \n';
@@ -466,6 +500,8 @@ function setTwoNodesToEdges(params) {
   let maxD = tmpObj.maxDuration;
   let okVals = tmpObj.okVals;
 
+  const elementRegistry = window.bpmnjs.get('elementRegistry');
+
   //If minD or maxD are not OK, do not create the nodes
   if (!okVals) {
     countObjs.elementsWithError += 1;
@@ -491,9 +527,14 @@ function setTwoNodesToEdges(params) {
       return;
 
     let propositionalLabel = "⊡";
-    if (element.attributes["tempcon:propositionalLabel"] != undefined)
-      if (element.attributes["tempcon:propositionalLabel"].value != '')
-        propositionalLabel = element.attributes["tempcon:propositionalLabel"].value;
+    let tmpElement = elementRegistry.get(element.attributes.id.value);
+    let propositionalLabelTmp = getExtensionElementValue(tmpElement, "TDuration", "gatewaySplitJoin");
+
+    // if (element.attributes["tempcon:propositionalLabel"] != undefined)
+    //   if (element.attributes["tempcon:propositionalLabel"].value != '')
+    if (propositionalLabelTmp != undefined)
+      if (propositionalLabelTmp != '')
+        propositionalLabel = propositionalLabelTmp;
 
     // Nodes
     let id_s = "S_" + elementType + "_" + elementTypeNumber + "_" + element.attributes.id.value;
@@ -510,8 +551,10 @@ function setTwoNodesToEdges(params) {
 
     if (myObjs[element.attributes.id.value].obs) {
       if (myObjs[element.attributes.id.value].obs === 'split') {
-        node.ele("data", { key: "Obs" }, element.attributes['tempcon:observedProposition'].value);
-        myObjs[element.attributes.id.value].observedProposition = element.attributes['tempcon:observedProposition'].value;
+        // node.ele("data", { key: "Obs" }, element.attributes['tempcon:observedProposition'].value);
+        // myObjs[element.attributes.id.value].observedProposition = element.attributes['tempcon:observedProposition'].value;
+        node.ele("data", { key: "Obs" }, getExtensionElementValue(tmpElement, "TXorProposition", "observedProposition"));
+        myObjs[element.attributes.id.value].observedProposition = getExtensionElementValue(tmpElement, "TXorProposition", "observedProposition");
         countObjs.nObservedProposition += 1;
       }
     }
@@ -1190,3 +1233,97 @@ function getProcessName(xmlDoc) {
   }
   return name;
 }
+
+
+
+
+function getExtensionElementValue(element, typeName, property) {  
+  let extensions = extHelper.getExtensionElements(
+    element.businessObject,
+    "tempcon:" + typeName
+  );
+  let returnValue;
+  if (extensions) {
+    if (extensions.length>0){
+      returnValue = extensions[0][property];
+    }  
+  } 
+  
+  // console.log('Return ' + property + ' ' + returnValue );
+  return returnValue;
+
+}
+
+
+// function setExtensionElementValue(element, typeName, property, value) {
+//   // debugger;
+//   const moddle = window.bpmnjs.get('moddle');
+//   const eventBus = window.bpmnjs.get('eventBus');
+
+//   let prefixTypeElement = "tempcon:" + typeName;
+
+//   let extensions = extHelper.getExtensionElements(
+//     element.businessObject,
+//     "tempcon:" + typeName
+//   );
+//   let returnValue;
+//   if (extensions && extensions.length>0) {
+//     extensions[0][property] = value;
+    
+//   } 
+//   else{
+
+//     let newExtensionElements = element.businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
+//     let relativeConstraint = moddle.create(prefixTypeElement);
+//     newExtensionElements.get('values').push(relativeConstraint);
+//     newExtensionElements[property] = value;
+//     // modeling.updateProperties(element, { extensionElements: newExtensionElements });
+//     eventBus.fire('element.changed', { element: element });
+//     // console.log('set ' + property + ' ' + value );
+
+//   }
+// }
+
+
+
+
+function setExtensionElementValue(element, typeName, property, value) {
+  
+  const moddle = window.bpmnjs.get('moddle');
+  const eventBus = window.bpmnjs.get('eventBus');
+  const modeling = window.bpmnjs.get('modeling');
+
+
+  let prefixTypeElement = "tempcon:" + typeName;
+
+
+  const extensionElements = element.businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
+  let analysisDetails = getExtensionElement(element.businessObject, prefixTypeElement);
+
+  if (!analysisDetails) {
+    analysisDetails = moddle.create(prefixTypeElement);
+  
+    extensionElements.get('values').push(analysisDetails);
+  }
+
+  analysisDetails[property] = value;
+  modeling.updateProperties(element, {
+        extensionElements
+      });
+  
+}
+
+function getExtensionElement(element, type) {
+  if (!element.extensionElements) {
+    return;
+  }
+
+  return element.extensionElements.values.filter((extensionElement) => {
+    return extensionElement.$instanceOf(type);
+  })[0];
+}
+
+
+  
+
+

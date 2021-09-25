@@ -30,7 +30,7 @@
         const moduleInfo = {
             name: 'CSTNU',
             buttonFunctions: [
-                { label: 'Set conditions', function: setCSTNULabels },
+                { label: 'Propagate conditions', function: setCSTNULabels },
                 { label: 'Temporal verification', function: evaluateCSTNU },
                 { label: 'Download CSTNU', function: downloadCSTNU },
                 { label: 'Reset colors', function: removeNotesUpdatedError }
@@ -50,7 +50,7 @@ import cstnuChecked from './cstnuChecked';
 const moduleInfo = {
     name: 'CSTNU',
     buttonFunctions: [
-        { label: 'Set conditions', function: setCSTNULabels },
+        { label: 'Propagate conditions', function: setCSTNULabels },
         { label: 'Temporal verification', function: evaluateCSTNU },
         { label: 'Download CSTNU', function: downloadCSTNU },
         { label: 'Reset colors', function: removeNotesUpdatedError }
@@ -65,7 +65,10 @@ function removeNotesUpdatedError() {
     const eventBus = window.bpmnjs.get('eventBus');
     const elementRegistry = window.bpmnjs.get('elementRegistry');
     // Remove notes/color of elements updated or with error  
-    window.elementsUpdated.forEach(elementId => {
+
+    let elementsUpdatedTmp = [...window.elementsUpdated];
+    window.elementsUpdated = [];
+    elementsUpdatedTmp.forEach(elementId => {
 
         let tempElement = elementRegistry.get(elementId);
         // Using this insted of modeling.updateProperties, this does not produce ctr+z
@@ -74,7 +77,6 @@ function removeNotesUpdatedError() {
 
     });
     let elementsErrorTmp = [...window.elementsError];
-    window.elementsUpdated = [];
     window.elementsError = [];
 
     elementsErrorTmp.forEach(elementId => {
@@ -280,9 +282,9 @@ function sendCSTNUtoEvaluate(cstnuXml, myObjs) {
                     // Elements updated 
                     let elementsUpdated = cstnuChecked(jsonRes.cstnuChecked, myObjs);
 
-                    divModalContent.innerText = "The given network is dynamic controllable. \n";
+                    divModalContent.innerText = "The given network is dynamically controllable. \n";
                     if (elementsUpdated.length === 0) {
-                        divModalContent.innerText += "No nodes will be updated.";
+                        divModalContent.innerText += "No temporal ranges updated.";
                     }
                     else {
                         divModalContent.innerText += "Nodes to be updated: \n";
@@ -307,7 +309,7 @@ function sendCSTNUtoEvaluate(cstnuXml, myObjs) {
                         }
                         currentObj = undefined;
                     }
-                    divModalContent.innerText = "The given network is NOT dynamic controllable.";
+                    divModalContent.innerText = "The given network is NOT dynamically controllable.";
                     if (currentObj) {
 
                         divModalContent.innerText += "\nNegative loop in node: " + strNodeId + " (" + currentObj.id + ").";
