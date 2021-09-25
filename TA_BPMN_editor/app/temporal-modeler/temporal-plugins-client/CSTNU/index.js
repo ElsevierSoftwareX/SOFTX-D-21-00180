@@ -284,7 +284,7 @@ function sendCSTNUtoEvaluate(cstnuXml, myObjs) {
 
                     divModalContent.innerText = "The given network is dynamically controllable. \n";
                     if (elementsUpdated.length === 0) {
-                        divModalContent.innerText += "No temporal ranges updated .";
+                        divModalContent.innerText += "No temporal ranges updated.";
                     }
                     else {
                         divModalContent.innerText += "Nodes to be updated: \n";
