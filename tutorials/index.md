@@ -19,7 +19,7 @@ The plug-ins are divided into two parts:
 ## Running the Example
 
 
-TimeAwareBPMN-js requires the [Java module](https://www.npmjs.com/package/java). Java module works with JVM 8 or JVM 11.
+TimeAwareBPMN-js requires the [Java module](https://www.npmjs.com/package/java). Java module works with JVM 11 or JVM 17.
 
 Installation Mac OS X
 
