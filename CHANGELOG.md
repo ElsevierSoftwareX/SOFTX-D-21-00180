@@ -6,6 +6,7 @@ v0.6.0 - 20210924
 
 - Change, tempcon attributes are saved as extensionElements
 - Update XML schema definition 
+- README.md improved
 
 v0.5.4 - 20210917
 
