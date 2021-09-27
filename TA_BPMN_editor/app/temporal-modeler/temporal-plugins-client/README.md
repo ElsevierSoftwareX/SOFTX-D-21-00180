@@ -30,7 +30,7 @@ In the actual version, all the functions receive as parameters
 
 By using this signature it is possible the dynamic creation of a set of buttons in the interface that are linked to functions in the plug-in. This set of buttons will depend on the functions in the JavaScript object exported by the plug-in. 
 
-The plug-ins have access to the object `window` and all the objects in the Document Object Model of the page, including the editor and elements, which can be updated directly from the plug-in. This separates the functionality associated with the verification and optimization of the temporal properties from the edition of the model process. 
+The plug-ins have access to the object `window` and all the objects in the Document Object Model of the page, including the editor and elements, which can be updated directly from the plug-in. This separates the functionality associated with the verification and optimization of the temporal properties from the editing of the model process. 
 
 The plug-ins should be added in the folder `TA_BPMN_editor/app/temporal-modeler/temporal-plugins-client/` and have as entry point a file that should be imported in the `index.js` file in the folder `temporal-plugins-client` and added to the object `evaluationModules` (as was it done for the `evalCSTNU` object). 
 

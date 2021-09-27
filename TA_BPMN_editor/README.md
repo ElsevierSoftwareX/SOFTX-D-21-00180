@@ -5,7 +5,7 @@ time-aware BPMN processes. This is the client of the **TimeAwareBPMN-js** tool, 
 
 ## About
 
-The **TimeAwareBPMN-editor** enables the edition of process models enriched with temporal constraints defined on BPMN elements. It contains a toolbar that allows the user to choose how to verify the process models with respect to their temporal constraints. 
+The **TimeAwareBPMN-editor** enables the editing of process models enriched with temporal constraints defined on BPMN elements. It contains a toolbar that allows the user to choose how to verify the process models with respect to their temporal constraints. 
 
 This verification is done in the server-side of the tool TimeAwareBPMN-js. 
 The tool was designed to be extended, by adding verification programs as plug-ins.

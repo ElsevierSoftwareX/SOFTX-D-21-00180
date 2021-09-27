@@ -1,6 +1,6 @@
 # TimeAwareBPMN-js
 
-A tool that enables the edition and verification of time-aware BPMN models based on temporal constraint networks.
+A tool that enables the editing and verification of time-aware BPMN models based on temporal constraint networks.
 
 
 ## About
