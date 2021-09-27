@@ -136,8 +136,6 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
     return componentsToPath(circlePath);
   };
 
-
-
   function addMarker(id, options) {
     var attrs = assign({
       fill: 'red',
@@ -193,7 +191,7 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
   function marker(type, fill, stroke) {
 
     var id = type + '-' + colorEscape(fill) + '-' + colorEscape(stroke) + '-' + rendererId;
-    console.log(id);
+
     if (!markers[id]) {
       createMarker(id, type, fill, stroke);
     }
@@ -217,15 +215,14 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
         }
       });
     }
-
   }
 
   this.drawCustomConnection = function (p, element, textRenderer) {
 
     let minD = "";
     let maxD = "";
-    
-    
+
+
     if (element.businessObject.minDuration != undefined)
       minD = element.businessObject.minDuration;
     if (element.businessObject.maxDuration != undefined)
@@ -402,61 +399,25 @@ CustomRenderer.prototype.drawConnection = function (p, element) {
     // Information about min max duration
     let minD = "";
     let maxD = "";
-    if ( getExtensionElementValue(element, 'TDuration', 'minDuration') != undefined)
-      minD = getExtensionElementValue(element, 'TDuration', 'minDuration') ;
-    if (getExtensionElementValue(element, 'TDuration', 'maxDuration')  != undefined)
-      maxD = getExtensionElementValue(element, 'TDuration', 'maxDuration') ;
-      
+    if (getExtensionElementValue(element, 'TDuration', 'minDuration') != undefined)
+      minD = getExtensionElementValue(element, 'TDuration', 'minDuration');
+    if (getExtensionElementValue(element, 'TDuration', 'maxDuration') != undefined)
+      maxD = getExtensionElementValue(element, 'TDuration', 'maxDuration');
+
     // Default values for a norma connection 
     if (minD === "") minD = 0;
     if (maxD === "") maxD = Infinity;
 
-    // if (element.businessObject.targetRef.$type.includes('ParallelGateway')) {
-    //   debugger;
-    // }
-
-    let colorFrame = undefined;
+    let colorFrame;
     if (minD < 0) colorFrame = "#cc0000";
     if (maxD < minD) colorFrame = "#cc0000";
     if ((minD != 0 && !Number.isInteger(parseFloat(minD))) ||
       (maxD != Infinity && !Number.isInteger(parseFloat(maxD)))) colorFrame = "#cc0000";
 
-
-    // //isTrueBranch : true or false isTrueBranch
-    // try {
-    //   if (element.businessObject.sourceRef) {
-    //     if (element.businessObject.sourceRef.$type.includes('ExclusiveGateway')) {
-    //       if (element.businessObject.sourceRef.gatewaySplitJoin != undefined) {
-    //         if (element.businessObject.sourceRef.gatewaySplitJoin === 'split') {
-    //           let isTrueBranch = element.businessObject.isTrueBranch;
-    //           if (isTrueBranch === undefined || isTrueBranch === "") colorFrame = "#cc0000";
-    //         }
-    //       }
-    //     }
-    //   }
-    // } catch (error) {
-    //   console.log('Error in sequenceFlow connected to exclusiveGateway');
-    // }
-
-    // try {
-    //   if (element.businessObject.targetRef) {
-    //     if (element.businessObject.targetRef.$type.includes('ParallelGateway')) {
-    //       if (element.businessObject.targetRef.gatewaySplitJoin != undefined) {
-    //         if (element.businessObject.targetRef.gatewaySplitJoin === 'join') {
-    //           if (maxD != Infinity) colorFrame = "#cc0000";
-    //         }
-    //       }
-    //     }
-    //   }
-    // } catch (error) {
-    //   console.log('Error in sequenceFlow connected to parallelGateway');
-    // }
-
     if (colorFrame != undefined) {
       shape.style.stroke = colorFrame;
       // shape.style.strokeWidth = "4px";
     }
-
 
     return shape;
   }
@@ -506,21 +467,16 @@ function drawShape_contingent(
 
   // Information about min max duration and isContingent
   let minD = "", maxD = "";
-  if ( getExtensionElementValue(element, 'TDuration', 'minDuration') != undefined)
-    minD = getExtensionElementValue(element, 'TDuration', 'minDuration') ;
-  if (getExtensionElementValue(element, 'TDuration', 'maxDuration')  != undefined)
-    maxD = getExtensionElementValue(element, 'TDuration', 'maxDuration') ;
+  if (getExtensionElementValue(element, 'TDuration', 'minDuration') != undefined)
+    minD = getExtensionElementValue(element, 'TDuration', 'minDuration');
+  if (getExtensionElementValue(element, 'TDuration', 'maxDuration') != undefined)
+    maxD = getExtensionElementValue(element, 'TDuration', 'maxDuration');
 
   let colorFrame = "#00cc00";
   if (isContingent) colorFrame = "#0000cc";
 
-  // console.log(element.businessObject.updated);
-
-  // if (window.elementsUpdated.indexOf(element.businessObject.id) >= 0 &&
-  //   element.businessObject.updated) colorFrame = "#FFFF00";
-  if (window.elementsUpdated.indexOf(element.businessObject.id) >= 0 )
-     colorFrame = "#FFFF00";
-  // console.log(window.elementsError.indexOf(element.businessObject.id));
+  if (window.elementsUpdated.indexOf(element.businessObject.id) >= 0)
+    colorFrame = "#FFFF00";
 
   if (window.elementsError.indexOf(element.businessObject.id) >= 0) colorFrame = "#cc00cc";
 
@@ -543,7 +499,6 @@ function drawShape_contingent(
   }
   if (isAny(element, ["bpmn:ExclusiveGateway", "bpmn:ParallelGateway"])) {
     //Check it has a type: split or join 
-    // let gatewaySplitJoin = element.businessObject.gatewaySplitJoin;
     let gatewaySplitJoin = getExtensionElementValue(element, "TGatewaySplitJoin", "gatewaySplitJoin");
     if (gatewaySplitJoin === undefined) {
       colorFrame = "#cc0000";
@@ -584,9 +539,6 @@ function drawShape_contingent(
   });
 
   let strText = minD + "-" + maxD;
-  // if (element.businessObject.propositionalLabel)
-  //   strText += ', ' + element.businessObject.propositionalLabel;
-
 
   let text = textRenderer.createText(strText); // (label || '', options);
   // svgClasses(text).add('djs-label');
@@ -599,24 +551,23 @@ function drawShape_contingent(
   if (is(element, "bpmn:IntermediateCatchEvent")) {
     temWidth = -40;
   }
-  
+
   svgAttr(text, {
     transform: "translate(" + temWidth + ", -7)",
   });
 }
 
-function getExtensionElementValue(element, typeName, property) {  
-    let extensions = extHelper.getExtensionElements(
-      element.businessObject,
-      "tempcon:" + typeName
-    );
-    let returnValue;
-    // console.log(element);
-    if (extensions) {
-      if (extensions.length>0){
-        returnValue = extensions[0][property];
-      }  
-    } 
-    return returnValue;
-  
-};
+function getExtensionElementValue(element, typeName, property) {
+  let extensions = extHelper.getExtensionElements(
+    element.businessObject,
+    "tempcon:" + typeName
+  );
+  let returnValue;
+  if (extensions) {
+    if (extensions.length > 0) {
+      returnValue = extensions[0][property];
+    }
+  }
+  return returnValue;
+
+}

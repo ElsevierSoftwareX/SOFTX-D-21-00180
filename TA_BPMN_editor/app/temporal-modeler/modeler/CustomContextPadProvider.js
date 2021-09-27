@@ -25,7 +25,6 @@ export default function CustomContextPadProvider(injector, connect, translate, c
 
   var cached = bind(this.getContextPadEntries, this);
 
-
   this.getContextPadEntries = function (element) {
     const {
       autoPlace,
@@ -35,18 +34,16 @@ export default function CustomContextPadProvider(injector, connect, translate, c
     } = this;
 
     var actions = cached(element);
-    delete actions["append.append-task"]
-    
+    delete actions["append.append-task"];
 
     var businessObject = element.businessObject;
     window.creatingRelativeConstraint = undefined;
-
 
     // To create a user task from the context menu
     function appendUserTask(event, element) {
       if (autoPlace) {
         const shape = elementFactory.createShape({ type: 'bpmn:UserTask' });
-  
+
         autoPlace.append(element, shape);
       } else {
         appendUserTaskStart(event, element);
@@ -55,14 +52,9 @@ export default function CustomContextPadProvider(injector, connect, translate, c
 
     function appendUserTaskStart(event) {
       const shape = elementFactory.createShape({ type: 'bpmn:UserTask' });
-  
+
       create.start(event, shape, element);
     }
-
-
-
-
-
 
     function startConnect(event, element, autoActivate) {
       window.creatingRelativeConstraint = true;
@@ -79,8 +71,6 @@ export default function CustomContextPadProvider(injector, connect, translate, c
             dragstart: startConnect
           }
         },
-        // },
-        // {
         'other': {
           group: 'connect',
           className: 'bpmn-icon-screw-wrench',
@@ -130,7 +120,7 @@ CustomContextPadProvider.$inject = [
   'injector',
   'connect',
   'translate',
-  'config', 
-  'create', 
+  'config',
+  'create',
   'elementFactory'
 ];

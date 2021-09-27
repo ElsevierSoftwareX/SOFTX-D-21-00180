@@ -28,7 +28,7 @@ export default function CustomElementFactory(bpmnFactory, moddle) {
    *
    * @return {djs.model.Base}
    */
-  this.create = function(elementType, attrs) {
+  this.create = function (elementType, attrs) {
     var type = attrs.type;
 
     if (elementType === 'label') {
@@ -47,11 +47,11 @@ export default function CustomElementFactory(bpmnFactory, moddle) {
             id: attrs.id
           });
         }
-        else{
+        else {
           // https://forum.bpmn.io/t/customelements-autogenerate-id/3505
-          
+
           assign(attrs.businessObject, {
-            id: 'InterTask_' + RENDERER_IDS.next().substring(0,4)
+            id: 'InterTask_' + RENDERER_IDS.next().substring(0, 4)
           });
         }
       }
@@ -60,11 +60,8 @@ export default function CustomElementFactory(bpmnFactory, moddle) {
       if (!/:connection$/.test(type)) {
         assign(attrs, self._getCustomElementSize(type));
       }
-
-
       // we mimic the ModdleElement API to allow interoperability with
       // other components, i.e. the Modeler and Properties Panel
-
       if (!('$model' in attrs.businessObject)) {
         Object.defineProperty(attrs.businessObject, '$model', {
           value: moddle
@@ -74,7 +71,7 @@ export default function CustomElementFactory(bpmnFactory, moddle) {
       if (!('$instanceOf' in attrs.businessObject)) {
         // ensures we can use ModelUtil#is for type checks
         Object.defineProperty(attrs.businessObject, '$instanceOf', {
-          value: function(type) {
+          value: function (type) {
             return this.type === type;
           }
         });
@@ -82,7 +79,7 @@ export default function CustomElementFactory(bpmnFactory, moddle) {
 
       if (!('get' in attrs.businessObject)) {
         Object.defineProperty(attrs.businessObject, 'get', {
-          value: function(key) {
+          value: function (key) {
             return this[key];
           }
         });
@@ -90,7 +87,7 @@ export default function CustomElementFactory(bpmnFactory, moddle) {
 
       if (!('set' in attrs.businessObject)) {
         Object.defineProperty(attrs.businessObject, 'set', {
-          value: function(key, value) {
+          value: function (key, value) {
             return this[key] = value;
           }
         });
@@ -133,7 +130,7 @@ CustomElementFactory.$inject = [
  *
  * @return {Dimensions} a {width, height} object representing the size of the element
  */
-CustomElementFactory.prototype._getCustomElementSize = function(type) {
+CustomElementFactory.prototype._getCustomElementSize = function (type) {
   var shapes = {
     __default: { width: 100, height: 80 },
     'custom:triangle': { width: 40, height: 40 },

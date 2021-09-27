@@ -1,7 +1,3 @@
-import inherits from "inherits";
-
-// import PropertiesActivator from "bpmn-js-properties-panel/lib/PropertiesActivator";
-
 // Require your custom property entries.
 import temporalConstraintsFields from './PanelTemporalConstraints';
 import typeOfGatewayFields from './PanelTypeOfGateway';
@@ -53,7 +49,6 @@ export default function TemporalConstraintsProvider(propertiesPanel, eventBus, b
       typeOfGatewayFields(typeOfGatewayGroup, element, translate);
       groups.push(typeOfGatewayGroup);
 
-
       // Add the "temporalConstraints" tab
       var temporalConstraintsTab = {
         id: 'temporalConstraints',
@@ -70,4 +65,3 @@ export default function TemporalConstraintsProvider(propertiesPanel, eventBus, b
 }
 
 TemporalConstraintsProvider.$inject = ['propertiesPanel', 'eventBus', 'bpmnFactory', 'translate'];
-// inherits(TemporalConstraintsProvider, PropertiesActivator);

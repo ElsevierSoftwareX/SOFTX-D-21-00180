@@ -1,13 +1,9 @@
 import entryFactory from 'bpmn-js-properties-panel/lib/factory/EntryFactory';
-import cmdHelper from "bpmn-js-properties-panel/lib/helper/CmdHelper";
 import extHelper from "bpmn-js-properties-panel/lib/helper/ExtensionElementsHelper";
-import elementHelper from "bpmn-js-properties-panel/lib/helper/ElementHelper";
-
 
 import {
   is, getBusinessObject
 } from 'bpmn-js/lib/util/ModelUtil';
-
 
 
 /** Check minDuration > 0 */
@@ -62,7 +58,7 @@ var validateMinDuration_sequenceFlow = function (element, values, node) {
   }
 
   if (val === undefined) {
-    // Default valur is 0
+    // Default value is 0
   }
   else {
     // val = val.replace(/\s/g, '');
@@ -90,7 +86,7 @@ var validateMinDuration_relativeConstraint = function (element, values, node) {
   }
 
   if (val === undefined) {
-    // Default valur is 0
+    // Default value is 0
   }
   else {
     // val = val.replace(/\s/g, '');
@@ -111,7 +107,7 @@ var validateMinDuration_relativeConstraint = function (element, values, node) {
 var validateMaxDuration_contingent = function (element, values, node) {
   let val = values.maxDuration;
   // let valMinDuration = element.businessObject.minDuration;
-  let valMinDuration  = getExtensionElementValue(element, 'TDuration', 'minDuration');
+  let valMinDuration = getExtensionElementValue(element, 'TDuration', 'minDuration');
 
   if (node.childElementCount > 0) {
     if (node.childNodes[2].className.includes("bpp-field-description")) {
@@ -134,7 +130,7 @@ var validateMaxDuration_contingent = function (element, values, node) {
 var validateMaxDuration_noContingent = function (element, values, node) {
   let val = values.maxDuration;
   // let valMinDuration = element.businessObject.minDuration;
-  let valMinDuration  = getExtensionElementValue(element, 'TDuration', 'minDuration');
+  let valMinDuration = getExtensionElementValue(element, 'TDuration', 'minDuration');
 
   if (node.childElementCount > 0) {
     if (node.childNodes[2].className.includes("bpp-field-description")) {
@@ -157,7 +153,7 @@ var validateMaxDuration_noContingent = function (element, values, node) {
 var validateMaxDuration_sequenceFlow = function (element, values, node) {
   let val = values.maxDuration;
   // let valMinDuration = element.businessObject.minDuration;
-  let valMinDuration  = getExtensionElementValue(element, 'TDuration', 'minDuration');
+  let valMinDuration = getExtensionElementValue(element, 'TDuration', 'minDuration');
   if (valMinDuration === undefined) valMinDuration = 0;
 
   if (node.childElementCount > 0) {
@@ -167,7 +163,7 @@ var validateMaxDuration_sequenceFlow = function (element, values, node) {
     }
   }
   if (val === undefined) {
-    // Default valur is Inf
+    // Default value is Inf
   }
   else {
     // val = val.replace(/\s/g, '');
@@ -195,7 +191,7 @@ var validateMaxDuration_relative = function (element, values, node) {
     }
   }
   if (val === undefined) {
-    // Default valur is Inf
+    // Default value is Inf
   }
   else {
     // val = val.replace(/\s/g, '');
@@ -211,11 +207,8 @@ var validateMaxDuration_relative = function (element, values, node) {
   return !isNaN(val) && Number(val) > 0;
 };
 
-
-
-
-function getExtensionElementValue(element, typeName, property) {  
-let bo = element.businessObject || element;
+function getExtensionElementValue(element, typeName, property) {
+  let bo = element.businessObject || element;
 
   let extensions = extHelper.getExtensionElements(
     bo,
@@ -223,12 +216,11 @@ let bo = element.businessObject || element;
   );
   let returnValue;
   if (extensions) {
-    if (extensions.length>0){
+    if (extensions.length > 0) {
       returnValue = extensions[0][property];
-    }  
-  } 
-  
-  // console.log('Return ' + property + ' ' + returnValue );
+    }
+  }
+
   return returnValue;
 
 }
@@ -245,212 +237,70 @@ export default function (group, element, bpmnFactory, translate) {
       returnObject[property] = "";
 
       if (extensions) {
-        if(extensions.length > 0){
+        if (extensions.length > 0) {
           returnObject[property] = extensions[0][property];
         }
-      } 
+      }
       return returnObject;
     };
   };
 
-  function setValue4(businessObject, prefix, typeName, property, element, values) {
-    var b_obj = getBusinessObject(element);
-    var selectedValues = {};
-    selectedValues = values;
-    prop[_id] = selectedValues[_id];
-    var selectedName = dropdownOptions[parseInt(prop[_id])].name;
-    var bo = cmdHelper.updateBusinessObject(element, b_obj, prop);
-
-    var selectedInputParameter = bpmnFactory.create('camunda:InputParameter', {
-      name: selectedName,
-      value: prop[_id]
-    });      
-
-    var inputOutput = bpmnFactory.create('camunda:InputOutput', {
-      inputParameters: [selectedInputParameter]
-    });  
-    b_obj.extensionElements = b_obj.extensionElements || bpmnFactory.create('bpmn:ExtensionElements');
-    b_obj.extensionElements.get('values').push(inputOutput);
-   
-    return bo;
-  }
-
-  
-  const setValue2 = function (businessObject, prefix, typeName, property, element, values) {
-    let prefixTypeElement = prefix + ":" + typeName;
-  
-    var b_obj = getBusinessObject(element);
-    var inputOutput = bpmnFactory.create(prefixTypeElement, {
-      values
-    }); 
-    b_obj.extensionElements = b_obj.extensionElements || bpmnFactory.create('bpmn:ExtensionElements');
-    b_obj.extensionElements.get('values').push(inputOutput);
-   
-    return bo;
-
-  }
-
-  const setValue3 = function (businessObject, prefix, typeName, property) {
-    return function (element, values) {
-      let prefixTypeElement = prefix + ":" + typeName;
-    
-      const moddle = window.bpmnjs.get('moddle');
-      const modeling = window.bpmnjs.get('modeling');
-      let newExtensionElements = businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
-
-      let relativeConstraint = moddle.create(prefixTypeElement);
-      newExtensionElements.get('values').push(relativeConstraint);
-      newExtensionElements[property] = values[property];
-      modeling.updateProperties(element, { extensionElements: newExtensionElements });
-      return getBusinessObject(element);
-    }
-  }
-  
-
   const setValue_isTrueBranch = function (businessObject, prefix, typeName, property) {
     return function (element, values) {
       const moddle = window.bpmnjs.get('moddle');
-      const eventBus = window.bpmnjs.get('eventBus');
       const modeling = window.bpmnjs.get('modeling');
 
-
       let prefixTypeElement = "tempcon:" + typeName;
-
 
       const extensionElements = element.businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
       let analysisDetails = getExtensionElement(element.businessObject, prefixTypeElement);
 
       if (!analysisDetails) {
         analysisDetails = moddle.create(prefixTypeElement);
-      
+
         extensionElements.get('values').push(analysisDetails);
       }
 
-      analysisDetails[property] =  values[property];
+      analysisDetails[property] = values[property];
       modeling.updateProperties(element, {
-            extensionElements,
-            name:values[property].charAt(0).toUpperCase() + values[property].slice(1)
-          });
-      
-    }
-  }
-  
-  const setValue = function (businessObject, prefix, typeName, property) {
-    return function (element, values) {
-      const moddle = window.bpmnjs.get('moddle');
-      const eventBus = window.bpmnjs.get('eventBus');
-      const modeling = window.bpmnjs.get('modeling');
-
-
-      let prefixTypeElement = "tempcon:" + typeName;
-
-
-      const extensionElements = element.businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
-      let analysisDetails = getExtensionElement(element.businessObject, prefixTypeElement);
-
-      if (!analysisDetails) {
-        analysisDetails = moddle.create(prefixTypeElement);
-      
-        extensionElements.get('values').push(analysisDetails);
-      }
-
-      analysisDetails[property] =  values[property];
-      modeling.updateProperties(element, {
-            extensionElements
-          });
-      
-    }
-  }
-
-
-
-  
-function getExtensionElement(element, type) {
-  if (!element.extensionElements) {
-    return;
-  }
-
-  return element.extensionElements.values.filter((extensionElement) => {
-    return extensionElement.$instanceOf(type);
-  })[0];
-}
-
-
-
-
-  const setValue6 = function (businessObject, prefix, typeName, property) {
-    return function (element, values) {
-      let newMailElement;
-      let prefixTypeElement = prefix + ":" + typeName;
-
-      const moddle = window.bpmnjs.get('moddle');
-      const modeling = window.bpmnjs.get('modeling');
-      const eventBus = window.bpmnjs.get('eventBus');
-
-      if (
-        !businessObject.get("extensionElements") &&
-        !extHelper.getExtensionElements(businessObject, prefixTypeElement)
-      ) {
-        newMailElement = elementHelper.createElement(
-          prefixTypeElement,
-          values,
-          businessObject,
-          bpmnFactory
-        );
-        let extensionAddResult = extHelper.addEntry(
-          businessObject,
-          element,
-          newMailElement,
-          bpmnFactory
-        );
-        return cmdHelper.updateBusinessObject(
-          element,
-          getBusinessObject(element),
-          extensionAddResult
-        );
-      } else {
-        let extensionElements = extHelper.getExtensionElements(
-          businessObject,
-          prefixTypeElement
-        );
-        if (extensionElements && extensionElements.length > 0) {
-          extensionElements[0][property] = values[property];
-          // return cmdHelper.updateBusinessObject(
-          //   element,
-          //   getBusinessObject(element),
-          //   extensionElements
-          // );
-          // modeling.updateProperties(element, { extensionElements:extensionElements });
-          eventBus.fire('element.changed', { element: element });
-        } else {
-          newMailElement = elementHelper.createElement(
-            prefixTypeElement,
-            values,
-            businessObject,
-            bpmnFactory
-          );
-          // return extHelper.addEntry(
-          //   businessObject,
-          //   element,
-          //   newMailElement,
-          //   bpmnFactory
-          // );
-          //TODO first time the value is not saved
-          
-          let newExtensionElements = businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
-
-          let relativeConstraint = moddle.create(prefixTypeElement);
-          newExtensionElements.get('values').push(relativeConstraint);
-          newExtensionElements[property] = values[property];
-          modeling.updateProperties(element, { extensionElements: newExtensionElements });
-          // eventBus.fire('element.changed', { element: element });
-          
-        }
-      }
+        extensionElements,
+        name: values[property].charAt(0).toUpperCase() + values[property].slice(1)
+      });
     };
   };
 
+  const setValue = function (businessObject, prefix, typeName, property) {
+    return function (element, values) {
+      const moddle = window.bpmnjs.get('moddle');
+      const modeling = window.bpmnjs.get('modeling');
 
+      let prefixTypeElement = "tempcon:" + typeName;
+
+      const extensionElements = element.businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
+      let analysisDetails = getExtensionElement(element.businessObject, prefixTypeElement);
+
+      if (!analysisDetails) {
+        analysisDetails = moddle.create(prefixTypeElement);
+
+        extensionElements.get('values').push(analysisDetails);
+      }
+
+      analysisDetails[property] = values[property];
+      modeling.updateProperties(element, {
+        extensionElements
+      });
+    };
+  };
+
+  function getExtensionElement(element, type) {
+    if (!element.extensionElements) {
+      return;
+    }
+
+    return element.extensionElements.values.filter((extensionElement) => {
+      return extensionElement.$instanceOf(type);
+    })[0];
+  }
 
   function set_group_minDuration(group, comparisonFunction, strComment = "") {
     group.entries.push(entryFactory.textField(translate, {
@@ -461,7 +311,7 @@ function getExtensionElement(element, type) {
       validate: comparisonFunction,
       get: getValue(getBusinessObject(element), "tempcon", "TDuration", "minDuration"),
       set: setValue(getBusinessObject(element), "tempcon", "TDuration", "minDuration")
-      
+
     }));
   }
 
@@ -477,7 +327,6 @@ function getExtensionElement(element, type) {
     }));
   }
 
-
   function set_group_propositionalLabel(group, disabled) {
 
     if (disabled === undefined)
@@ -489,13 +338,13 @@ function getExtensionElement(element, type) {
       description: 'Label created with propositions of XORs',
       label: 'Propositional label',
       modelProperty: 'propositionalLabel',
-      get: getValue(getBusinessObject(element),  "tempcon", "TDuration", "propositionalLabel"),
-      set: setValue(getBusinessObject(element),  "tempcon", "TDuration", "propositionalLabel")
+      get: getValue(getBusinessObject(element), "tempcon", "TDuration", "propositionalLabel"),
+      set: setValue(getBusinessObject(element), "tempcon", "TDuration", "propositionalLabel")
       // disabled: function () { return disabled; }
     }));
   }
 
-  
+
   function set_group_minDuration_asProperty(group, comparisonFunction, strComment = "") {
     group.entries.push(entryFactory.textField(translate, {
       id: 'minDuration',
@@ -503,7 +352,7 @@ function getExtensionElement(element, type) {
       label: 'Min duration' + strComment,
       modelProperty: 'minDuration',
       validate: comparisonFunction
-      
+
     }));
   }
 
@@ -516,7 +365,6 @@ function getExtensionElement(element, type) {
       validate: comparisonFunction
     }));
   }
-
 
   function set_group_propositionalLabel_asProperty(group, disabled) {
 
@@ -533,8 +381,6 @@ function getExtensionElement(element, type) {
     }));
   }
 
-
-
   if (is(element, 'bpmn:SequenceFlow')) {
     group.entries.push(entryFactory.label({
       id: 'fromLabel',
@@ -548,14 +394,11 @@ function getExtensionElement(element, type) {
       modelProperty: 'toLabel',
       labelText: 'To: ' + element.businessObject.targetRef.id
     }));
- 
+
     set_group_minDuration(group, validateMinDuration_sequenceFlow, " (default: 0)");
     set_group_maxDuration(group, validateMaxDuration_sequenceFlow, " (default: ∞)");
-    
-    // if (element.businessObject.sourceRef.$type.includes('ExclusiveGateway')) {
-    //   if (element.businessObject.sourceRef.gatewaySplitJoin === 'split') {
-      // debugger
-    if (element.businessObject.sourceRef.$type.includes('ExclusiveGateway')) {      
+
+    if (element.businessObject.sourceRef.$type.includes('ExclusiveGateway')) {
       if (getExtensionElementValue(element.businessObject.sourceRef, 'TGatewaySplitJoin', 'gatewaySplitJoin') === 'split') {
         group.entries.push(entryFactory.selectBox(translate, {
           id: 'isTrueBranch',
@@ -567,7 +410,7 @@ function getExtensionElement(element, type) {
           get: getValue(getBusinessObject(element), "tempcon", "TPLiteralValue", "isTrueBranch"),
           set: setValue_isTrueBranch(getBusinessObject(element), "tempcon", "TPLiteralValue", "isTrueBranch"),
           selectOptions: [{ name: '', value: '' }, { name: 'True', value: 'true' }, { name: 'False', value: 'false' }]
-          
+
         }));
       }
     }
@@ -622,17 +465,15 @@ function getExtensionElement(element, type) {
     //   // TODO force to create the property in the XML file
     //   selectOptions: [{ name: '', value: '' }, { name: 'Split', value: 'split' }, { name: 'Join', value: 'join' }],
     // }));
-    
-    // if (element.businessObject.gatewaySplitJoin == 'split') {
-      
-    if (getValue(getBusinessObject(element),  "tempcon", "TGatewaySplitJoin", "gatewaySplitJoin")(element)['gatewaySplitJoin'] == 'split') {
+
+    if (getValue(getBusinessObject(element), "tempcon", "TGatewaySplitJoin", "gatewaySplitJoin")(element)['gatewaySplitJoin'] == 'split') {
       group.entries.push(entryFactory.textField(translate, {
         id: 'observedProposition',
         description: 'Type one letter to be used as proposition',
         label: 'Letter representing the boolean condition',
         modelProperty: 'observedProposition',
-        get: getValue(getBusinessObject(element),  "tempcon", "TXorProposition", "observedProposition"),
-        set: setValue(getBusinessObject(element),  "tempcon", "TXorProposition", "observedProposition")
+        get: getValue(getBusinessObject(element), "tempcon", "TXorProposition", "observedProposition"),
+        set: setValue(getBusinessObject(element), "tempcon", "TXorProposition", "observedProposition")
       }));
     }
 
@@ -701,5 +542,4 @@ function getExtensionElement(element, type) {
     set_group_propositionalLabel_asProperty(group, false);
 
   }
-
 }

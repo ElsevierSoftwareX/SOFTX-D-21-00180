@@ -1,8 +1,6 @@
 
 
 import { is } from "bpmn-js/lib/util/ModelUtil";
-import { isAny } from "bpmn-js/lib/features/modeling/util/ModelingUtil";
-
 
 export default function CustomEvents(eventBus, commandStack, elementRegistry) {
 
@@ -39,10 +37,7 @@ export default function CustomEvents(eventBus, commandStack, elementRegistry) {
         }
       }
     }
-
-
   });
-
 
   eventBus.on('tempcon.changed', (event) => {
     var currentElement = event.element;
@@ -63,9 +58,7 @@ export default function CustomEvents(eventBus, commandStack, elementRegistry) {
         }
       }
     }
-
   });
-
 }
 
 CustomEvents.$inject = ['eventBus', 'commandStack', 'elementRegistry'];
