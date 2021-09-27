@@ -44,7 +44,7 @@ npm install
 ```
 npm start
 ```
-A model can be loaded by dragging the file in the editor or using the option Load BPMN model. There are example models in the [models folder](exmples/models/).
+A model can be loaded by dragging the file in the editor or using the option Load BPMN model. There are example models in the [models folder](./exmples/models/).
 
 ## Demos
 Check usage examples in [demos folder](./examples/demos/).
