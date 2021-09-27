@@ -18,28 +18,22 @@ To run the application, it is necessary to install some Node modules and depende
 
 1. First, it is necessary to install **Java** module, necessary for the CSTNU plug-in.
 
-*Installation in Mac OS X**
+**Installation in Mac OS X**
 
-1. Install JDK 11/17 (if you are using brew, `brew install openjdk@11`)
-2. Set the JAVA_HOME environment variable to JDK home.
-If you installed by brew, then the JAVA_HOME can be set by
-```
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk-11.jdk/Contents/Home
-```
-(for JDK 11)
-or
-```
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home
-```
-(for JDK 17)
-3. Install compiling tools: `npm install -g node-gyp`
-4. Install java: `npm i java`
+    1. Install JDK 11/17 (if you are using brew, `brew install openjdk@11`)
+    2. Set the JAVA_HOME environment variable to JDK home.
+       If you installed by brew, then the JAVA_HOME can be set for JDK 11 by        
+        export JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk-11.jdk/Contents/Home
+       or for JDK 17 by    
+        export JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home
+    3. Install compiling tools: `npm install -g node-gyp`
+    4. Install java: `npm i java`
 
-*Installation in Ubuntu**
+**Installation in Ubuntu**
 
-1. Install JDK 11
-2. Install compiling tools: `sudo apt install make g++`
-3. Install java: `npm i java`
+    1. Install JDK 11
+    2. Install compiling tools: sudo apt install make g++
+    3. Install java: npm i java
 
 2. Then, install all other dependencies
 ```
@@ -50,7 +44,7 @@ npm install
 ```
 npm start
 ```
-A model can be loaded by dragging the file in the editor or using the option Load BPMN model. There are example models in the folder `TA_BPMN_editor/resources/`.
+A model can be loaded by dragging the file in the editor or using the option Load BPMN model. There are example models in the [models folder](exmples/models/).
 
 ## Demos
 Check usage examples in [demos folder](./examples/demos/).
