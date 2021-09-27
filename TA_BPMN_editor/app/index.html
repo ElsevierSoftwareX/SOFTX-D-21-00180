@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>bpmn-js-Temporal-constraints extension demo</title>
+  <title>TimeAwareBPMN-js</title>
 
   <meta charset="utf-8">
   <link rel="stylesheet" href="css/diagram-js.css" />
@@ -40,36 +40,36 @@
     <div id="js-properties-panel"></div>
   </div>
 
-<div class="toolbar">
-  <ul id="ulButtonsTCEvaluation" class="buttonsTCEvaluation">
-    <li id="liSelectTCEvaluation">
-      Temporal constraint verification:
-      <select id="selectTCEvaluation"> </select>
-    </li>
-  </ul>
+  <div class="toolbar">
+    <ul id="ulButtonsTCEvaluation" class="buttonsTCEvaluation">
+      <li id="liSelectTCEvaluation">
+        Temporal constraint verification:
+        <select id="selectTCEvaluation"> </select>
+      </li>
+    </ul>
 
 
-  <ul class="buttonsLoadFiles">
-    <li>Load</li>
-    <li>
-      BPMN model <input type="file" id="inputFile_bpmn" accept=".bpmn">
-    </li>
-  </ul>
+    <ul class="buttonsLoadFiles">
+      <li>Load</li>
+      <li>
+        BPMN model <input type="file" id="inputFile_bpmn" accept=".bpmn">
+      </li>
+    </ul>
 
 
-  <ul class="buttonsDownloadFiles">
-    <li>
-      Save
-    </li>
-    <li>
-      <button id="button-download-diagram" disabled="true">BPMN model</button>
-    </li>
-    <li style="visibility: hidden">
-      <button id="button-download-svg" disabled="true">BPMN image</button>
-    </li>
-  </ul>
+    <ul class="buttonsDownloadFiles">
+      <li>
+        Save
+      </li>
+      <li>
+        <button id="button-download-diagram" disabled="true">BPMN model</button>
+      </li>
+      <li style="visibility: hidden">
+        <button id="button-download-svg" disabled="true">BPMN image</button>
+      </li>
+    </ul>
 
-</div>
+  </div>
 
   <!-- Trigger/Open The Modal -->
 
