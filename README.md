@@ -26,8 +26,8 @@ To run the application, it is necessary to install some Node modules and depende
         export JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk-11.jdk/Contents/Home
        or for JDK 17 by    
         export JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home
-    3. Install compiling tools: `npm install -g node-gyp`
-    4. Install java: `npm i java`
+    3. Install compiling tools: npm install -g node-gyp
+    4. Install java: npm i java
 
 **Installation in Ubuntu**
 
