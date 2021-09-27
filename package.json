@@ -8,12 +8,8 @@
     "node-static": "^0.7.11",
     "open": "^8.2.1"
   },
-  "devDependencies": {
-    "jsdoc": "^3.6.7"
-  },
   "scripts": {
     "start": "node serverNodeJS.js",
-    "doc": "jsdoc -c jsdoc.json",
     "clientInstallDep": "cd TA_BPMN_editor && npm install",
     "clientUpdate": "cd TA_BPMN_editor && npm run all"
   },

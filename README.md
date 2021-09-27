@@ -53,7 +53,7 @@ npm start
 A model can be loaded by dragging the file in the editor or using the option Load BPMN model. There are example models in the folder `TA_BPMN_editor/resources/`.
 
 ## Demos
-Check usage examples in [demos folder](./tutorials/demos/).
+Check usage examples in [demos folder](./examples/demos/).
 
 
 ## Adding a plug-in
