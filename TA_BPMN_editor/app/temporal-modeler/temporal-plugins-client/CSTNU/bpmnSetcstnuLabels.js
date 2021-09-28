@@ -6,8 +6,6 @@
  */
 //** 20210530
 
-import extHelper from "bpmn-js-properties-panel/lib/helper/ExtensionElementsHelper";
-
 
 /**@function bpmnSetcstnuLabels
  * @description
@@ -51,8 +49,6 @@ export default function bpmnSetcstnuLabels(bpmn) {
   let visitList = [];
   let isSplit = false;
   let tempProposition = '';
-  let gatewayAnd = [];
-  let gatewayXor = [];
 
   if (myObjs.zNode) { // It is require 1 zNode in the diagram
     // TODO consider more than one START node
@@ -454,14 +450,6 @@ function processSequenceFlow(params) {
 
 }
 
-function isInclude(searchName, arrayOfNames) {
-
-  arrayOfNames.forEach(function (partialName) {
-    if (searchName.includes(partialName)) return true;
-    else return false;
-  });
-}
-
 /**
  * Iterates all the BPMN elements of xmlDoc and 
  * creates graph in the object myObjs
@@ -472,10 +460,6 @@ function isInclude(searchName, arrayOfNames) {
  */
 function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
   let i = 0, j = 0;
-
-  let elementsNodes = ['userTask', 'serviceTask', 'scriptTask', 'sednTask', 'receivetask']; // subProcess
-  let elementsStartEnd = ['startEvent', 'endEvent'];
-  let elementsGateways = ['startEvent', 'endEvent'];
 
   for (i = 0; i < xmlDoc.children[0].children.length; i++) {
     let elementP = xmlDoc.children[0].children[i];
@@ -596,39 +580,6 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
 
 
 
-// function getExtensionElementValue(element, typeName, property) {
-//   let businessObject = element.businessObject || element;
-
-//   let tempConType;
-
-//   if (businessObject.$type.includes('Task')) {
-//     tempConType = "TTask";
-//   } else if (businessObject.$type.includes('Gateway')) {
-//     tempConType = "TGateway";
-//   } else if (businessObject.$type.includes('Event')) {
-//     tempConType = "TEvent";
-//   } else if (businessObject.$type.includes('Flow')) {
-//     tempConType = "TSequenceFlow";
-//   }
-
-//   let extensions = extHelper.getExtensionElements(
-//     businessObject,
-//     "tempcon:" + tempConType
-//   );
-//   let returnValue;
-//   if (extensions) {
-//     if (extensions.length > 0) {
-//       returnValue = extensions[0][property];
-//       if (property != 'observedProposition' && property != 'isTrueBranch')
-//         returnValue = extensions[0].duration[property];
-//       else
-//         returnValue = extensions[0][property];
-//     }
-//   }
-//   return returnValue;
-// }
-
-
 function getExtensionElementValue(element, typeName, property) {
   return window.bpmnjs.getExtensionElementValue(element, typeName, property);
 }
@@ -646,7 +597,7 @@ function setExtensionElementValue(element, typeName, property, value) {
   } else if (businessObject.$type.includes('Gateway')) {
     tempConType = "TGateway";
   } else if (businessObject.$type.includes('Event') && !businessObject.$type.includes('StartEvent') && !businessObject.$type.includes('EndEvent')) {
-    tempConType = "TEvent"
+    tempConType = "TEvent";
   } else if (businessObject.$type.includes('Flow')) {
     tempConType = "TSequenceFlow";
   }

@@ -12,7 +12,6 @@ import inherits from 'inherits';
 import CustomModule from './modeler';
 import TCEvaluations from './temporal-plugins-client';
 import { getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
-import { getWaypointsMid } from 'bpmn-js/lib/util/LabelUtil';
 
 
 export default function CustomModeler(options) {

@@ -6,8 +6,6 @@
  * and updates the temporal properties of the elements in the BPMN diagram. 
  */
 
-import extHelper from "bpmn-js-properties-panel/lib/helper/ExtensionElementsHelper";
-
 
 export default function cstnuChecked(xmlCTNUChecked, myObjs) {
 
@@ -22,10 +20,10 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
   // Update elements --> NO contingents 
   let tmpElement;
 
-  let contingentElements = ["UserTask", "ServiceTask", "SendTask", "ReceiveTask", "SubProcess",
-    "TimerEventDefinition", "MessageEventDefinition", "SignalEventDefinition"];
-  let noContingentElements = ["ScripTask", "SequenceFlow", "ParallelGateway", "ExclusiveGateway", "EventBasedGateway"];
-  let noConsideredElements = ["Task"];
+  // let contingentElements = ["UserTask", "ServiceTask", "SendTask", "ReceiveTask", "SubProcess",
+  //   "TimerEventDefinition", "MessageEventDefinition", "SignalEventDefinition"];
+  // let noContingentElements = ["ScripTask", "SequenceFlow", "ParallelGateway", "ExclusiveGateway", "EventBasedGateway"];
+  // let noConsideredElements = ["Task"];
 
   let myKeys = Object.keys(myObjs);
   for (let k = 0; k < myKeys.length; k++) {
@@ -154,41 +152,6 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
 }
 
 
-
-
-// function getExtensionElementValue(element, typeName, property) {
-//   let businessObject = element.businessObject || element;
-
-//   let tempConObj;
-
-//   if (businessObject.$type.includes('Task')) {
-//     tempConObj = "TTask";
-//   } else if (businessObject.$type.includes('Gateway')) {
-//     tempConObj = "TGateway";
-//   } else if (businessObject.$type.includes('Event')) {
-//     tempConObj = "TEvent";
-//   } else if (businessObject.$type.includes('Flow')) {
-//     tempConObj = "TSequenceFlow";
-//   }
-
-//   let extensions = extHelper.getExtensionElements(
-//     businessObject,
-//     "tempcon:" + tempConObj
-//   );
-//   let returnValue;
-//   if (extensions) {
-//     if (extensions.length > 0) {
-//       returnValue = extensions[0][property];
-//       if (property != 'observedProposition' && property != 'isTrueBranch')
-//         returnValue = extensions[0].duration[property];
-//       else
-//         returnValue = extensions[0][property];
-//     }
-//   }
-//   return returnValue;
-// }
-
-
 function getExtensionElementValue(element, typeName, property) {
   return window.bpmnjs.getExtensionElementValue(element, typeName, property);
 }
@@ -206,7 +169,7 @@ function setExtensionElementValue(element, typeName, property, value) {
   } else if (businessObject.$type.includes('Gateway')) {
     tempConType = "TGateway";
   } else if (businessObject.$type.includes('Event') && !businessObject.$type.includes('StartEvent') && !businessObject.$type.includes('EndEvent')) {
-    tempConType = "TEvent"
+    tempConType = "TEvent";
   } else if (businessObject.$type.includes('Flow')) {
     tempConType = "TSequenceFlow";
   }

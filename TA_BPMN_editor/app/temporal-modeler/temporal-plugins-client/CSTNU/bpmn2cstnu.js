@@ -3,7 +3,6 @@
  * Performs the translation of a XML string of the BPMN model to CSTNU XML string.
  */
 
-import extHelper from "bpmn-js-properties-panel/lib/helper/ExtensionElementsHelper";
 
 const builder = require("xmlbuilder");
 
@@ -1193,55 +1192,6 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
 
 }
 
-/**
- * Get the nodeName of a node of type process
- * @param {xmlDocument} xmlDoc 
- * @returns {String} 
- */
-function getProcessName(xmlDoc) {
-  let name = "", i = 0;
-
-  for (i = 0; i < xmlDoc.children[0].children.length; i++) {
-    let elementP = xmlDoc.children[0].children[i];
-    if (elementP.nodeName.includes("process")) {
-      name = elementP.attributes.name.value;
-    }
-  }
-  return name;
-}
-
-
-// function getExtensionElementValue(element, typeName, property) {
-//   let businessObject = element.businessObject || element;
-
-//   let tempConObj;
-
-//   if (businessObject.$type.includes('Task')) {
-//     tempConObj = "TTask";
-//   } else if (businessObject.$type.includes('Gateway')) {
-//     tempConObj = "TGateway";
-//   } else if (businessObject.$type.includes('Event')) {
-//     tempConObj = "TEvent";
-//   } else if (businessObject.$type.includes('Flow')) {
-//     tempConObj = "TSequenceFlow";
-//   }
-
-//   let extensions = extHelper.getExtensionElements(
-//     businessObject,
-//     "tempcon:" + tempConObj
-//   );
-//   let returnValue;
-//   if (extensions) {
-//     if (extensions.length > 0) {
-//       returnValue = extensions[0][property];
-//       if (property != 'observedProposition' && property != 'isTrueBranch')
-//         returnValue = extensions[0].duration[property];
-//       else
-//         returnValue = extensions[0][property];
-//     }
-//   }
-//   return returnValue;
-// }
 
 function getExtensionElementValue(element, typeName, property) {
   return window.bpmnjs.getExtensionElementValue(element, typeName, property);
