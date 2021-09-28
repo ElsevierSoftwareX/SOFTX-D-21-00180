@@ -1,7 +1,5 @@
 import inherits from 'inherits';
 
-import extHelper from "bpmn-js-properties-panel/lib/helper/ExtensionElementsHelper";
-
 import BaseRenderer from 'diagram-js/lib/draw/BaseRenderer';
 
 import {
