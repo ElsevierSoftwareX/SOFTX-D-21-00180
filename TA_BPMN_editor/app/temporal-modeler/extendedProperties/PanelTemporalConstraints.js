@@ -207,41 +207,6 @@ var validateMaxDuration_relative = function (element, values, node) {
   return !isNaN(val) && Number(val) > 0;
 };
 
-// function getExtensionElementValue(element, typeName, property) {
-//   let businessObject = element.businessObject || element;
-
-//   let tempConType;
-
-//   if (businessObject.$type.includes('Task')) {
-//     tempConType = "TTask";
-//   } else if (businessObject.$type.includes('Gateway')) {
-//     tempConType = "TGateway";
-//   } else if (businessObject.$type.includes('Event')) {
-//     tempConType = "TEvent";
-//   } else if (businessObject.$type.includes('Flow')) {
-//     tempConType = "TSequenceFlow";
-//   }
-
-
-
-//   let extensions = extHelper.getExtensionElements(
-//     businessObject,
-//     "tempcon:" + tempConType
-//   );
-//   let returnValue;
-//   if (extensions) {
-//     if (extensions.length > 0) {
-//       returnValue = extensions[0][property];
-//       if (property != 'observedProposition' && property != 'isTrueBranch')
-//         returnValue = extensions[0].duration[property];
-//       else
-//         returnValue = extensions[0][property];
-//     }
-//   }
-
-//   return returnValue;
-
-// }
 
 
 function getExtensionElementValue(element, typeName, property) {
@@ -302,7 +267,7 @@ export default function (group, element, bpmnFactory, translate) {
       } else if (businessObject.$type.includes('Gateway')) {
         tempConType = "TGateway";
       } else if (businessObject.$type.includes('Event')) {
-        tempConType = "TEvent"
+        tempConType = "TEvent";
       } else if (businessObject.$type.includes('Flow')) {
         tempConType = "TSequenceFlow";
       }
@@ -340,7 +305,7 @@ export default function (group, element, bpmnFactory, translate) {
       } else if (businessObject.$type.includes('Gateway')) {
         tempConType = "TGateway";
       } else if (businessObject.$type.includes('Event')) {
-        tempConType = "TEvent"
+        tempConType = "TEvent";
       } else if (businessObject.$type.includes('Flow')) {
         tempConType = "TSequenceFlow";
       }
@@ -377,17 +342,6 @@ export default function (group, element, bpmnFactory, translate) {
       return extensionElement.$instanceOf(type);
     })[0];
   }
-
-  function getExtensionElement_secondLevel(element, type) {
-    if (!element.extensionElements) {
-      return;
-    }
-
-    return element.extensionElements.values.filter((extensionElement) => {
-      return extensionElement.$instanceOf(type);
-    })[0];
-  }
-
 
   function set_group_minDuration(group, comparisonFunction, strComment = "") {
     group.entries.push(entryFactory.textField(translate, {
