@@ -6,8 +6,6 @@
  */
 //** 20210530
 
-import extHelper from "bpmn-js-properties-panel/lib/helper/ExtensionElementsHelper";
-
 
 /**@function bpmnSetcstnuLabels
  * @description
@@ -60,7 +58,6 @@ export default function bpmnSetcstnuLabels(bpmn) {
       let node = visitList.pop();
       if (visited[node.id] === undefined) visited[node.id] = 0;
       visited[node.id] += 1;
-
       if (node.id && visited[node.id] < 2) {
         if (myObjs[node.id].obs != undefined) {
           if (myObjs[node.id].obs === 'join') {
@@ -77,12 +74,14 @@ export default function bpmnSetcstnuLabels(bpmn) {
             if (node.cps.length > 0)
               node.cps.pop();
             else {
-              myLogObj.errors += '\n' + tempElement.type + '(' + node.id + ')' + ': Empty CSP, it is required a porposition for node markerd as join \n';
+              myLogObj.errors += '\n' + tempElement.type + '(' + node.id + ')' + ': Empty CSP, it is required a proposition for an exclusive gateway of type join. \n';
               countObjs.elementsWithError += 1;
             }
           }
           if (myObjs[node.id].obs === 'split') {
+
             let tempElement = elementRegistry.get(node.id);
+
             setExtensionElementValue(tempElement, "TGatewaySplitJoin", "gatewaySplitJoin", "split");
 
             if (myObjs[node.id].observedProposition)
@@ -128,7 +127,16 @@ export default function bpmnSetcstnuLabels(bpmn) {
         isSplit = false;
         tempProposition = '';
       }
+
+      // if (visitList.length === 0) {
+      //   if (node.cps.length > 0) {
+      //     myLogObj.errors += '\nCSP is not empy, the number of split and join gateways does not match \n';
+      //     countObjs.elementsWithError += 1;
+      //   }
+      // }
+
     }
+
   }
   else { // No zNode found in the model 
     myLogObj.errors += '\n No zNode found in the model  \n';
@@ -187,7 +195,8 @@ function processElements(params) {
       }
 
       let sourceElement = elementRegistry.get(element.attributes.id.value);
-      let gatewaySplitJoinTmp = getExtensionElementValue(sourceElement, "TGatewaySplitJoin", "gatewaySplitJoin");
+      // let gatewaySplitJoinTmp = getExtensionElementValue(sourceElement, "TGatewaySplitJoin", "gatewaySplitJoin");
+      let gatewaySplitJoinTmp = window.bpmnjs.checkSplitJoin(sourceElement);
 
       if (gatewaySplitJoinTmp != undefined) { //Read it
         if (gatewaySplitJoinTmp.includes('join')) {
@@ -441,14 +450,6 @@ function processSequenceFlow(params) {
 
 }
 
-function isInclude(searchName, arrayOfNames) {
-
-  arrayOfNames.forEach(function (partialName) {
-    if (searchName.includes(partialName)) return true;
-    else return false;
-  });
-}
-
 /**
  * Iterates all the BPMN elements of xmlDoc and 
  * creates graph in the object myObjs
@@ -459,10 +460,6 @@ function isInclude(searchName, arrayOfNames) {
  */
 function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
   let i = 0, j = 0;
-
-  let elementsNodes = ['userTask', 'serviceTask', 'scriptTask', 'sednTask', 'receivetask']; // subProcess
-  let elementsStartEnd = ['startEvent', 'endEvent'];
-  let elementsGateways = ['startEvent', 'endEvent'];
 
   for (i = 0; i < xmlDoc.children[0].children.length; i++) {
     let elementP = xmlDoc.children[0].children[i];
@@ -582,20 +579,9 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
 }
 
 
+
 function getExtensionElementValue(element, typeName, property) {
-  let extensions = extHelper.getExtensionElements(
-    element.businessObject,
-    "tempcon:" + typeName
-  );
-  let returnValue;
-  if (extensions) {
-    if (extensions.length > 0) {
-      returnValue = extensions[0][property];
-    }
-  }
-
-  return returnValue;
-
+  return window.bpmnjs.getExtensionElementValue(element, typeName, property);
 }
 
 
@@ -603,25 +589,42 @@ function setExtensionElementValue(element, typeName, property, value) {
 
   const moddle = window.bpmnjs.get('moddle');
   const modeling = window.bpmnjs.get('modeling');
+  let businessObject = element.businessObject || element;
 
-
-  let prefixTypeElement = "tempcon:" + typeName;
-
-
-  const extensionElements = element.businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
-  let analysisDetails = getExtensionElement(element.businessObject, prefixTypeElement);
-
-  if (!analysisDetails) {
-    analysisDetails = moddle.create(prefixTypeElement);
-
-    extensionElements.get('values').push(analysisDetails);
+  let tempConType;
+  if (businessObject.$type.includes('Task')) {
+    tempConType = "TTask";
+  } else if (businessObject.$type.includes('Gateway')) {
+    tempConType = "TGateway";
+  } else if (businessObject.$type.includes('Event') && !businessObject.$type.includes('StartEvent') && !businessObject.$type.includes('EndEvent')) {
+    tempConType = "TEvent";
+  } else if (businessObject.$type.includes('Flow')) {
+    tempConType = "TSequenceFlow";
   }
 
-  analysisDetails[property] = value;
-  modeling.updateProperties(element, {
-    extensionElements
-  });
+  if (tempConType) {
 
+    let prefixTypeElement = "tempcon:" + tempConType;
+
+    const extensionElements = element.businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
+    let tempConElement = getExtensionElement(element.businessObject, prefixTypeElement);
+
+    if (!tempConElement) {
+      tempConElement = moddle.create(prefixTypeElement);
+      extensionElements.get('values').push(tempConElement);
+      let duration = moddle.create("tempcon:TDuration");
+      tempConElement["duration"] = duration;
+    }
+    if (property != 'observedProposition' && property != 'isTrueBranch')
+      tempConElement.duration[property] = value;
+    else
+      tempConElement[property] = value;
+
+
+    modeling.updateProperties(element, {
+      extensionElements
+    });
+  }
 }
 
 function getExtensionElement(element, type) {

@@ -9,41 +9,44 @@ export default function (group, element, translate) {
 
   const getValue = function (businessObject, prefix, typeName, property) {
     return function (element) {
-      let extensions = extHelper.getExtensionElements(
-        businessObject,
-        prefix + ":" + typeName
-      );
+      // let extensions = extHelper.getExtensionElements(
+      //   businessObject,
+      //   prefix + ":" + typeName
+      // );
+      // let returnObject = {};
+      // returnObject[property] = "";
+      // if (extensions) {
+      //   if (extensions.length > 0) {
+      //     returnObject[property] = extensions[0][property];
+      //   }
+      // }
+
       let returnObject = {};
-      returnObject[property] = "";
-      if (extensions) {
-        if (extensions.length > 0) {
-          returnObject[property] = extensions[0][property];
-        }
-      }
+      returnObject[property] = window.bpmnjs.checkSplitJoin(element);
       return returnObject;
     };
   };
 
   const setValue = function (businessObject, prefix, typeName, property) {
     return function (element, values) {
-      const moddle = window.bpmnjs.get('moddle');
-      const modeling = window.bpmnjs.get('modeling');
+      // const moddle = window.bpmnjs.get('moddle');
+      // const modeling = window.bpmnjs.get('modeling');
 
-      let prefixTypeElement = "tempcon:" + typeName;
+      // let prefixTypeElement = "tempcon:" + typeName;
 
-      const extensionElements = element.businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
-      let analysisDetails = getExtensionElement(element.businessObject, prefixTypeElement);
+      // const extensionElements = element.businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
+      // let analysisDetails = getExtensionElement(element.businessObject, prefixTypeElement);
 
-      if (!analysisDetails) {
-        analysisDetails = moddle.create(prefixTypeElement);
+      // if (!analysisDetails) {
+      //   analysisDetails = moddle.create(prefixTypeElement);
 
-        extensionElements.get('values').push(analysisDetails);
-      }
+      //   extensionElements.get('values').push(analysisDetails);
+      // }
 
-      analysisDetails[property] = values[property];
-      modeling.updateProperties(element, {
-        extensionElements
-      });
+      // analysisDetails[property] = values[property];
+      // modeling.updateProperties(element, {
+      //   extensionElements
+      // });
     };
   };
 

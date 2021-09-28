@@ -3,7 +3,6 @@
  * Performs the translation of a XML string of the BPMN model to CSTNU XML string.
  */
 
-import extHelper from "bpmn-js-properties-panel/lib/helper/ExtensionElementsHelper";
 
 const builder = require("xmlbuilder");
 
@@ -411,7 +410,8 @@ function checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs) {
     }
     const elementRegistry = window.bpmnjs.get('elementRegistry');
     let tempElement = elementRegistry.get(element.attributes.id.value);
-    let gatewaySplitJoinTmp = getExtensionElementValue(tempElement, "TGatewaySplitJoin", "gatewaySplitJoin");
+    // let gatewaySplitJoinTmp = getExtensionElementValue(tempElement, "TGatewaySplitJoin", "gatewaySplitJoin");
+    let gatewaySplitJoinTmp = window.bpmnjs.checkSplitJoin(tempElement);
 
     if (gatewaySplitJoinTmp != undefined) { //Read it
       if (gatewaySplitJoinTmp.includes('split')) {
@@ -510,7 +510,7 @@ function setTwoNodesToEdges(params) {
 
     let propositionalLabel = "⊡";
     let tmpElement = elementRegistry.get(element.attributes.id.value);
-    let propositionalLabelTmp = getExtensionElementValue(tmpElement, "TDuration", "gatewaySplitJoin");
+    let propositionalLabelTmp = getExtensionElementValue(tmpElement, "TDuration", "propositionalLabel");
 
     if (propositionalLabelTmp != undefined)
       if (propositionalLabelTmp != '')
@@ -1192,39 +1192,9 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
 
 }
 
-/**
- * Get the nodeName of a node of type process
- * @param {xmlDocument} xmlDoc 
- * @returns {String} 
- */
-function getProcessName(xmlDoc) {
-  let name = "", i = 0;
-
-  for (i = 0; i < xmlDoc.children[0].children.length; i++) {
-    let elementP = xmlDoc.children[0].children[i];
-    if (elementP.nodeName.includes("process")) {
-      name = elementP.attributes.name.value;
-    }
-  }
-  return name;
-}
 
 function getExtensionElementValue(element, typeName, property) {
-  let extensions = extHelper.getExtensionElements(
-    element.businessObject,
-    "tempcon:" + typeName
-  );
-  let returnValue;
-  if (extensions) {
-    if (extensions.length > 0) {
-      returnValue = extensions[0][property];
-    }
-  }
-
-  return returnValue;
-
+  return window.bpmnjs.getExtensionElementValue(element, typeName, property);
 }
-
-
 
 

@@ -1,7 +1,5 @@
 import inherits from 'inherits';
 
-import extHelper from "bpmn-js-properties-panel/lib/helper/ExtensionElementsHelper";
-
 import BaseRenderer from 'diagram-js/lib/draw/BaseRenderer';
 
 import {
@@ -499,7 +497,9 @@ function drawShape_contingent(
   }
   if (isAny(element, ["bpmn:ExclusiveGateway", "bpmn:ParallelGateway"])) {
     //Check it has a type: split or join 
-    let gatewaySplitJoin = getExtensionElementValue(element, "TGatewaySplitJoin", "gatewaySplitJoin");
+    // let gatewaySplitJoin = getExtensionElementValue(element, "TGatewaySplitJoin", "gatewaySplitJoin");
+    let gatewaySplitJoin = window.bpmnjs.checkSplitJoin(element);
+
     if (gatewaySplitJoin === undefined) {
       colorFrame = "#cc0000";
     }
@@ -557,17 +557,9 @@ function drawShape_contingent(
   });
 }
 
-function getExtensionElementValue(element, typeName, property) {
-  let extensions = extHelper.getExtensionElements(
-    element.businessObject,
-    "tempcon:" + typeName
-  );
-  let returnValue;
-  if (extensions) {
-    if (extensions.length > 0) {
-      returnValue = extensions[0][property];
-    }
-  }
-  return returnValue;
 
+
+function getExtensionElementValue(element, typeName, property) {
+  return window.bpmnjs.getExtensionElementValue(element, typeName, property);
 }
+

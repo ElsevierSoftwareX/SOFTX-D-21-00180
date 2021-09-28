@@ -23,10 +23,20 @@ The temporal constraints, like `tempcon:minDuration`, are then stored as an exte
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions ... xmlns:tempcon="https://gitlab.com/univr.di/TimeAwareBPMN" id="sample-diagram">
-  <bpmn2:process id="Process_1">
-    <bpmn2:userTask id="StartEvent_1" tempcon:minDuration="2" />
-  </bpmn2:process>
+<bpmn2:definitions ...  xmlns:tempcon="https://gitlab.com/univr.di/TimeAwareBPMN/-/tree/main/ TABPMN20.xsd" id="sample-diagram">
+  <bpmn2:userTask id="T3" name="Accept Cash (T3)">
+      <bpmn2:extensionElements>
+        <tempcon:tTask>
+          <tempcon:tDuration>
+            <tempcon:minDuration>1</tempcon:minDuration>
+            <tempcon:maxDuration>6</tempcon:maxDuration>
+            <tempcon:propositionalLabel>¬R</tempcon:propositionalLabel>
+          </tempcon:tDuration>
+        </tempcon:tTask>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_1t58voa</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1h69eb3</bpmn2:outgoing>
+    </bpmn2:userTask>
   ...
 </bpmn2:definitions>
 ```
@@ -36,24 +46,21 @@ The temporal constraints, like `tempcon:minDuration`, are then stored as an exte
 We created a custom connection that sets relative temporal constraints between any pair of elements in the diagram.<br>
 A relative constraint limits the temporal distance between two elements: A ---[1,10]---> B means that, during an execution, the activity B must start/end (according to the specification of the relative constraint) between 1 and 10 units time after the start/end of A.
 
-The attributes of relative constraint elements are: type ("custom:connection"), id_relative, waypoints, source, target, From (default: end), To (default: start), and propositionalLabel. 
+The attributes and elements of relative constraint elements are: type ("custom:connection"), id_relativeCostraint, waypoints, target, From (default: end), To (default: start), and an element tDuration with elements minDuraion, maxDuration and propositionalLabel. 
 We save the realtive constraints as extension element of the element where the connection starts. This is an example of a relative constraint. 
 
 ```xml
 <bpmn2:extensionElements>
-	<tempcon:relative type = "custom:connection"
-	id_relative = "RelativeConstraint_01" 	
-	source = "T1" 
-	target = "T4" 
-	minDuration = "1" 
-	maxDuration = "2" 
-	propositionalLabel = "R" 
-	From = "start"
-	To = "end"
-	waypoints = "[{&#34;x&#34;:220,&#34;y&#34;:220},
-		{&#34;x&#34;:220,&#34;y&#34;:370},
-		{&#34;x&#34;:560,&#34;y&#34;:370},
-		{&#34;x&#34;:560,&#34;y&#34;:220}]" />
+	<tempcon:relativeCostraint type="custom:connection" id_relativeConstraint="RelativeConstraint_2v93" waypoints="[{&#34;x&#34;:220,&#34;y&#34;:220},{&#34;x&#34;:220,&#34;y&#34;:420},{&#34;x&#34;:960,&#34;y&#34;:420},{&#34;x&#34;:960,&#34;y&#34;:220}]">
+		<tempcon:target>T4</tempcon:target>
+		<tempcon:tDuration>
+			<tempcon:minDuration>2</tempcon:minDuration>
+			<tempcon:maxDuration>31</tempcon:maxDuration>
+			<tempcon:propositionalLabel>U</tempcon:propositionalLabel>
+		</tempcon:tDuration>
+		<tempcon:From>start</tempcon:From>
+		<tempcon:To>end</tempcon:To>
+	</tempcon:relativeCostraint>
 </bpmn2:extensionElements>
 ```
 

@@ -13,64 +13,68 @@
       "properties": [
         {
           "name": "minDuration",
-          "isAttr": true,
-          "type": "String",
-          "constraints": {
-            "notEmpty": true
-          }
+          "type": "String"
         },
         {
           "name": "maxDuration",
-          "isAttr": true,
           "type": "String"
         },
         {
           "name": "propositionalLabel",
-          "isAttr": true,
           "type": "String"
-        },
-        {
-          "name": "updated",
-          "isAttr": true,
-          "type": "Boolean"
         }
       ]
     },
     {
-      "name": "TPLiteralValue",
+      "name": "TTask",
       "superClass": ["Element"],
       "properties": [
         {
-          "name": "isTrueBranch",
-          "isAttr": true,
-          "type": "String"
+          "name": "duration",
+          "type": "TDuration"
         }
       ]
     },
     {
-      "name": "TGatewaySplitJoin",
-      "superClass": ["Element"],
-      "properties": [
-        {
-          "name": "gatewaySplitJoin",
-          "isAttr": true,
-          "type": "String"
-        }
-      ]
-    },
-    {
-      "name": "TXorProposition",
+      "name": "TGateway",
       "superClass": ["Element"],
       "properties": [
         {
           "name": "observedProposition",
-          "isAttr": true,
           "type": "String"
+        },
+        {
+          "name": "duration",
+          "type": "TDuration"
         }
       ]
     },
     {
-      "name": "Relative",
+      "name": "TEvent",
+      "superClass": ["Element"],
+      "properties": [
+        {
+          "name": "duration",
+          "type": "TDuration"
+        }
+      ]
+    },
+    {
+      "name": "TSequenceFlow",
+      "superClass": ["Element"],
+      "properties": [
+        {
+          "name": "isTrueBranch",
+          "type": "String"
+        },
+        {
+          "name": "duration",
+          "type": "TDuration"
+        }
+      ]
+    },
+    {
+      "name": "RelativeCostraint",
       "superClass": ["Element"],
       "properties": [
         {
@@ -79,7 +83,7 @@
           "type": "String"
         },
         {
-          "name": "id_relative",
+          "name": "id_relativeConstraint",
           "isAttr": true,
           "type": "String"
         },
@@ -94,38 +98,19 @@
           "type": "String"
         },
         {
-          "name": "source",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
           "name": "target",
-          "isAttr": true,
           "type": "String"
         },
         {
-          "name": "minDuration",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "maxDuration",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "propositionalLabel",
-          "isAttr": true,
-          "type": "String"
-        },
+          "name": "duration",
+          "type": "TDuration"
+        },       
         {
           "name": "From",
-          "isAttr": true,
           "type": "String"
         },
         {
           "name": "To",
-          "isAttr": true,
           "type": "String"
         }
       ]

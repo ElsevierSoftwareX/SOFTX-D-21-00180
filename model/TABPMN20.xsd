@@ -1,55 +1,41 @@
-
-
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="https://gitlab.com/univr.di/TimeAwareBPMN/-/tree/main/ TABPMN20.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:element name="tDuration">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="https://gitlab.com/univr.di/TimeAwareBPMN/-/tree/main/ TABPMN20.xsd"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="tDuration">
+    <xs:element type="xs:integer" name="minDuration" minOccurs="0" maxOccurs="1" />
+    <xs:element type="xs:integer" name="maxDuration" use="optional"/>
+    <xs:element type="xs:string" name="propositionalLabel" use="optional"/>
+  </xs:complexType>
+  <xs:element name="tGateway">
     <xs:complexType>
-      <xs:simpleContent>
-        <xs:extension base="xs:string">
-          <xs:attribute type="xs:integer" name="minDuration" use="optional"/>
-          <xs:attribute type="xs:integer" name="maxDuration" use="optional"/>
-          <xs:attribute type="xs:string" name="propositionalLabel" use="optional"/>
-        </xs:extension>
-      </xs:simpleContent>
+      <xs:element type="xs:string" name="observedProposition" use="optional"/>
+      <xs:element base="tDuration" name="Duration"/>
     </xs:complexType>
   </xs:element>
-  <xs:element name="tGatewaySplitJoin">
+  <xs:element name="tTask">
     <xs:complexType>
-      <xs:simpleContent>
-        <xs:extension base="xs:string">
-          <xs:attribute type="xs:string" name="gatewaySplitJoin" use="optional"/>
-        </xs:extension>
-      </xs:simpleContent>
+      <xs:element base="tDuration" name="Duration"/>
     </xs:complexType>
   </xs:element>
-  <xs:element name="tXorProposition">
+  <xs:element name="tEvent">
     <xs:complexType>
-      <xs:simpleContent>
-        <xs:extension base="xs:string">
-          <xs:attribute type="xs:string" name="observedProposition" use="optional"/>
-        </xs:extension>
-      </xs:simpleContent>
+      <xs:element base="tDuration" name="Duration"/>
     </xs:complexType>
   </xs:element>
-  <xs:element name="relative">
+  <xs:element name="relativeCostraint">
     <xs:complexType>
-      <xs:simpleContent>
-        <xs:extension base="xs:string">
-          <xs:attribute type="xs:string" name="type"/>
-          <xs:attribute type="xs:string" name="id_relative"/>
-          <xs:attribute type="xs:string" name="waypoints"/>
-          <xs:attribute type="xs:string" name="source"/>
-          <xs:attribute type="xs:string" name="target"/>
-        </xs:extension>
-      </xs:simpleContent>
+      <xs:element base="tDuration" name="Duration"/>
+      <xs:element type="xs:string" name="target"/>
+      <xs:element type="xs:string" name="From"/>
+      <xs:element type="xs:string" name="To"/>
+      <xs:attribute type="xs:string" name="type"/>
+      <xs:attribute type="xs:string" name="id_relativeConstraint"/>
+      <xs:attribute type="xs:string" name="waypoints"/>
     </xs:complexType>
   </xs:element>
-  <xs:element name="tPLiteralValue">
+  <xs:element name="tSequenceFlow">
     <xs:complexType>
-      <xs:simpleContent>
-        <xs:extension base="xs:string">
-          <xs:attribute type="xs:string" name="isTrueBranch" use="optional"/>
-        </xs:extension>
-      </xs:simpleContent>
+      <xs:element type="xs:boolean" name="isTrueBranch" use="optional"/>
+      <xs:element base="tDuration" name="Duration"/>
     </xs:complexType>
   </xs:element>
 </xs:schema>

@@ -2,6 +2,11 @@
 
 ## TimeAwareBPMN-js
 
+v1.0.0 - 20210924
+
+- Change structure of extensionElements and update get and set functions. 
+- Update README.md files 
+
 v0.6.0 - 20210924
 
 - Change, tempcon attributes are saved as extensionElements
