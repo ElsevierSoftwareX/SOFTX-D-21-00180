@@ -207,38 +207,83 @@ var validateMaxDuration_relative = function (element, values, node) {
   return !isNaN(val) && Number(val) > 0;
 };
 
+// function getExtensionElementValue(element, typeName, property) {
+//   let businessObject = element.businessObject || element;
+
+//   let tempConType;
+
+//   if (businessObject.$type.includes('Task')) {
+//     tempConType = "TTask";
+//   } else if (businessObject.$type.includes('Gateway')) {
+//     tempConType = "TGateway";
+//   } else if (businessObject.$type.includes('Event')) {
+//     tempConType = "TEvent";
+//   } else if (businessObject.$type.includes('Flow')) {
+//     tempConType = "TSequenceFlow";
+//   }
+
+
+
+//   let extensions = extHelper.getExtensionElements(
+//     businessObject,
+//     "tempcon:" + tempConType
+//   );
+//   let returnValue;
+//   if (extensions) {
+//     if (extensions.length > 0) {
+//       returnValue = extensions[0][property];
+//       if (property != 'observedProposition' && property != 'isTrueBranch')
+//         returnValue = extensions[0].duration[property];
+//       else
+//         returnValue = extensions[0][property];
+//     }
+//   }
+
+//   return returnValue;
+
+// }
+
+
 function getExtensionElementValue(element, typeName, property) {
-  let bo = element.businessObject || element;
+  return window.bpmnjs.getExtensionElementValue(element, typeName, property);
+}
 
-  let extensions = extHelper.getExtensionElements(
-    bo,
-    "tempcon:" + typeName
-  );
-  let returnValue;
-  if (extensions) {
-    if (extensions.length > 0) {
-      returnValue = extensions[0][property];
-    }
-  }
 
-  return returnValue;
 
+function checkSplitJoin(element) {
+  return window.bpmnjs.checkSplitJoin(element);
 }
 
 export default function (group, element, bpmnFactory, translate) {
 
+
   const getValue = function (businessObject, prefix, typeName, property) {
     return function (element) {
+
+      let tempConType;
+      if (businessObject.$type.includes('Task')) {
+        tempConType = "TTask";
+      } else if (businessObject.$type.includes('Gateway')) {
+        tempConType = "TGateway";
+      } else if (businessObject.$type.includes('Event')) {
+        tempConType = "TEvent";
+      } else if (businessObject.$type.includes('Flow')) {
+        tempConType = "TSequenceFlow";
+      }
+
       let extensions = extHelper.getExtensionElements(
         businessObject,
-        prefix + ":" + typeName
+        prefix + ":" + tempConType
       );
       let returnObject = {};
       returnObject[property] = "";
 
       if (extensions) {
         if (extensions.length > 0) {
-          returnObject[property] = extensions[0][property];
+          if (property != 'observedProposition' && property != 'isTrueBranch')
+            returnObject[property] = extensions[0].duration[property];
+          else
+            returnObject[property] = extensions[0][property];
         }
       }
       return returnObject;
@@ -250,18 +295,33 @@ export default function (group, element, bpmnFactory, translate) {
       const moddle = window.bpmnjs.get('moddle');
       const modeling = window.bpmnjs.get('modeling');
 
-      let prefixTypeElement = "tempcon:" + typeName;
+      let tempConType;
 
-      const extensionElements = element.businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
-      let analysisDetails = getExtensionElement(element.businessObject, prefixTypeElement);
-
-      if (!analysisDetails) {
-        analysisDetails = moddle.create(prefixTypeElement);
-
-        extensionElements.get('values').push(analysisDetails);
+      if (businessObject.$type.includes('Task')) {
+        tempConType = "TTask";
+      } else if (businessObject.$type.includes('Gateway')) {
+        tempConType = "TGateway";
+      } else if (businessObject.$type.includes('Event')) {
+        tempConType = "TEvent"
+      } else if (businessObject.$type.includes('Flow')) {
+        tempConType = "TSequenceFlow";
       }
 
-      analysisDetails[property] = values[property];
+      let prefixTypeElement = "tempcon:" + tempConType;
+
+      const extensionElements = element.businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
+      let tempConElement = getExtensionElement(element.businessObject, prefixTypeElement);
+
+      if (!tempConElement) {
+        tempConElement = moddle.create(prefixTypeElement);
+
+        extensionElements.get('values').push(tempConElement);
+      }
+      if (property != 'observedProposition' && property != 'isTrueBranch')
+        tempConElement.duration[property] = values[property];
+      else
+        tempConElement[property] = values[property];
+
       modeling.updateProperties(element, {
         extensionElements,
         name: values[property].charAt(0).toUpperCase() + values[property].slice(1)
@@ -274,18 +334,34 @@ export default function (group, element, bpmnFactory, translate) {
       const moddle = window.bpmnjs.get('moddle');
       const modeling = window.bpmnjs.get('modeling');
 
-      let prefixTypeElement = "tempcon:" + typeName;
-
-      const extensionElements = element.businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
-      let analysisDetails = getExtensionElement(element.businessObject, prefixTypeElement);
-
-      if (!analysisDetails) {
-        analysisDetails = moddle.create(prefixTypeElement);
-
-        extensionElements.get('values').push(analysisDetails);
+      let tempConType;
+      if (businessObject.$type.includes('Task')) {
+        tempConType = "TTask";
+      } else if (businessObject.$type.includes('Gateway')) {
+        tempConType = "TGateway";
+      } else if (businessObject.$type.includes('Event')) {
+        tempConType = "TEvent"
+      } else if (businessObject.$type.includes('Flow')) {
+        tempConType = "TSequenceFlow";
       }
 
-      analysisDetails[property] = values[property];
+      let prefixTypeElement = "tempcon:" + tempConType;
+
+      const extensionElements = element.businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
+      let tempConElement = getExtensionElement(element.businessObject, prefixTypeElement);
+      let duration;
+      if (!tempConElement) {
+        tempConElement = moddle.create(prefixTypeElement);
+        extensionElements.get('values').push(tempConElement);
+        duration = moddle.create("tempcon:TDuration");
+        tempConElement["duration"] = duration;
+      }
+
+      if (property != 'observedProposition' && property != 'isTrueBranch')
+        tempConElement["duration"][property] = values[property];
+      else
+        tempConElement[property] = values[property];
+
       modeling.updateProperties(element, {
         extensionElements
       });
@@ -301,6 +377,17 @@ export default function (group, element, bpmnFactory, translate) {
       return extensionElement.$instanceOf(type);
     })[0];
   }
+
+  function getExtensionElement_secondLevel(element, type) {
+    if (!element.extensionElements) {
+      return;
+    }
+
+    return element.extensionElements.values.filter((extensionElement) => {
+      return extensionElement.$instanceOf(type);
+    })[0];
+  }
+
 
   function set_group_minDuration(group, comparisonFunction, strComment = "") {
     group.entries.push(entryFactory.textField(translate, {
@@ -399,7 +486,8 @@ export default function (group, element, bpmnFactory, translate) {
     set_group_maxDuration(group, validateMaxDuration_sequenceFlow, " (default: ∞)");
 
     if (element.businessObject.sourceRef.$type.includes('ExclusiveGateway')) {
-      if (getExtensionElementValue(element.businessObject.sourceRef, 'TGatewaySplitJoin', 'gatewaySplitJoin') === 'split') {
+      // if (getExtensionElementValue(element.businessObject.sourceRef, 'TGatewaySplitJoin', 'gatewaySplitJoin') === 'split') {
+      if (checkSplitJoin(element.businessObject.sourceRef) == 'split') {
         group.entries.push(entryFactory.selectBox(translate, {
           id: 'isTrueBranch',
           description: 'Select the value true or false',
@@ -466,7 +554,8 @@ export default function (group, element, bpmnFactory, translate) {
     //   selectOptions: [{ name: '', value: '' }, { name: 'Split', value: 'split' }, { name: 'Join', value: 'join' }],
     // }));
 
-    if (getValue(getBusinessObject(element), "tempcon", "TGatewaySplitJoin", "gatewaySplitJoin")(element)['gatewaySplitJoin'] == 'split') {
+    // if (getValue(getBusinessObject(element), "tempcon", "TGatewaySplitJoin", "gatewaySplitJoin")(element)['gatewaySplitJoin'] == 'split') {
+    if (checkSplitJoin(element) == 'split') {
       group.entries.push(entryFactory.textField(translate, {
         id: 'observedProposition',
         description: 'Type one letter to be used as proposition',
@@ -476,6 +565,8 @@ export default function (group, element, bpmnFactory, translate) {
         set: setValue(getBusinessObject(element), "tempcon", "TXorProposition", "observedProposition")
       }));
     }
+
+
 
     set_group_propositionalLabel(group);
   }

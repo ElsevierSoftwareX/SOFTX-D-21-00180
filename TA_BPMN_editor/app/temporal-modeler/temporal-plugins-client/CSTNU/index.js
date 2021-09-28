@@ -310,6 +310,7 @@ function sendCSTNUtoEvaluate(cstnuXml, myObjs) {
                         currentObj = undefined;
                     }
                     divModalContent.innerText = "The given network is NOT dynamically controllable.";
+
                     if (currentObj) {
 
                         divModalContent.innerText += "\nNegative loop in node: " + strNodeId + " (" + currentObj.id + ").";
@@ -319,7 +320,7 @@ function sendCSTNUtoEvaluate(cstnuXml, myObjs) {
 
                     }
                     else {
-                        divModalContent.innerText += "\nNegative loop in node: " + strNodeId + " (" + currentObj + ").";
+                        divModalContent.innerText += "\nNegative loop in node: " + strNodeId + ".";
                     }
 
                 }
