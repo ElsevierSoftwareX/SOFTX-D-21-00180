@@ -65,234 +65,239 @@
     <default/>
   </key>
   <graph edgedefault="directed">
-    <node id="S_XOR_1">
+    <node id="S_XOR_1_G2">
       
-      <data key="x">271</data>
+      <data key="x">421</data>
       <data key="y">156</data>
       <data key="Label">⊡</data>
     </node>
-    <node id="E_XOR_1">
+    <node id="E_XOR_1_G2">
       
-      <data key="x">319</data>
+      <data key="x">469</data>
       <data key="y">154</data>
       <data key="Label">⊡</data>
-      <data key="Obs">R</data>
     </node>
-    <edge id="S_XOR_1-E_XOR_1" source="S_XOR_1" target="E_XOR_1">
-      
-      <data key="Type">normal</data>
-      <data key="Value">4</data>
-    </edge>
-    <edge id="E_XOR_1-S_XOR_1" source="E_XOR_1" target="S_XOR_1">
-      
-      <data key="Type">normal</data>
-      <data key="Value">-2</data>
-    </edge>
-    <node id="S_XOR_2">
-      
-      <data key="x">422</data>
-      <data key="y">157</data>
-      <data key="Label">⊡</data>
-    </node>
-    <node id="E_XOR_2">
-      
-      <data key="x">468</data>
-      <data key="y">153</data>
-      <data key="Label">⊡</data>
-    </node>
-    <edge id="S_XOR_2-E_XOR_2" source="S_XOR_2" target="E_XOR_2">
+    <edge id="S_XOR_1_G2-E_XOR_1_G2" source="S_XOR_1_G2" target="E_XOR_1_G2">
       
       <data key="Type">normal</data>
       <data key="Value">2</data>
     </edge>
-    <edge id="E_XOR_2-S_XOR_2" source="E_XOR_2" target="S_XOR_2">
+    <edge id="E_XOR_1_G2-S_XOR_1_G2" source="E_XOR_1_G2" target="S_XOR_1_G2">
       
       <data key="Type">normal</data>
       <data key="Value">-1</data>
     </edge>
-    <node id="S_TASK_1">
+    <node id="S_TASK_1_T3">
       
       <data key="x">246</data>
       <data key="y">251</data>
-      <data key="Label">R</data>
+      <data key="Label">¬R</data>
     </node>
-    <node id="E_TASK_1">
+    <node id="E_TASK_1_T3">
       
       <data key="x">294</data>
       <data key="y">249</data>
-      <data key="Label">R</data>
+      <data key="Label">¬R</data>
     </node>
-    <edge id="S_TASK_1-E_TASK_1" source="S_TASK_1" target="E_TASK_1">
+    <edge id="S_TASK_1_T3-E_TASK_1_T3" source="S_TASK_1_T3" target="E_TASK_1_T3">
       
       <data key="Type">contingent</data>
       <data key="Value">6</data>
     </edge>
-    <edge id="E_TASK_1-S_TASK_1" source="E_TASK_1" target="S_TASK_1">
+    <edge id="E_TASK_1_T3-S_TASK_1_T3" source="E_TASK_1_T3" target="S_TASK_1_T3">
       
       <data key="Type">contingent</data>
       <data key="Value">-1</data>
     </edge>
-    <node id="S_TASK_2">
+    <node id="S_TASK_2_T4">
       
-      <data key="x">507</data>
+      <data key="x">537</data>
       <data key="y">142</data>
       <data key="Label">⊡</data>
     </node>
-    <node id="E_TASK_2">
+    <node id="E_TASK_2_T4">
       
-      <data key="x">553</data>
+      <data key="x">583</data>
       <data key="y">138</data>
       <data key="Label">⊡</data>
     </node>
-    <edge id="S_TASK_2-E_TASK_2" source="S_TASK_2" target="E_TASK_2">
+    <edge id="S_TASK_2_T4-E_TASK_2_T4" source="S_TASK_2_T4" target="E_TASK_2_T4">
       
       <data key="Type">contingent</data>
       <data key="Value">4</data>
     </edge>
-    <edge id="E_TASK_2-S_TASK_2" source="E_TASK_2" target="S_TASK_2">
+    <edge id="E_TASK_2_T4-S_TASK_2_T4" source="E_TASK_2_T4" target="S_TASK_2_T4">
       
       <data key="Type">contingent</data>
       <data key="Value">-1</data>
     </edge>
-    <node id="S_TASK_3">
+    <node id="S_TASK_3_IE1">
       
       <data key="x">430</data>
       <data key="y">35</data>
-      <data key="Label">¬R</data>
+      <data key="Label">R</data>
     </node>
-    <node id="E_TASK_3">
+    <node id="E_TASK_3_IE1">
       
       <data key="x">474</data>
       <data key="y">29</data>
-      <data key="Label">¬R</data>
+      <data key="Label">R</data>
     </node>
-    <edge id="S_TASK_3-E_TASK_3" source="S_TASK_3" target="E_TASK_3">
+    <edge id="S_TASK_3_IE1-E_TASK_3_IE1" source="S_TASK_3_IE1" target="E_TASK_3_IE1">
       
       <data key="Type">normal</data>
       <data key="Value">3</data>
     </edge>
-    <edge id="E_TASK_3-S_TASK_3" source="E_TASK_3" target="S_TASK_3">
+    <edge id="E_TASK_3_IE1-S_TASK_3_IE1" source="E_TASK_3_IE1" target="S_TASK_3_IE1">
       
       <data key="Type">normal</data>
       <data key="Value">-1</data>
     </edge>
-    <node id="S_TASK_4">
+    <node id="S_TASK_4_T1">
       
       <data key="x">149</data>
       <data key="y">144</data>
       <data key="Label">⊡</data>
     </node>
-    <node id="E_TASK_4">
+    <node id="E_TASK_4_T1">
       
       <data key="x">191</data>
       <data key="y">136</data>
       <data key="Label">⊡</data>
     </node>
-    <edge id="S_TASK_4-E_TASK_4" source="S_TASK_4" target="E_TASK_4">
+    <edge id="S_TASK_4_T1-E_TASK_4_T1" source="S_TASK_4_T1" target="E_TASK_4_T1">
       
       <data key="Type">contingent</data>
       <data key="Value">3</data>
     </edge>
-    <edge id="E_TASK_4-S_TASK_4" source="E_TASK_4" target="S_TASK_4">
+    <edge id="E_TASK_4_T1-S_TASK_4_T1" source="E_TASK_4_T1" target="S_TASK_4_T1">
       
       <data key="Type">contingent</data>
       <data key="Value">-2</data>
     </edge>
-    <node id="S_TASK_5">
+    <node id="S_TASK_5_T2">
       
       <data key="x">250</data>
       <data key="y">15</data>
-      <data key="Label">¬R</data>
+      <data key="Label">R</data>
     </node>
-    <node id="E_TASK_5">
+    <node id="E_TASK_5_T2">
       
       <data key="x">290</data>
       <data key="y">5</data>
-      <data key="Label">¬R</data>
+      <data key="Label">R</data>
     </node>
-    <edge id="S_TASK_5-E_TASK_5" source="S_TASK_5" target="E_TASK_5">
+    <edge id="S_TASK_5_T2-E_TASK_5_T2" source="S_TASK_5_T2" target="E_TASK_5_T2">
       
       <data key="Type">contingent</data>
       <data key="Value">2</data>
     </edge>
-    <edge id="E_TASK_5-S_TASK_5" source="E_TASK_5" target="S_TASK_5">
+    <edge id="E_TASK_5_T2-S_TASK_5_T2" source="E_TASK_5_T2" target="S_TASK_5_T2">
       
       <data key="Type">contingent</data>
       <data key="Value">-1</data>
     </edge>
-    <node id="START_">
+    <node id="S_XOR_2_G1">
+      
+      <data key="x">272</data>
+      <data key="y">157</data>
+      <data key="Label">⊡</data>
+    </node>
+    <node id="E_XOR_2_G1">
+      
+      <data key="x">318</data>
+      <data key="y">153</data>
+      <data key="Label">⊡</data>
+      <data key="Obs">R</data>
+    </node>
+    <edge id="S_XOR_2_G1-E_XOR_2_G1" source="S_XOR_2_G1" target="E_XOR_2_G1">
+      
+      <data key="Type">normal</data>
+      <data key="Value">4</data>
+    </edge>
+    <edge id="E_XOR_2_G1-S_XOR_2_G1" source="E_XOR_2_G1" target="S_XOR_2_G1">
+      
+      <data key="Type">normal</data>
+      <data key="Value">-2</data>
+    </edge>
+    <node id="START__StartEvent_1">
       
       <data key="x">112</data>
       <data key="y">162</data>
       <data key="Label">Z</data>
     </node>
-    <node id="END_">
+    <node id="END__e">
       
-      <data key="x">742</data>
+      <data key="x">712</data>
       <data key="y">162</data>
       <data key="Label">Ω</data>
     </node>
-    <edge id="E_XOR_1-S_TASK_1" source="E_XOR_1" target="S_TASK_1">
+    <edge id="S_XOR_1_G2-E_TASK_1_T3" source="S_XOR_1_G2" target="E_TASK_1_T3">
+      
+      <data key="Type">normal</data>
+      <data key="Value">0</data>
+    </edge>
+    <edge id="S_XOR_1_G2-E_TASK_3_IE1" source="S_XOR_1_G2" target="E_TASK_3_IE1">
+      
+      <data key="Type">normal</data>
+      <data key="Value">0</data>
+    </edge>
+    <edge id="END__e-E_TASK_2_T4" source="END__e" target="E_TASK_2_T4">
+      
+      <data key="Type">normal</data>
+      <data key="Value">0</data>
+    </edge>
+    <edge id="S_TASK_3_IE1-E_TASK_5_T2" source="S_TASK_3_IE1" target="E_TASK_5_T2">
+      
+      <data key="Type">normal</data>
+      <data key="Value">0</data>
+    </edge>
+    <edge id="S_TASK_4_T1-START__StartEvent_1" source="S_TASK_4_T1" target="START__StartEvent_1">
+      
+      <data key="Type">normal</data>
+      <data key="Value">0</data>
+    </edge>
+    <edge id="E_TASK_4_T1-S_XOR_2_G1" source="E_TASK_4_T1" target="S_XOR_2_G1">
       
       <data key="Type">normal</data>
       <data key="Value">2</data>
     </edge>
-    <edge id="S_TASK_1-E_XOR_1" source="S_TASK_1" target="E_XOR_1">
+    <edge id="S_XOR_2_G1-E_TASK_4_T1" source="S_XOR_2_G1" target="E_TASK_4_T1">
       
       <data key="Type">normal</data>
       <data key="Value">-1</data>
     </edge>
-    <edge id="S_XOR_2-E_TASK_1" source="S_XOR_2" target="E_TASK_1">
+    <edge id="E_XOR_2_G1-S_TASK_5_T2" source="E_XOR_2_G1" target="S_TASK_5_T2">
       
       <data key="Type">normal</data>
-      <data key="Value">0</data>
+      <data key="Value">4</data>
     </edge>
-    <edge id="S_TASK_2-E_XOR_2" source="S_TASK_2" target="E_XOR_2">
-      
-      <data key="Type">normal</data>
-      <data key="Value">0</data>
-    </edge>
-    <edge id="S_XOR_2-E_TASK_3" source="S_XOR_2" target="E_TASK_3">
-      
-      <data key="Type">normal</data>
-      <data key="Value">0</data>
-    </edge>
-    <edge id="END_-E_TASK_2" source="END_" target="E_TASK_2">
-      
-      <data key="Type">normal</data>
-      <data key="Value">0</data>
-    </edge>
-    <edge id="E_XOR_1-S_TASK_5" source="E_XOR_1" target="S_TASK_5">
-      
-      <data key="Type">normal</data>
-      <data key="Value">2</data>
-    </edge>
-    <edge id="S_TASK_5-E_XOR_1" source="S_TASK_5" target="E_XOR_1">
+    <edge id="S_TASK_5_T2-E_XOR_2_G1" source="S_TASK_5_T2" target="E_XOR_2_G1">
       
       <data key="Type">normal</data>
       <data key="Value">-1</data>
     </edge>
-    <edge id="S_TASK_3-E_TASK_5" source="S_TASK_3" target="E_TASK_5">
+    <edge id="E_XOR_2_G1-S_TASK_1_T3" source="E_XOR_2_G1" target="S_TASK_1_T3">
+      
+      <data key="Type">normal</data>
+      <data key="Value">3</data>
+    </edge>
+    <edge id="S_TASK_1_T3-E_XOR_2_G1" source="S_TASK_1_T3" target="E_XOR_2_G1">
+      
+      <data key="Type">normal</data>
+      <data key="Value">-1</data>
+    </edge>
+    <edge id="S_TASK_2_T4-E_XOR_1_G2" source="S_TASK_2_T4" target="E_XOR_1_G2">
       
       <data key="Type">normal</data>
       <data key="Value">0</data>
     </edge>
-    <edge id="S_XOR_1-E_TASK_4" source="S_XOR_1" target="E_TASK_4">
-      
-      <data key="Type">normal</data>
-      <data key="Value">0</data>
-    </edge>
-    <edge id="S_TASK_4-START_" source="S_TASK_4" target="START_">
-      
-      <data key="Type">normal</data>
-      <data key="Value">0</data>
-    </edge>
-    <edge id="S_TASK_4-E_TASK_2" source="S_TASK_4" target="E_TASK_2" Label="S">
+    <edge id="S_TASK_4_T1-E_TASK_2_T4-RelativeConstraint_2v93" source="S_TASK_4_T1" target="E_TASK_2_T4" Label="U">
       
       <data key="Type">normal </data>
-      <data key="Value">18</data>
+      <data key="Value">31</data>
     </edge>
-    <edge id="E_TASK_2-S_TASK_4" source="E_TASK_2" target="S_TASK_4" Label="S">
+    <edge id="E_TASK_2_T4-S_TASK_4_T1-RelativeConstraint_2v93" source="E_TASK_2_T4" target="S_TASK_4_T1" Label="U">
       
       <data key="Type">normal</data>
       <data key="Value">-2</data>
@@ -300,7 +305,7 @@
     <data key="nContingent">4</data>
     <data key="nObservedProposition">1</data>
     <data key="NetworkType">CSTNU</data>
-    <data key="nEdges">27</data>
+    <data key="nEdges">28</data>
     <data key="nVertices">14</data>
     <data key="Name">diagrma</data>
   </graph>
