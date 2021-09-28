@@ -3,11 +3,11 @@
 It is a tool for editing and verifying time-aware BPMN models, BPMN models having temporal constraints.
 
 It is a web-application and consists of a graphical editor where it is possible to create or edit time-aware BPMN models
-and where it is possible to select and run a plug-in for verifying temporal constraints.
+and to select and run a plug-in for *verifying* temporal constraints.
 
 Plug-in architecture allows the execution of different programs for verifying different temporal properties.
 
-As a proof-of-concept, the application contains a plug-in, CSTNU plug-in, that allows verifying if the model is *dynamically controllable*,
+As a proof-of-concept, the application contains a plug-in, *CSTNU plug-in*, that allows verifying if the model is *dynamically controllable*,
 i.e., it is possible to execute it whatever the duration of some activities, called *contingent* activities.
 Each contingent-activity duration is limited to stay in a temporal range, but the exact duration is decided at run-time by the external "agent" executing it.
 CSTNU plug-in verifies the dynamic controllability property using an external Java library.
@@ -23,17 +23,17 @@ To run the application, it is necessary to install some Node modules and depende
     1. Install JDK 11/17 (if you are using brew, `brew install openjdk@11`)
     2. Set the JAVA_HOME environment variable to JDK home.
        If you installed by brew, then the JAVA_HOME can be set for JDK 11 by        
-        export JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk-11.jdk/Contents/Home
+        `export JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk-11.jdk/Contents/Home`
        or for JDK 17 by    
-        export JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home
-    3. Install compiling tools: npm install -g node-gyp
-    4. Install java: npm i java
+        `export JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home`
+    3. Install compiling tools: `npm install -g node-gyp`
+    4. Install java: `npm i java`
 
 **Installation in Ubuntu**
 
     1. Install JDK 11
-    2. Install compiling tools: sudo apt install make g++
-    3. Install java: npm i java
+    2. Install compiling tools: `sudo apt install make g++`
+    3. Install java: `npm i java`
 
 2. Then, install all other dependencies
 ```
@@ -44,7 +44,8 @@ npm install
 ```
 npm start
 ```
-A model can be loaded by dragging the file in the editor or using the option Load BPMN model. There are example models in the [models folder](./exmples/models/).
+A model can be loaded by dragging the file in the editor or using the option Load BPMN model.
+There are example models in the [models folder](./exmples/models/).
 
 ## Demos
 Check usage examples in [demos folder](./examples/demos/).
