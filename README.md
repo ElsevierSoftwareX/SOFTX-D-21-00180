@@ -17,23 +17,23 @@ CSTNU plug-in verifies the dynamic controllability property using an external Ja
 To run the application, it is necessary to install some Node modules and dependency.
 
 1. First, it is necessary to install **Java** module, necessary for the CSTNU plug-in.
+    
+    **Installation in Mac OS X**
+    > 1. Install JDK 11 or 17 (if you are using brew, `brew install openjdk@11` for JDK 11)<br>
+    > 2. Set the JAVA_HOME environment variable to JDK home.<br>
+    >    If you installed by brew, then the JAVA_HOME can be set for JDK 11 by<br>
+    >    `export JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk-11.jdk/Contents/Home`<br>
+    >    or for JDK 17 by<br>
+    >   `export JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home`<br>
+    > 3. Install compiling tools: `npm install -g node-gyp`<br>
+    > 4. Install java: `npm i java`<br>
 
-**Installation in Mac OS X**
 
-    1. Install JDK 11/17 (if you are using brew, `brew install openjdk@11`)
-    2. Set the JAVA_HOME environment variable to JDK home.
-       If you installed by brew, then the JAVA_HOME can be set for JDK 11 by        
-        `export JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk-11.jdk/Contents/Home`
-       or for JDK 17 by    
-        `export JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home`
-    3. Install compiling tools: `npm install -g node-gyp`
-    4. Install java: `npm i java`
+    **Installation in Ubuntu**
+    > 1. Install JDK 11 or 17
+    > 2. Install compiling tools: `sudo apt install make g++`
+    > 3. Install java: `npm i java`
 
-**Installation in Ubuntu**
-
-    1. Install JDK 11
-    2. Install compiling tools: `sudo apt install make g++`
-    3. Install java: `npm i java`
 
 2. Then, install all other dependencies
 ```
@@ -48,7 +48,7 @@ A model can be loaded by dragging the file in the editor or using the option Loa
 There are example models in the [models folder](./exmples/models/).
 
 ## Demos
-Check usage examples in [demos folder](./examples/demos/).
+[Demos folder](./examples/demos/) contains some video showing how to use the application.
 
 
 ## Adding a plug-in
