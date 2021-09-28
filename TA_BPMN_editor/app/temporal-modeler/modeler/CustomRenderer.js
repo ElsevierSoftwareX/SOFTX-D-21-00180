@@ -499,7 +499,9 @@ function drawShape_contingent(
   }
   if (isAny(element, ["bpmn:ExclusiveGateway", "bpmn:ParallelGateway"])) {
     //Check it has a type: split or join 
-    let gatewaySplitJoin = getExtensionElementValue(element, "TGatewaySplitJoin", "gatewaySplitJoin");
+    // let gatewaySplitJoin = getExtensionElementValue(element, "TGatewaySplitJoin", "gatewaySplitJoin");
+    let gatewaySplitJoin = window.bpmnjs.checkSplitJoin(element);
+
     if (gatewaySplitJoin === undefined) {
       colorFrame = "#cc0000";
     }
@@ -557,17 +559,41 @@ function drawShape_contingent(
   });
 }
 
-function getExtensionElementValue(element, typeName, property) {
-  let extensions = extHelper.getExtensionElements(
-    element.businessObject,
-    "tempcon:" + typeName
-  );
-  let returnValue;
-  if (extensions) {
-    if (extensions.length > 0) {
-      returnValue = extensions[0][property];
-    }
-  }
-  return returnValue;
+// function getExtensionElementValue(element, typeName, property) {
+//   let businessObject = element.businessObject || element;
 
+//   let tempConObj;
+
+//   if (businessObject.$type.includes('Task')) {
+//     tempConObj = "TTask";
+//   } else if (businessObject.$type.includes('Gateway')) {
+//     tempConObj = "TGateway";
+//   } else if (businessObject.$type.includes('Event')) {
+//     tempConObj = "TEvent";
+//   } else if (businessObject.$type.includes('Flow')) {
+//     tempConObj = "TSequenceFlow";
+//   }
+
+//   let extensions = extHelper.getExtensionElements(
+//     businessObject,
+//     "tempcon:" + tempConObj
+//   );
+//   let returnValue;
+//   if (extensions) {
+//     if (extensions.length > 0) {
+//       returnValue = extensions[0][property];
+//       if (property != 'observedProposition' && property != 'isTrueBranch')
+//         returnValue = extensions[0].duration[property];
+//       else
+//         returnValue = extensions[0][property];
+//     }
+//   }
+//   return returnValue;
+// }
+
+
+
+function getExtensionElementValue(element, typeName, property) {
+  return window.bpmnjs.getExtensionElementValue(element, typeName, property);
 }
+

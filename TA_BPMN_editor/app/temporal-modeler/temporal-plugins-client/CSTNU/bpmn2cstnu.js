@@ -411,7 +411,8 @@ function checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs) {
     }
     const elementRegistry = window.bpmnjs.get('elementRegistry');
     let tempElement = elementRegistry.get(element.attributes.id.value);
-    let gatewaySplitJoinTmp = getExtensionElementValue(tempElement, "TGatewaySplitJoin", "gatewaySplitJoin");
+    // let gatewaySplitJoinTmp = getExtensionElementValue(tempElement, "TGatewaySplitJoin", "gatewaySplitJoin");
+    let gatewaySplitJoinTmp = window.bpmnjs.checkSplitJoin(tempElement);
 
     if (gatewaySplitJoinTmp != undefined) { //Read it
       if (gatewaySplitJoinTmp.includes('split')) {
@@ -510,7 +511,7 @@ function setTwoNodesToEdges(params) {
 
     let propositionalLabel = "⊡";
     let tmpElement = elementRegistry.get(element.attributes.id.value);
-    let propositionalLabelTmp = getExtensionElementValue(tmpElement, "TDuration", "gatewaySplitJoin");
+    let propositionalLabelTmp = getExtensionElementValue(tmpElement, "TDuration", "propositionalLabel");
 
     if (propositionalLabelTmp != undefined)
       if (propositionalLabelTmp != '')
@@ -1209,22 +1210,41 @@ function getProcessName(xmlDoc) {
   return name;
 }
 
+
+// function getExtensionElementValue(element, typeName, property) {
+//   let businessObject = element.businessObject || element;
+
+//   let tempConObj;
+
+//   if (businessObject.$type.includes('Task')) {
+//     tempConObj = "TTask";
+//   } else if (businessObject.$type.includes('Gateway')) {
+//     tempConObj = "TGateway";
+//   } else if (businessObject.$type.includes('Event')) {
+//     tempConObj = "TEvent";
+//   } else if (businessObject.$type.includes('Flow')) {
+//     tempConObj = "TSequenceFlow";
+//   }
+
+//   let extensions = extHelper.getExtensionElements(
+//     businessObject,
+//     "tempcon:" + tempConObj
+//   );
+//   let returnValue;
+//   if (extensions) {
+//     if (extensions.length > 0) {
+//       returnValue = extensions[0][property];
+//       if (property != 'observedProposition' && property != 'isTrueBranch')
+//         returnValue = extensions[0].duration[property];
+//       else
+//         returnValue = extensions[0][property];
+//     }
+//   }
+//   return returnValue;
+// }
+
 function getExtensionElementValue(element, typeName, property) {
-  let extensions = extHelper.getExtensionElements(
-    element.businessObject,
-    "tempcon:" + typeName
-  );
-  let returnValue;
-  if (extensions) {
-    if (extensions.length > 0) {
-      returnValue = extensions[0][property];
-    }
-  }
-
-  return returnValue;
-
+  return window.bpmnjs.getExtensionElementValue(element, typeName, property);
 }
-
-
 
 

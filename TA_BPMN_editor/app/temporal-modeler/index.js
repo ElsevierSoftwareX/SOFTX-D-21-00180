@@ -1,4 +1,6 @@
 import Modeler from 'bpmn-js/lib/Modeler';
+import extHelper from "bpmn-js-properties-panel/lib/helper/ExtensionElementsHelper";
+
 
 import {
   assign,
@@ -183,28 +185,28 @@ CustomModeler.prototype.cleanCustomElements = function () {
 CustomModeler.prototype.loadCustomElementsFromXML = function () {
 
   const elementRegistry = this.get('elementRegistry');
-
   let connections = [];
   elementRegistry.getAll().forEach(function (element) {
     let businessObject = getBusinessObject(element);
     let extensionElements = businessObject.extensionElements;
 
     if (extensionElements) {
-      let relativeConstraints = getExtensionElement(businessObject, 'tempcon:Relative');
-      if(relativeConstraints){
+      let relativeConstraints = getExtensionElement(businessObject, 'tempcon:RelativeCostraint');
+      if (relativeConstraints && relativeConstraints.length > 0) {
+
         relativeConstraints.forEach(function (relativeConstraint) {
           let customElement = {
             type: relativeConstraint.type,
-            id: relativeConstraint.id_relative,
+            id: relativeConstraint.id_relativeConstraint,
             name: relativeConstraint.name,
             waypoints: JSON.parse(relativeConstraint.waypoints),
-            source: relativeConstraint.source,
+            source: element.id,
             target: relativeConstraint.target,
-            minDuration: relativeConstraint.minDuration,
-            maxDuration: relativeConstraint.maxDuration,
-            propositionalLabel: relativeConstraint.propositionalLabel,
-            relativeConstraintConnFrom: relativeConstraint.From,
-            intentaskConnTo: relativeConstraint.To
+            minDuration: relativeConstraint.duration.minDuration,
+            maxDuration: relativeConstraint.duration.maxDuration,
+            propositionalLabel: relativeConstraint.duration.propositionalLabel,
+            From: relativeConstraint.From,
+            To: relativeConstraint.To
           };
           connections.push(customElement);
         });
@@ -227,7 +229,7 @@ CustomModeler.prototype.getDefinitionsWithRelativeConstraintAsExtensionElements 
     let extensionElements = businessObject.extensionElements;
 
     if (extensionElements) {
-      let relativeConstraints = getExtensionElement(businessObject, 'tempcon:Relative');
+      let relativeConstraints = getExtensionElement(businessObject, 'tempcon:RelativeCostraint');
 
       if (relativeConstraints) {
         relativeConstraints.forEach(function (relativeConstraint) {
@@ -246,18 +248,20 @@ CustomModeler.prototype.getDefinitionsWithRelativeConstraintAsExtensionElements 
 
     let extensionElements = businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
 
-    let relativeConstraint = moddle.create('tempcon:Relative');
+    let relativeConstraint = moddle.create('tempcon:RelativeCostraint');
     extensionElements.get('values').push(relativeConstraint);
+    let duration = moddle.create("tempcon:TDuration");
+    relativeConstraint["duration"] = duration;
 
     relativeConstraint.type = customConnection.type;
-    relativeConstraint.id_relative = customConnection.id;
+    relativeConstraint.id_relativeConstraint = customConnection.id;
     relativeConstraint.name = customConnection.name;
     relativeConstraint.waypoints = JSON.stringify(customConnection.waypoints);
-    relativeConstraint.source = customConnection.source;
+    // relativeConstraint.source = customConnection.source;
     relativeConstraint.target = customConnection.target;
-    relativeConstraint.minDuration = customConnection.minDuration;
-    relativeConstraint.maxDuration = customConnection.maxDuration;
-    relativeConstraint.propositionalLabel = customConnection.propositionalLabel;
+    relativeConstraint.duration.minDuration = customConnection.minDuration;
+    relativeConstraint.duration.maxDuration = customConnection.maxDuration;
+    relativeConstraint.duration.propositionalLabel = customConnection.propositionalLabel;
     relativeConstraint.From = customConnection.From;
     relativeConstraint.To = customConnection.To;
 
@@ -270,6 +274,52 @@ CustomModeler.prototype.getDefinitionsWithRelativeConstraintAsExtensionElements 
   return definitions;
 };
 
+
+CustomModeler.prototype.checkSplitJoin = function (element) {
+  let businessObject = element.businessObject || element;
+  let incoming = businessObject.incoming;
+  let outgoing = businessObject.outgoing;
+  let type;
+
+  if (incoming && outgoing) {
+    if (incoming.length == 2 && outgoing.length == 1) type = 'join';
+    else if (incoming.length == 1 && outgoing.length == 2) type = 'split';
+  }
+  return type;
+};
+
+CustomModeler.prototype.getExtensionElementValue = function (element, typeName, property) {
+  let businessObject = element.businessObject || element;
+
+  let tempConType;
+
+  if (businessObject.$type.includes('Task')) {
+    tempConType = "TTask";
+  } else if (businessObject.$type.includes('Gateway')) {
+    tempConType = "TGateway";
+  } else if (businessObject.$type.includes('Event')) {
+    tempConType = "TEvent";
+  } else if (businessObject.$type.includes('Flow')) {
+    tempConType = "TSequenceFlow";
+  }
+
+  let extensions = extHelper.getExtensionElements(
+    businessObject,
+    "tempcon:" + tempConType
+  );
+  let returnValue;
+  if (extensions) {
+    if (extensions.length > 0) {
+      returnValue = extensions[0][property];
+      if (property != 'observedProposition' && property != 'isTrueBranch')
+        returnValue = extensions[0].duration[property];
+      else
+        returnValue = extensions[0][property];
+    }
+  }
+  return returnValue;
+};
+
 function isCustomConnection(element) {
   return element.type === 'custom:connection';
 }
@@ -280,7 +330,7 @@ function getExtensionElement(element, type) {
     return;
   }
 
-  if(element.extensionElements.values){
+  if (element.extensionElements.values) {
     return element.extensionElements.values.filter((extensionElement) => {
       return extensionElement.$instanceOf(type);
     });
