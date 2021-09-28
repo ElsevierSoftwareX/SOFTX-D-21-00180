@@ -11,12 +11,15 @@ This verification is done in the server-side of the tool TimeAwareBPMN-js.
 The tool was designed to be extended, by adding verification programs as plug-ins.
 This version contains a plug-in that connects with the Java tool CSTNU to evaluate the dynamic controllability. 
 
-This implementation is based on the examples: [properties-panel-extension with custom properties](https://github.com/bpmn-io/bpmn-js-examples/tree/master/properties-panel-extension) and [custom-elements](https://github.com/bpmn-io/bpmn-js-examples/tree/master/custom-elements).
+The base code of this editor is [bpmn-io](https://github.com/bpmn-io/).<br>
+We realized the exstension considering the following patterns:
+ 1. [properties-panel-extension with custom properties](https://github.com/bpmn-io/bpmn-js-examples/tree/master/properties-panel-extension), and 
+ 2. [custom-elements](https://github.com/bpmn-io/bpmn-js-examples/tree/master/custom-elements).
 
-### Editing temporal properties 
+### Editing temporal constraints 
 
-We extend the properties panel to allow editing `temporal properties` on BPMN elements. 
-The temporal properties, like `tempcon:minDuration`, will be persisted as an extension as part of the BPMN 2.0 document:
+We extend the properties panel to allow editing `temporal constraints` of BPMN elements. 
+The temporal constraints, like `tempcon:minDuration`, are then stored as an extension element in the BPMN 2.0 document representing the model:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -30,8 +33,8 @@ The temporal properties, like `tempcon:minDuration`, will be persisted as an ext
 
 ### Relative constraint
 
-We created a custom connection that sets relative temporal constraints between any pair of elements in the diagram. These relative constraints are a general concept in temporal verification methods. We implemented them as a custom objects and save them as extension elements in the BPMN model. 
-The editor loads and saves BPMN XML files with the information of the relative constraints. 
+We created a custom connection that sets relative temporal constraints between any pair of elements in the diagram.<br>
+A relative constraint limits the temporal distance between two elements: A ---[1,10]---> B means that, during an execution, the activity B must start/end (according to the specification of the relative constraint) between 1 and 10 units time after the start/end of A.
 
 The attributes of relative constraint elements are: type ("custom:connection"), id_relative, waypoints, source, target, From (default: end), To (default: start), and propositionalLabel. 
 We save the realtive constraints as extension element of the element where the connection starts. This is an example of a relative constraint. 
@@ -57,24 +60,7 @@ We save the realtive constraints as extension element of the element where the c
 
 ### Toolbar to select the verification tool
 
-We created a toolbar that loads and exposes the plug-ins, that communicate with the corresponding plug-in in the server, which can interact with desktop applications to perform the verifications of the models. 
-
-## Running the Example
-
-The TimeAwareBPMN-editor is loaded by the TimeAwareBPMN-js tool. It is possible to execute it alone to edit models, but without performing the verification of temporal constraints. 
-
-Install all required dependencies:
-
-```
-npm install
-```
-
-Build and run the project
-
-```
-npm run dev
-```
-
+The toolbar present in the low part of the editor allows a user to select the plug-in to use for *verifying* the temporal constraints.
 
 ## License
 
