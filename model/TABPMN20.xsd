@@ -1,34 +1,33 @@
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="https://gitlab.com/univr.di/TimeAwareBPMN/-/tree/main/ TABPMN20.xsd"
   xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:complexType name="tDuration">
-    <xs:element type="xs:integer" name="minDuration" minOccurs="0" maxOccurs="1" />
-    <xs:element type="xs:integer" name="maxDuration" use="optional"/>
-    <xs:element type="xs:string" name="propositionalLabel" use="optional"/>
+    <xs:element type="xs:integer" name="minDuration" maxOccurs="1" />
+    <xs:element type="xs:integer" name="maxDuration" maxOccurs="1"/>
+    <xs:element type="xs:string" name="propositionalLabel" maxOccurs="1"/>
   </xs:complexType>
   <xs:element name="tGateway">
     <xs:complexType>
-      <xs:element type="xs:string" name="observedProposition" use="optional"/>
-      <xs:element base="tDuration" name="Duration"/>
+      <xs:element type="xs:string" name="observedProposition" maxOccurs="1"/><!--proposition letter in [A-Z]. It represents the name of proposition representing the choice value in a binary XOR Split--> 
+      <xs:element base="tDuration" name="Duration" maxOccurs="1"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="tTask">
     <xs:complexType>
-      <xs:element base="tDuration" name="Duration"/>
+      <xs:element base="tDuration" name="Duration" maxOccurs="1"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="tEvent">
     <xs:complexType>
-      <xs:element base="tDuration" name="Duration"/>
+      <xs:element base="tDuration" name="Duration" maxOccurs="1"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="relativeCostraint">
     <xs:complexType>
-      <xs:element base="tDuration" name="Duration"/>
-      <xs:element type="xs:string" name="target"/>
-      <xs:element type="xs:string" name="From"/>
-      <xs:element type="xs:string" name="To"/>
+      <xs:element base="tDuration" name="Duration" maxOccurs="1"/>
+      <xs:element type="xs:string" name="target" maxOccurs="1"/>
+      <xs:element type="xs:string" name="To" minOccurs="1" maxOccurs="1"/><!-- From is implicit because it is the element where this one in insert-->
       <xs:attribute type="xs:string" name="type"/>
-      <xs:attribute type="xs:string" name="id_relativeConstraint"/>
+      <xs:attribute type="xs:string" name="id_relativeConstraint"/><!-- id for this element-->
       <xs:attribute type="xs:string" name="waypoints"/>
     </xs:complexType>
   </xs:element>
