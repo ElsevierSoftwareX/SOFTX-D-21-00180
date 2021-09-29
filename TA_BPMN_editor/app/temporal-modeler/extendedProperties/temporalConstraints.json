@@ -13,11 +13,11 @@
       "properties": [
         {
           "name": "minDuration",
-          "type": "String"
+          "type": "Integer"
         },
         {
           "name": "maxDuration",
-          "type": "String"
+          "type": "Integer"
         },
         {
           "name": "propositionalLabel",
@@ -65,7 +65,7 @@
       "properties": [
         {
           "name": "isTrueBranch",
-          "type": "String"
+          "type": "Boolean"
         },
         {
           "name": "duration",
