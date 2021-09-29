@@ -1,7 +1,6 @@
 import Modeler from 'bpmn-js/lib/Modeler';
 import extHelper from "bpmn-js-properties-panel/lib/helper/ExtensionElementsHelper";
 
-
 import {
   assign,
   isArray

@@ -27,7 +27,7 @@
       <bpmn2:extensionElements>
         <tempcon:tTask>
           <tempcon:tDuration>
-            <tempcon:minDuration>1</tempcon:minDuration>
+            <tempcon:minDuration>14</tempcon:minDuration>
             <tempcon:maxDuration>6</tempcon:maxDuration>
             <tempcon:propositionalLabel>¬R</tempcon:propositionalLabel>
           </tempcon:tDuration>
@@ -79,11 +79,10 @@
           <tempcon:target>T4</tempcon:target>
           <tempcon:tDuration>
             <tempcon:minDuration>2</tempcon:minDuration>
-            <tempcon:maxDuration>31</tempcon:maxDuration>
-            <tempcon:propositionalLabel>U</tempcon:propositionalLabel>
+            <tempcon:maxDuration>15</tempcon:maxDuration>
           </tempcon:tDuration>
-          <tempcon:From>start</tempcon:From>
-          <tempcon:To>end</tempcon:To>
+          <tempcon:From>end</tempcon:From>
+          <tempcon:To>start</tempcon:To>
         </tempcon:relativeCostraint>
       </bpmn2:extensionElements>
       <bpmn2:incoming>Flow_1y1s5dn</bpmn2:incoming>
@@ -118,7 +117,7 @@
       <bpmn2:outgoing>Flow_19suy4z</bpmn2:outgoing>
       <bpmn2:outgoing>Flow_1t58voa</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="Flow_0aync76" sourceRef="T1" targetRef="G1">
+    <bpmn2:sequenceFlow id="Flow_0aync76" sourceRef="T1" targetRef="G1" updated="true">
       <bpmn2:extensionElements>
         <tempcon:tSequenceFlow>
           <tempcon:tDuration>
