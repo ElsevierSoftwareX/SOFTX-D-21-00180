@@ -1,41 +1,79 @@
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="https://gitlab.com/univr.di/TimeAwareBPMN/-/tree/main/ TABPMN20.xsd"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:complexType name="tDuration">
-    <xs:element type="xs:integer" name="minDuration" maxOccurs="1" />
-    <xs:element type="xs:integer" name="maxDuration" maxOccurs="1"/>
-    <xs:element type="xs:string" name="propositionalLabel" maxOccurs="1"/>
-  </xs:complexType>
-  <xs:element name="tGateway">
-    <xs:complexType>
-      <xs:element type="xs:string" name="observedProposition" maxOccurs="1"/><!--proposition letter in [A-Z]. It represents the name of proposition representing the choice value in a binary XOR Split--> 
-      <xs:element base="tDuration" name="Duration" maxOccurs="1"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="tTask">
-    <xs:complexType>
-      <xs:element base="tDuration" name="Duration" maxOccurs="1"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="tEvent">
-    <xs:complexType>
-      <xs:element base="tDuration" name="Duration" maxOccurs="1"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="relativeCostraint">
-    <xs:complexType>
-      <xs:element base="tDuration" name="Duration" maxOccurs="1"/>
-      <xs:element type="xs:string" name="target" maxOccurs="1"/>
-      <xs:element type="xs:string" name="To" minOccurs="1" maxOccurs="1"/><!-- From is implicit because it is the element where this one in insert-->
-      <xs:attribute type="xs:string" name="type"/>
-      <xs:attribute type="xs:string" name="id_relativeConstraint"/><!-- id for this element-->
-      <xs:attribute type="xs:string" name="waypoints"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="tSequenceFlow">
-    <xs:complexType>
-      <xs:element type="xs:boolean" name="isTrueBranch" use="optional"/>
-      <xs:element base="tDuration" name="Duration"/>
-    </xs:complexType>
-  </xs:element>
+<!-- Add XML Schema (XSD) Data -->
+<xs:schema xmlns:tempcon="https://gitlab.com/univr.di/TimeAwareBPMN/-/blob/main/model/TABPMN20.xsd" targetNamespace="https://gitlab.com/univr.di/TimeAwareBPMN/-/blob/main/model/TABPMN20.xsd"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:complexType name="tDuration">
+		<xs:annotation>
+			<xs:documentation>It represents a duration range. 
+			PropositionalLabel is a conjunction of conditions for saying when the duration range must be considered.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:all>
+			<xs:element type="xs:integer" name="minDuration"/>
+			<xs:element type="xs:integer" name="maxDuration"/>
+			<xs:element type="xs:string" name="propositionalLabel" minOccurs="0"/>
+		</xs:all>
+	</xs:complexType>
+
+	<xs:simpleType name="tProposition">
+		<xs:annotation>
+			<xs:documentation>It represents a boolean proposition that it is used to characterize the choice in an XOR Split Gateway.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[a-zA-Z]{1}"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="tGateway">
+		<xs:complexType>
+			<xs:all>
+				<xs:element type="tempcon:tProposition" name="observedProposition" />
+				<!--proposition letter in [a-z][A-Z]. It represents the name of proposition representing the choice value in a binary XOR Split-->
+				<xs:element type="tempcon:tDuration" name="Duration" />
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="tTask">
+		<xs:complexType>
+			<xs:all>
+				<xs:element type="tempcon:tDuration" name="Duration" />
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="tEvent">
+		<xs:complexType>
+			<xs:all>
+				<xs:element type="tempcon:tDuration" name="Duration" />
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="relativeCostraint">
+		<xs:complexType>
+			<xs:all>
+				<xs:element type="tempcon:tDuration" name="Duration" />
+				<xs:element type="xs:string" name="target" />
+				<!-- It is the id of the BPMN element to which this relative constraint is connected -->
+				<xs:element type="xs:string" name="From" />
+				<!-- It is the string 'Start' or 'End' and it represents the instant from which the relative constraint begins-->
+				<xs:element type="xs:string" name="To" />
+				<!--  It is the string 'Start' or 'End' and it represents the instant to which the relative constraint ends-->
+			</xs:all>
+
+			<xs:attribute type="xs:string" name="type"/>
+			<!-- For future use: it represents a possible kind of relative constraint. In this version, it is just 'custom:connection'-->
+			<xs:attribute type="xs:string" name="id_relativeConstraint"/>
+			<!-- id for this element-->
+			<xs:attribute type="xs:string" name="waypoints"/>
+			<!-- string to represent all coordinates describing the drawing of the relative constraint inside the graphical editor-->
+
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="tSequenceFlow">
+		<xs:complexType>
+			<xs:all>
+				<xs:element type="xs:boolean" name="isTrueBranch" minOccurs="0"/>
+				<xs:element type="tempcon:tDuration" name="Duration"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
 </xs:schema>
 
