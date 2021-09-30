@@ -2,6 +2,10 @@
 
 ## TimeAwareBPMN-js
 
+v1.1.0 - to be released 
+
+- Fixed the syntax of XSD for temporal constraints specification in BPMN v2 documents.
+
 v1.0.0 - 20210924
 
 - Change structure of extensionElements and update get and set functions. 
