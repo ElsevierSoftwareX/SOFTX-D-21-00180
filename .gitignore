@@ -4,3 +4,4 @@ package-lock.json
 .project
 .settings
 *~
+.DS_Store
