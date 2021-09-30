@@ -106,11 +106,11 @@
           "type": "TDuration"
         },       
         {
-          "name": "From",
+          "name": "from",
           "type": "String"
         },
         {
-          "name": "To",
+          "name": "to",
           "type": "String"
         }
       ]

@@ -46,7 +46,7 @@ The temporal constraints, like `tempcon:minDuration`, are then stored as an exte
 We created a custom connection that sets relative temporal constraints between any pair of elements in the diagram.<br>
 A relative constraint limits the temporal distance between two elements: A ---[1,10]---> B means that, during an execution, the activity B must start/end (according to the specification of the relative constraint) between 1 and 10 units time after the start/end of A.
 
-The attributes and elements of relative constraint elements are: type ("custom:connection"), id_relativeCostraint, waypoints, target, From (default: end), To (default: start), and an element tDuration with elements minDuraion, maxDuration and propositionalLabel. 
+The attributes and elements of relative constraint elements are: type ("custom:connection"), id_relativeCostraint, waypoints, target, from (default: end), to (default: start), and an element tDuration with elements minDuraion, maxDuration and propositionalLabel. 
 We save the realtive constraints as extension element of the element where the connection starts. This is an example of a relative constraint. 
 
 ```xml
@@ -58,8 +58,8 @@ We save the realtive constraints as extension element of the element where the c
 			<tempcon:maxDuration>31</tempcon:maxDuration>
 			<tempcon:propositionalLabel>U</tempcon:propositionalLabel>
 		</tempcon:tDuration>
-		<tempcon:From>start</tempcon:From>
-		<tempcon:To>end</tempcon:To>
+		<tempcon:from>start</tempcon:from>
+		<tempcon:to>end</tempcon:to>
 	</tempcon:relativeCostraint>
 </bpmn2:extensionElements>
 ```

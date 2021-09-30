@@ -1,4 +1,3 @@
-<!-- Add XML Schema (XSD) Data -->
 <xs:schema xmlns:tempcon="https://gitlab.com/univr.di/TimeAwareBPMN/-/blob/main/model/TABPMN20.xsd" targetNamespace="https://gitlab.com/univr.di/TimeAwareBPMN/-/blob/main/model/TABPMN20.xsd"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:complexType name="tDuration">
@@ -28,33 +27,33 @@
 			<xs:all>
 				<xs:element type="tempcon:tProposition" name="observedProposition" />
 				<!--proposition letter in [a-z][A-Z]. It represents the name of proposition representing the choice value in a binary XOR Split-->
-				<xs:element type="tempcon:tDuration" name="Duration" />
+				<xs:element type="tempcon:tDuration" name="duration" />
 			</xs:all>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="tTask">
 		<xs:complexType>
 			<xs:all>
-				<xs:element type="tempcon:tDuration" name="Duration" />
+				<xs:element type="tempcon:tDuration" name="duration" />
 			</xs:all>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="tEvent">
 		<xs:complexType>
 			<xs:all>
-				<xs:element type="tempcon:tDuration" name="Duration" />
+				<xs:element type="tempcon:tDuration" name="duration" />
 			</xs:all>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="relativeCostraint">
 		<xs:complexType>
 			<xs:all>
-				<xs:element type="tempcon:tDuration" name="Duration" />
+				<xs:element type="tempcon:tDuration" name="duration" />
 				<xs:element type="xs:string" name="target" />
 				<!-- It is the id of the BPMN element to which this relative constraint is connected -->
-				<xs:element type="xs:string" name="From" />
+				<xs:element type="xs:string" name="from" />
 				<!-- It is the string 'Start' or 'End' and it represents the instant from which the relative constraint begins-->
-				<xs:element type="xs:string" name="To" />
+				<xs:element type="xs:string" name="to" />
 				<!--  It is the string 'Start' or 'End' and it represents the instant to which the relative constraint ends-->
 			</xs:all>
 
@@ -71,7 +70,7 @@
 		<xs:complexType>
 			<xs:all>
 				<xs:element type="xs:boolean" name="isTrueBranch" minOccurs="0"/>
-				<xs:element type="tempcon:tDuration" name="Duration"/>
+				<xs:element type="tempcon:tDuration" name="duration"/>
 			</xs:all>
 		</xs:complexType>
 	</xs:element>

@@ -203,8 +203,8 @@ CustomModeler.prototype.loadCustomElementsFromXML = function () {
             minDuration: relativeConstraint.duration.minDuration,
             maxDuration: relativeConstraint.duration.maxDuration,
             propositionalLabel: relativeConstraint.duration.propositionalLabel,
-            From: relativeConstraint.From,
-            To: relativeConstraint.To
+            from: relativeConstraint.from,
+            to: relativeConstraint.to
           };
           connections.push(customElement);
         });
@@ -260,8 +260,8 @@ CustomModeler.prototype.getDefinitionsWithRelativeConstraintAsExtensionElements 
     relativeConstraint.duration.minDuration = customConnection.minDuration;
     relativeConstraint.duration.maxDuration = customConnection.maxDuration;
     relativeConstraint.duration.propositionalLabel = customConnection.propositionalLabel;
-    relativeConstraint.From = customConnection.From;
-    relativeConstraint.To = customConnection.To;
+    relativeConstraint.from = customConnection.from;
+    relativeConstraint.to = customConnection.to;
 
     modeling.updateProperties(sourceElement, { extensionElements });
 

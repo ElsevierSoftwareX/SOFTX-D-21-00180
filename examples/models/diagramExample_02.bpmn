@@ -87,8 +87,8 @@
             <tempcon:maxDuration>31</tempcon:maxDuration>
             <tempcon:propositionalLabel>U</tempcon:propositionalLabel>
           </tempcon:tDuration>
-          <tempcon:From>start</tempcon:From>
-          <tempcon:To>end</tempcon:To>
+          <tempcon:from>start</tempcon:from>
+          <tempcon:to>end</tempcon:to>
         </tempcon:relativeCostraint>
       </bpmn2:extensionElements>
       <bpmn2:incoming>Flow_1y1s5dn</bpmn2:incoming>

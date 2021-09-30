@@ -834,8 +834,8 @@ function setTwoEdges_relativeConstraint(params) {
   //Get cstnuId of the connected nodes
   let source = element.source;
   let target = element.target;
-  let connFrom = element.From;
-  let connTo = element.To;
+  let connFrom = element.from;
+  let connTo = element.to;
   let sourceTaskId, targetTaskId;
 
   let propositionalLabel = "⊡";

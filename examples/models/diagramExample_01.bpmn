@@ -86,8 +86,8 @@
             <tempcon:minDuration>2</tempcon:minDuration>
             <tempcon:maxDuration>15</tempcon:maxDuration>
           </tempcon:tDuration>
-          <tempcon:From>end</tempcon:From>
-          <tempcon:To>start</tempcon:To>
+          <tempcon:from>end</tempcon:from>
+          <tempcon:to>start</tempcon:to>
         </tempcon:relativeCostraint>
       </bpmn2:extensionElements>
       <bpmn2:incoming>Flow_1y1s5dn</bpmn2:incoming>

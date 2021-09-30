@@ -557,10 +557,10 @@ export default function (group, element, bpmnFactory, translate) {
       labelText: 'From: ' + element.businessObject.source
     }));
     group.entries.push(entryFactory.selectBox(translate, {
-      id: 'From',
+      id: 'from',
       description: 'Select the start or end of the element',
       label: 'Connected from',
-      modelProperty: 'From',
+      modelProperty: 'from',
       // Default configuration, the property is not created id it does not change/click
       // TODO force to create the property in the XML file
       selectOptions: [{ name: 'End', value: 'end' }, { name: 'Start', value: 'start' }]
@@ -572,10 +572,10 @@ export default function (group, element, bpmnFactory, translate) {
       labelText: 'To: ' + element.businessObject.target
     }));
     group.entries.push(entryFactory.selectBox(translate, {
-      id: 'To',
+      id: 'to',
       description: 'Select the start or end of the element',
       label: 'Connected to',
-      modelProperty: 'To',
+      modelProperty: 'to',
       // Default configuration, the property is not created id it does not change/click
       // TODO force to create the property in the XML file
       selectOptions: [{ name: 'Start', value: 'start' }, { name: 'End', value: 'end' }]
