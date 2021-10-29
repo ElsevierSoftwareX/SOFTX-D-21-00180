@@ -1,4 +1,7 @@
-
+/**
+ * Custom module used to catch events generated in the Panel or triggered by the modules in temporal-plugins-client
+ * and perform actions like update the interface by triggering a different event
+ */
 
 import { is } from "bpmn-js/lib/util/ModelUtil";
 

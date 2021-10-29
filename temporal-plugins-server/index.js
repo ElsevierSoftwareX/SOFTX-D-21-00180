@@ -4,7 +4,6 @@
  * of the models generated and sended from the Web TimeAwareBPMN-editor.
 */
 
-
 const glob = require('glob');
 
 const PLUGINS_PATTERN = './temporal-plugins-server/*/index.js';

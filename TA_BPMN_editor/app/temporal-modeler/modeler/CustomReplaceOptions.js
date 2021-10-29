@@ -1,4 +1,6 @@
-
+/**
+ * This module controles the options showed in the tool 'replace' (screw wrench) in the context menu
+ */
 
 
 // Elements not mapped to the CSTNU are removed

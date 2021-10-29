@@ -78,11 +78,8 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
               console.log('No updated ' + currentBPMN_Obj.id + ' ' + currentBPMN_Obj.cstnuEdgeIds);
             }
           }
-
         }
-
       }
-
     }
     currentBPMN_Obj = undefined;
   }
@@ -91,7 +88,6 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
   myKeys = Object.keys(myObjs.arrows);
   for (let k = 0; k < myKeys.length; k++) {
     currentBPMN_Obj = myObjs.arrows[myKeys[k]];
-
 
     if (currentBPMN_Obj.cstnuEdgeIds && currentBPMN_Obj.edgeType === 'normal') {
       for (let i = 0; i < currentBPMN_Obj.cstnuEdgeIds.length; i++) {
@@ -107,7 +103,6 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
             if (currentBPMN_Obj.cstnuEdgeIds[i][0] === 'E') { //Update max value
               tmpElement = elementRegistry.get(currentBPMN_Obj.id);
               let maxDurationTmp = getExtensionElementValue(tmpElement, "TDuration", "maxDuration");
-
 
               // if (tmpElement.businessObject.maxDuration && tmpElement.businessObject.maxDuration != newValue) {
               if (maxDurationTmp && maxDurationTmp != newValue) {
@@ -192,12 +187,10 @@ function setExtensionElementValue(element, typeName, property, value) {
     else
       tempConElement[property] = value;
 
-
     modeling.updateProperties(element, {
       extensionElements
     });
   }
-
 }
 
 function getExtensionElement(element, type) {

@@ -1189,9 +1189,7 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
       countObjs.elementsWithError += 1;
     }
   });
-
 }
-
 
 function getExtensionElementValue(element, typeName, property) {
   return window.bpmnjs.getExtensionElementValue(element, typeName, property);

@@ -1,3 +1,7 @@
+/**
+ * In this custum model the rules for creating the connections with the relative constraints are defined. 
+ */
+
 import {
   reduce
 } from 'min-dash';

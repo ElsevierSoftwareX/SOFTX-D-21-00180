@@ -1,3 +1,6 @@
+/**
+ * Module to render elements with temporal constraints and relative constraints connections
+ */
 import inherits from 'inherits';
 
 import BaseRenderer from 'diagram-js/lib/draw/BaseRenderer';

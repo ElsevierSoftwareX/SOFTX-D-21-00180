@@ -1,3 +1,8 @@
+/**
+ * This module was added to control and prevent that the relative constraint was transformed to sequenceFlow
+ * when the endpoints were moved 
+ */
+
 import {
   forEach,
   find,
@@ -19,8 +24,8 @@ export default function ReplaceConnectionBehavior(eventBus, modeling, bpmnRules,
 
   function fixConnection(connection) {
     var source = connection.source,
-        target = connection.target,
-        parent = connection.parent;
+      target = connection.target,
+      parent = connection.parent;
 
     // do not do anything if connection
     // is already deleted (may happen due to other
@@ -30,7 +35,7 @@ export default function ReplaceConnectionBehavior(eventBus, modeling, bpmnRules,
     }
 
     var replacementType,
-        remove;
+      remove;
 
     /**
      * Check if incoming or outgoing connections
@@ -87,14 +92,14 @@ export default function ReplaceConnectionBehavior(eventBus, modeling, bpmnRules,
   function replaceReconnectedConnection(event) {
 
     var context = event.context,
-        connection = context.connection,
-        source = context.newSource || connection.source,
-        target = context.newTarget || connection.target,
-        allowed,
-        replacement;
+      connection = context.connection,
+      source = context.newSource || connection.source,
+      target = context.newTarget || connection.target,
+      allowed,
+      replacement;
 
     allowed = bpmnRules.canConnect(source, target);
-    
+
     if (!allowed || allowed.type === connection.type || connection.type === 'custom:connection') {
       return;
     }
@@ -119,8 +124,8 @@ export default function ReplaceConnectionBehavior(eventBus, modeling, bpmnRules,
   function cleanDraggingSelection(oldConnection, newConnection) {
 
     var context = dragging.context(),
-        previousSelection = context && context.payload.previousSelection,
-        index;
+      previousSelection = context && context.payload.previousSelection,
+      index;
 
     // do nothing if not dragging or no selection was present
     if (!previousSelection || !previousSelection.length) {
@@ -138,22 +143,22 @@ export default function ReplaceConnectionBehavior(eventBus, modeling, bpmnRules,
 
   // lifecycle hooks
 
-  this.postExecuted('elements.move', function(context) {
+  this.postExecuted('elements.move', function (context) {
 
     var closure = context.closure,
-        allConnections = closure.allConnections;
+      allConnections = closure.allConnections;
 
     forEach(allConnections, fixConnection);
   }, true);
 
   this.preExecute('connection.reconnect', replaceReconnectedConnection);
 
-  this.postExecuted('element.updateProperties', function(event) {
+  this.postExecuted('element.updateProperties', function (event) {
     var context = event.context,
-        properties = context.properties,
-        element = context.element,
-        businessObject = element.businessObject,
-        connection;
+      properties = context.properties,
+      element = context.element,
+      businessObject = element.businessObject,
+      connection;
 
     // remove condition on change to default
     if (properties.default) {

@@ -1,9 +1,15 @@
+/** temporal-modeler/extendedProperties/ExtendedPropertiesProvider
+ * 
+ * Creates the custom tab with the temporal constraints,
+ * the fields of the tab change for different elements. 
+ * The fields are specified in the file PanelTemporalConstraints
+ */
+
 // Require your custom property entries.
 import temporalConstraintsFields from './PanelTemporalConstraints';
 import typeOfGatewayFields from './PanelTypeOfGateway';
 
 var LOW_PRIORITY = 500;
-
 
 // Create the custom tab.
 // The properties are organized in groups.
@@ -29,9 +35,6 @@ export default function TemporalConstraintsProvider(propertiesPanel, eventBus, b
   // Register our custom temporal properties provider.
   // Use a lower priority to ensure it is loaded after the basic BPMN properties.
   propertiesPanel.registerProvider(LOW_PRIORITY, this);
-
-  // PropertiesActivator.call(this, eventBus);
-
 
   this.getTabs = function (element) {
     return function (entries) {

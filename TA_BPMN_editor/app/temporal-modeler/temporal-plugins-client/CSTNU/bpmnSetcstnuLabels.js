@@ -128,13 +128,6 @@ export default function bpmnSetcstnuLabels(bpmn) {
         tempProposition = '';
       }
 
-      // if (visitList.length === 0) {
-      //   if (node.cps.length > 0) {
-      //     myLogObj.errors += '\nCSP is not empy, the number of split and join gateways does not match \n';
-      //     countObjs.elementsWithError += 1;
-      //   }
-      // }
-
     }
 
   }
@@ -446,8 +439,6 @@ function processSequenceFlow(params) {
       }
     }
   }
-
-
 }
 
 /**
@@ -469,12 +460,6 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
         let params = { element, myLogObj, countObjs, myObjs };
         let elementName = element.nodeName; //.toLowerCase(isInclude)           
         // ---------------- Tasks --------------- //     
-        // if(isInclude(elementName,elementsNodes )){
-        //   processElements(params);  
-        // }
-        // else if(isInclude(elementName, elementsStartEnd)){
-
-        // }
 
         if (elementName.includes("task")) {
           myLogObj.errors += "\n " + elementName + " " + " not allowed \n "; // +element.attributes.id 

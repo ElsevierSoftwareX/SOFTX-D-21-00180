@@ -11,7 +11,6 @@ import {
   bind
 } from 'min-dash';
 
-
 export default function CustomContextPadProvider(injector, connect, translate, config, create, elementFactory) {
 
   injector.invoke(ContextPadProvider, this);

@@ -1,3 +1,10 @@
+/** temporal-modeler/extendedProperties/PanelTemporalConstraints
+ * 
+ * Creates the fields that are presented in the custom tab with the temporal constraints,
+ * The first part contains functions to perform check and validation of the fields minDuraion and maxDuration
+ * Custom functions to get and set values from the extensionElements of the elements are implemented  
+ * 
+ */
 import entryFactory from 'bpmn-js-properties-panel/lib/factory/EntryFactory';
 import extHelper from "bpmn-js-properties-panel/lib/helper/ExtensionElementsHelper";
 
@@ -221,7 +228,15 @@ function checkSplitJoin(element) {
 
 export default function (group, element, bpmnFactory, translate) {
 
-
+  /** @function getValue  
+   * Custom function gets values from the extensionElements
+   * 
+   * @param {*} businessObject 
+   * @param {*} prefix 
+   * @param {*} typeName 
+   * @param {*} property 
+   * @returns 
+   */
   const getValue = function (businessObject, prefix, typeName, property) {
     return function (element) {
 
@@ -255,45 +270,16 @@ export default function (group, element, bpmnFactory, translate) {
     };
   };
 
-  const setValue_isTrueBranch = function (businessObject, prefix, typeName, property) {
-    return function (element, values) {
-      const moddle = window.bpmnjs.get('moddle');
-      const modeling = window.bpmnjs.get('modeling');
 
-      let tempConType;
-
-      if (businessObject.$type.includes('Task')) {
-        tempConType = "TTask";
-      } else if (businessObject.$type.includes('Gateway')) {
-        tempConType = "TGateway";
-      } else if (businessObject.$type.includes('Event')) {
-        tempConType = "TEvent";
-      } else if (businessObject.$type.includes('Flow')) {
-        tempConType = "TSequenceFlow";
-      }
-
-      let prefixTypeElement = "tempcon:" + tempConType;
-
-      const extensionElements = element.businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
-      let tempConElement = getExtensionElement(element.businessObject, prefixTypeElement);
-
-      if (!tempConElement) {
-        tempConElement = moddle.create(prefixTypeElement);
-
-        extensionElements.get('values').push(tempConElement);
-      }
-      if (property != 'observedProposition' && property != 'isTrueBranch')
-        tempConElement.duration[property] = values[property];
-      else
-        tempConElement[property] = values[property];
-
-      modeling.updateProperties(element, {
-        extensionElements,
-        name: values[property].charAt(0).toUpperCase() + values[property].slice(1)
-      });
-    };
-  };
-
+  /** @function setValues
+   * Custom function sets values from the extensionElements, 
+   * it adds elements with temporalconstraints values and the complex element Duration
+   * @param {*} businessObject 
+   * @param {*} prefix 
+   * @param {*} typeName 
+   * @param {*} property 
+   * @returns 
+   */
   const setValue = function (businessObject, prefix, typeName, property) {
     return function (element, values) {
       const moddle = window.bpmnjs.get('moddle');
@@ -313,23 +299,38 @@ export default function (group, element, bpmnFactory, translate) {
       let prefixTypeElement = "tempcon:" + tempConType;
 
       const extensionElements = element.businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
-      let tempConElement = getExtensionElement(element.businessObject, prefixTypeElement);
+      let tempExtensionElement = getExtensionElement(element.businessObject, prefixTypeElement);
       let duration;
-      if (!tempConElement) {
-        tempConElement = moddle.create(prefixTypeElement);
-        extensionElements.get('values').push(tempConElement);
-        duration = moddle.create("tempcon:TDuration");
-        tempConElement["duration"] = duration;
+
+      // If there was no extensionElement in the element, create one
+      if (!tempExtensionElement) {
+        tempExtensionElement = moddle.create(prefixTypeElement);
+        extensionElements.get('values').push(tempExtensionElement);
+        // If 'property' is one property of Duration, crete the object 
+        if (property != 'observedProposition' && property != 'isTrueBranch') {
+          duration = moddle.create("tempcon:TDuration");
+          tempExtensionElement["duration"] = duration;
+        }
       }
 
       if (property != 'observedProposition' && property != 'isTrueBranch')
-        tempConElement["duration"][property] = values[property];
+        tempExtensionElement["duration"][property] = values[property];
       else
-        tempConElement[property] = values[property];
+        tempExtensionElement[property] = values[property];
 
-      modeling.updateProperties(element, {
-        extensionElements
-      });
+      // Property isTrueBranch correspond to the Sequence flow outpuf from XOR, 
+      // and the value is added to the name of the element 
+      if (property == 'isTrueBranch') {
+        modeling.updateProperties(element, {
+          extensionElements,
+          name: values[property].charAt(0).toUpperCase() + values[property].slice(1)
+        });
+      }
+      else {
+        modeling.updateProperties(element, {
+          extensionElements
+        });
+      }
     };
   };
 
@@ -381,10 +382,8 @@ export default function (group, element, bpmnFactory, translate) {
       modelProperty: 'propositionalLabel',
       get: getValue(getBusinessObject(element), "tempcon", "TDuration", "propositionalLabel"),
       set: setValue(getBusinessObject(element), "tempcon", "TDuration", "propositionalLabel")
-      // disabled: function () { return disabled; }
     }));
   }
-
 
   function set_group_minDuration_asProperty(group, comparisonFunction, strComment = "") {
     group.entries.push(entryFactory.textField(translate, {
@@ -418,7 +417,6 @@ export default function (group, element, bpmnFactory, translate) {
       description: 'Label created with propositions of XORs',
       label: 'Propositional label',
       modelProperty: 'propositionalLabel'
-      // disabled: function () { return disabled; }
     }));
   }
 
@@ -440,7 +438,6 @@ export default function (group, element, bpmnFactory, translate) {
     set_group_maxDuration(group, validateMaxDuration_sequenceFlow, " (default: ∞)");
 
     if (element.businessObject.sourceRef.$type.includes('ExclusiveGateway')) {
-      // if (getExtensionElementValue(element.businessObject.sourceRef, 'TGatewaySplitJoin', 'gatewaySplitJoin') === 'split') {
       if (checkSplitJoin(element.businessObject.sourceRef) == 'split') {
         group.entries.push(entryFactory.selectBox(translate, {
           id: 'isTrueBranch',
@@ -450,14 +447,12 @@ export default function (group, element, bpmnFactory, translate) {
           // Default configuration, the property is not created id it does not change/click
           // TODO force to create the property in the XML file
           get: getValue(getBusinessObject(element), "tempcon", "TPLiteralValue", "isTrueBranch"),
-          set: setValue_isTrueBranch(getBusinessObject(element), "tempcon", "TPLiteralValue", "isTrueBranch"),
+          set: setValue(getBusinessObject(element), "tempcon", "TPLiteralValue", "isTrueBranch"),
           selectOptions: [{ name: '', value: '' }, { name: 'True', value: 'true' }, { name: 'False', value: 'false' }]
-
         }));
       }
     }
   }
-
 
   // ---------------------------- Events -------------------------
   if (is(element, 'bpmn:IntermediateCatchEvent')) {
@@ -497,16 +492,7 @@ export default function (group, element, bpmnFactory, translate) {
     set_group_minDuration(group, validateMinDuration_noContingent);
     set_group_maxDuration(group, validateMaxDuration_noContingent);
 
-    // Moved to tab General 
-    // group.entries.push(entryFactory.selectBox(translate, {
-    //   id: 'gatewaySplitJoin',
-    //   description: 'Set the Gateway as XOR Split or XOR Join',
-    //   label: 'Type of XOR',
-    //   modelProperty: 'gatewaySplitJoin',
-    //   // Default configuration, the property is not created id it does not change/click
-    //   // TODO force to create the property in the XML file
-    //   selectOptions: [{ name: '', value: '' }, { name: 'Split', value: 'split' }, { name: 'Join', value: 'join' }],
-    // }));
+    // gatewaySplitJoin was moved to tab General     
 
     // if (getValue(getBusinessObject(element), "tempcon", "TGatewaySplitJoin", "gatewaySplitJoin")(element)['gatewaySplitJoin'] == 'split') {
     if (checkSplitJoin(element) == 'split') {
@@ -519,34 +505,19 @@ export default function (group, element, bpmnFactory, translate) {
         set: setValue(getBusinessObject(element), "tempcon", "TXorProposition", "observedProposition")
       }));
     }
-
-
-
     set_group_propositionalLabel(group);
   }
-
 
   if (is(element, 'bpmn:ParallelGateway')) { //||
 
     set_group_minDuration(group, validateMinDuration_noContingent);
     set_group_maxDuration(group, validateMaxDuration_noContingent);
 
-    // Moved to tab General 
-    // group.entries.push(entryFactory.selectBox(translate, {
-    //   id: 'gatewaySplitJoin',
-    //   description: 'Set the Gateway as XOR Split or XOR Join',
-    //   label: 'Type of AND',
-    //   modelProperty: 'gatewaySplitJoin',
-    //   // Default configuration, the property is not created id it does not change/click
-    //   // TODO force to create the property in the XML file
-    //   selectOptions: [{ name: '', value: '' }, { name: 'Split', value: 'split' }, { name: 'Join', value: 'join' }],
-
-    // }));
+    // gatewaySplitJoin was moved to tab General 
 
     set_group_propositionalLabel(group);
 
   }
-
 
 
   // ---------- RelativeConstraint ------------
@@ -565,7 +536,6 @@ export default function (group, element, bpmnFactory, translate) {
       // TODO force to create the property in the XML file
       selectOptions: [{ name: 'End', value: 'end' }, { name: 'Start', value: 'start' }]
     }));
-
 
     group.entries.push(entryFactory.label({
       id: 'lblRelativeConstraintTo',
