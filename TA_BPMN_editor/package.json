@@ -40,6 +40,7 @@
     "babelify": "^8.0.0",
     "grunt": "~1.0.1",
     "grunt-browserify": "^5.0.0",
+    "grunt-cli": "^1.4.3",
     "grunt-contrib-connect": "~1.0.2",
     "grunt-contrib-copy": "~1.0.0",
     "grunt-contrib-less": "^1.0.1",
