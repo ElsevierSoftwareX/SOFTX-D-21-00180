@@ -116,7 +116,10 @@ PaletteProvider.prototype.getPaletteEntries = function (element) {
     // 'create.subprocess-expanded': createAction(
     //   'bpmn:SubProcess', 'activity', 'bpmn-icon-subprocess-expanded', 'Create expanded SubProcess',
     //   { isExpanded: true }
-    // ),
+    // ),    
+   'create.data-object': createAction(
+    'bpmn:DataObjectReference', 'data-object', 'bpmn-icon-data-object'
+  ),
     'create.participant-expanded': {
       group: 'collaboration',
       className: 'bpmn-icon-participant',
