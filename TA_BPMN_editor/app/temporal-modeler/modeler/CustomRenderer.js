@@ -498,7 +498,7 @@ function drawShape_contingent(
   if (isAny(element, ["bpmn:IntermediateCatchEvent", "bpmn:TimerEventDefinition"])) {
 
   }
-  if (isAny(element, ["bpmn:ExclusiveGateway", "bpmn:ParallelGateway"])) {
+  if (isAny(element, ["bpmn:ExclusiveGateway"])){ //, "bpmn:ParallelGateway"])) {
     //Check it has a type: split or join 
     // let gatewaySplitJoin = getExtensionElementValue(element, "TGatewaySplitJoin", "gatewaySplitJoin");
     let gatewaySplitJoin = window.bpmnjs.checkSplitJoin(element);

@@ -172,7 +172,7 @@ function processElements(params) {
     myObjs[element.attributes.id.value].nodeName = element.nodeName;
     if (element.attributes.name != undefined) myObjs[element.attributes.id.value].name = element.attributes.name.value.replace(/(\r\n|\n|\r)/gm, "") + ' ';
 
-    if (element.nodeName.includes("exclusiveGateway") || element.nodeName.includes("parallelGateway")) {
+    if (element.nodeName.includes("exclusiveGateway")){ // || element.nodeName.includes("parallelGateway")) {
 
       // Check incoming and outgoing to detect split or join 
       // This is use to add or remove observations (letters) in the propositions
@@ -378,7 +378,13 @@ function processSequenceFlow(params) {
         else {
 
           let tempElement = elementRegistry.get(idArrow);
-          if (myObjs[source].obsTrueArrow == undefined) {
+          if (myObjs[source].obsTrueArrow == undefined && myObjs[source].obsFalseArrow == undefined) {
+            tempElement.businessObject.isTrueBranch = 'true';
+            setExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch", "true");
+            tempElement.businessObject.name = 'True';
+            myObjs[source].obsTrueArrow = idArrow;
+          }
+          else if (myObjs[source].obsTrueArrow == undefined) {
             tempElement.businessObject.isTrueBranch = 'true';
             setExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch", "true");
             tempElement.businessObject.name = 'True';
