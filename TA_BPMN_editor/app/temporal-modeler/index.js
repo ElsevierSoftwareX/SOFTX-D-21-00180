@@ -10,7 +10,7 @@ import inherits from 'inherits';
 
 import CustomModule from './modeler';
 import TCEvaluations from './temporal-plugins-client';
-import { getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
+import { is, getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
 
 
 export default function CustomModeler(options) {
@@ -280,8 +280,14 @@ CustomModeler.prototype.checkSplitJoin = function (element) {
   let type;
 
   if (incoming && outgoing) {
-    if (incoming.length == 2 && outgoing.length == 1) type = 'join';
-    else if (incoming.length == 1 && outgoing.length == 2) type = 'split';
+    if (is(element, 'bpmn:ExclusiveGateway')) {
+      if (incoming.length == 2 && outgoing.length == 1) type = 'join';
+      else if (incoming.length == 1 && outgoing.length == 2) type = 'split';
+    }
+    else if (is(element, 'bpmn:ParallelGateway')) {
+      if (incoming.length >= 2 && outgoing.length == 1) type = 'join';
+      else if (incoming.length == 1 && outgoing.length >= 2) type = 'split';
+    }
   }
   return type;
 };

@@ -525,7 +525,7 @@ export default function (group, element, bpmnFactory, translate) {
     set_group_propositionalLabel(group);
   }
 
-  if (is(element, 'bpmn:ParallelGateway')) { //||
+  if (is(element, 'bpmn:ParallelGateway')) { 
 
     set_group_minDuration(group, validateMinDuration_noContingent);
     set_group_maxDuration(group, validateMaxDuration_noContingent);

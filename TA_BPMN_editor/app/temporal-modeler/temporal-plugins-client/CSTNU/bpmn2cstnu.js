@@ -397,30 +397,15 @@ function checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs) {
 
   if (element.nodeName.includes("exclusiveGateway") || element.nodeName.includes("parallelGateway")) {
 
-    // Check incoming and outgoing
-    let nIncoming = 0, nOutgoing = 0;
-    for (let i = 0; i < element.children.length; i++) {
-      let child = element.children[i];
-      if (child.tagName.includes("incoming")) {
-        nIncoming++;
-      }
-      else if (child.tagName.includes("outgoing")) {
-        nOutgoing++;
-      }
-    }
+
     const elementRegistry = window.bpmnjs.get('elementRegistry');
     let tempElement = elementRegistry.get(element.attributes.id.value);
     // let gatewaySplitJoinTmp = getExtensionElementValue(tempElement, "TGatewaySplitJoin", "gatewaySplitJoin");
     let gatewaySplitJoinTmp = window.bpmnjs.checkSplitJoin(tempElement);
 
-    if (gatewaySplitJoinTmp != undefined) { //Read it
+    if (gatewaySplitJoinTmp != undefined) { // Read it
       if (gatewaySplitJoinTmp.includes('split')) {
-        // if split, it should have 1 input and 2 outputs
-        if (nIncoming != 1 || nOutgoing != 2) {
-          myLogObj.errors += '\n' + element.nodeName + ' (' + element.attributes.id.value + ')' + ' invalid number of incoming/outcoming arrows \n';
-          countObjs.elementsWithError += 1;
-          return false;
-        }
+        
         if (element.nodeName.includes("exclusiveGateway")) {
           let tmpElement = elementRegistry.get(element.attributes.id.value);
           let observedPropositionTmp = getExtensionElementValue(tmpElement, "TXorProposition", "observedProposition");
@@ -437,26 +422,19 @@ function checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs) {
         }
       }
       else if (gatewaySplitJoinTmp.includes('join')) {
-        // if join, it should have 2 inputs and 1 output
-        if (nIncoming != 2 || nOutgoing != 1) {
-          myLogObj.errors += '\n' + element.nodeName + ' (' + element.attributes.id.value + ')' + ' invalid number of incoming/outcoming arrows \n';
-          countObjs.elementsWithError += 1;
-          return false;
-        }
+        
         if (element.nodeName.includes("exclusiveGateway")) {
           myObjs[element.attributes.id.value].obs = 'join';
         }
       }
     }
     else {
-      myLogObj.errors += '\n' + element.nodeName + ' (' + element.attributes.id.value + '): gatewaySplitJoin not defined \n';
+      myLogObj.errors += '\n' + element.nodeName + ' (' + element.attributes.id.value + ')' + ' invalid number of incoming/outcoming arrows \n';
       countObjs.elementsWithError += 1;
       return false;
     }
   }
-
   return true;
-
 }
 
 

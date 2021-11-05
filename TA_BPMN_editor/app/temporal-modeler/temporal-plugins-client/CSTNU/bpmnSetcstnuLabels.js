@@ -172,46 +172,21 @@ function processElements(params) {
     myObjs[element.attributes.id.value].nodeName = element.nodeName;
     if (element.attributes.name != undefined) myObjs[element.attributes.id.value].name = element.attributes.name.value.replace(/(\r\n|\n|\r)/gm, "") + ' ';
 
-    if (element.nodeName.includes("exclusiveGateway")){ // || element.nodeName.includes("parallelGateway")) {
-
-      // Check incoming and outgoing to detect split or join 
-      // This is use to add or remove observations (letters) in the propositions
-      let nIncoming = 0, nOutgoing = 0;
-      for (let i = 0; i < element.children.length; i++) {
-        let child = element.children[i];
-        if (child.tagName.includes("incoming")) {
-          nIncoming++;
-        }
-        else if (child.tagName.includes("outgoing")) {
-          nOutgoing++;
-        }
-      }
+    if (element.nodeName.includes("exclusiveGateway") || element.nodeName.includes("parallelGateway")) {
 
       let sourceElement = elementRegistry.get(element.attributes.id.value);
       // let gatewaySplitJoinTmp = getExtensionElementValue(sourceElement, "TGatewaySplitJoin", "gatewaySplitJoin");
       let gatewaySplitJoinTmp = window.bpmnjs.checkSplitJoin(sourceElement);
 
-      if (gatewaySplitJoinTmp != undefined) { //Read it
+      if (gatewaySplitJoinTmp != undefined) { // Read it
         if (gatewaySplitJoinTmp.includes('join')) {
 
-          // if join, it should have 2 inputs and 1 output
-          if (nIncoming != 2 || nOutgoing != 1) {
-            myLogObj.errors += '\n' + element.nodeName + '(' + element.attributes.id.value + ')' + ' invalid number of incoming/outcoming arrows \n';
-            countObjs.elementsWithError += 1;
-            return;
-          }
           if (element.nodeName.includes("exclusiveGateway")) {
             myObjs[element.attributes.id.value].obs = 'join';
           }
         }
         else if (gatewaySplitJoinTmp.includes('split')) {
 
-          // if split, it should have 1 input and 2 outputs
-          if (nIncoming != 1 || nOutgoing != 2) {
-            myLogObj.errors += '\n' + element.nodeName + '(' + element.attributes.id.value + ')' + ' invalid number of incoming/outcoming arrows \n';
-            countObjs.elementsWithError += 1;
-            return;
-          }
           if (element.nodeName.includes("exclusiveGateway")) {
 
             let observedPropositionTmp = getExtensionElementValue(sourceElement, "TXorProposition", "observedProposition");
@@ -229,7 +204,8 @@ function processElements(params) {
               myObjs[element.attributes.id.value].observedProposition = undefined; // This will be set when the labels are created            
             }
             myObjs[element.attributes.id.value].obs = 'split';
-            //Check if the output arrow has a value
+
+            // Check if the output arrow has a value
             for (let i = 0; i < element.children.length; i++) {
               let child = element.children[i];
               if (child.tagName.includes("outgoing")) {
@@ -240,12 +216,12 @@ function processElements(params) {
 
                 if (isTrueBranchTmp != undefined) {
                   if (isTrueBranchTmp != '') {
-          
+
                     if (isTrueBranchTmp == true || isTrueBranchTmp == 'true')
                       myObjs[element.attributes.id.value].obsTrueArrow = idArrow;
                     else
                       myObjs[element.attributes.id.value].obsFalseArrow = idArrow;
-          
+
                   }
                 }
               }
@@ -259,61 +235,11 @@ function processElements(params) {
           return;
         }
       }
-      else { // Set it
-        // If 2 inputs and 1 output, join
-        if (nIncoming == 2 || nOutgoing == 1) {
-          myObjs[element.attributes.id.value].obs = 'join';
-        }
-        // If 1 input and 2 outputs, split
-        else if (nIncoming == 1 || nOutgoing == 2) {
-          myObjs[element.attributes.id.value].obs = 'split';
-
-          if (element.nodeName.includes("exclusiveGateway")) {
-
-            let observedPropositionTmp = getExtensionElementValue(sourceElement, "TXorProposition", "observedProposition");
-
-            if (observedPropositionTmp != undefined) {
-              myObjs[element.attributes.id.value].observedProposition = observedPropositionTmp.trim().charAt(0);
-              // Check and remove from array of possible letters 
-              const index = myObjs['nodeObservation'].indexOf(myObjs[element.attributes.id.value].observedProposition);
-              if (index > -1) {
-                myObjs['nodeObservation'].splice(index, 1);
-              }
-              countObjs.nObservedProposition += 1;
-            }
-            else {
-              myObjs[element.attributes.id.value].observedProposition = undefined; // This will be set when the labes are created            
-            }
-
-            //Check if the output arrow has a value
-            for (let i = 0; i < element.children.length; i++) {
-              let child = element.children[i];
-              if (child.tagName.includes("outgoing")) {
-
-                let idArrow = child.innerHTML;
-                let tempElement = elementRegistry.get(idArrow);
-                let isTrueBranchTmp = getExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch");
-
-                if (isTrueBranchTmp != undefined) {
-                  if (isTrueBranchTmp != '') {
-          
-                    if (isTrueBranchTmp == true || isTrueBranchTmp == 'true')
-                      myObjs[element.attributes.id.value].obsTrueArrow = idArrow;
-                    else
-                      myObjs[element.attributes.id.value].obsFalseArrow = idArrow;
-          
-                  }
-                }
-              }
-            }
-          }
-        }
-        else {
-          myLogObj.errors += '\n' + element.nodeName + '(' + element.attributes.id.value + ')' + ' invalid number of incoming/outcoming arrows \n';
-          countObjs.elementsWithError += 1;
-          return;
-        }
-      }
+      else {
+        myLogObj.errors += '\n' + element.nodeName + '(' + element.attributes.id.value + ')' + ' invalid number of incoming/outcoming arrows \n';
+        countObjs.elementsWithError += 1;
+        return;
+      }      
     }
   }
   else {
@@ -392,7 +318,7 @@ function processSequenceFlow(params) {
   let elementRegistry = window.bpmnjs.get('elementRegistry');
   let modeling = window.bpmnjs.get('modeling');
 
-  //Get cstnuId of the connected nodes
+  // Get cstnuId of the connected nodes
   let source = element.attributes.sourceRef.value;
   let target = element.attributes.targetRef.value;
 
@@ -508,7 +434,7 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
       for (j = 0; j < elementP.children.length; j++) {
         let element = elementP.children[j];
         let params = { element, myLogObj, countObjs, myObjs };
-        let elementName = element.nodeName; //.toLowerCase(isInclude)           
+        let elementName = element.nodeName; // .toLowerCase(isInclude)           
         // ---------------- Tasks --------------- //     
 
         if (elementName.includes("task")) {
@@ -532,9 +458,9 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
         }
         else if (elementName.includes("subProcess")) {
           processElements(params);
-        } 
+        }
         //  ---------------------- Events ---------------//
-        else if (elementName.includes("intermediateCatchEvent") || elementName.includes("intermediateThrowEvent") ) {
+        else if (elementName.includes("intermediateCatchEvent") || elementName.includes("intermediateThrowEvent")) {
           // Subtypes are
           //  bpmn:timerEventDefinition   // This is a bit different TODO
           //  bpmn:messageEventDefinition
@@ -546,11 +472,11 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
           countObjs.elementsWithWarning++;
         }
         else if (elementName.includes("startEvent")) {
-          //Need to know how many to decide Z or Z_i
+          // Need to know how many to decide Z or Z_i
           countObjs.startEventsTotal += 1;
         }
         else if (elementName.includes("endEvent")) {
-          //Need to know how many to decide Omega or Omega_i
+          // Need to know how many to decide Omega or Omega_i
           countObjs.endEventsTotal += 1;
         }
         // ---------------------------- SequenceFlow -------------------------//
