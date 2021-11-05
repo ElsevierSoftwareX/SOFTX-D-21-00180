@@ -229,6 +229,28 @@ function processElements(params) {
               myObjs[element.attributes.id.value].observedProposition = undefined; // This will be set when the labels are created            
             }
             myObjs[element.attributes.id.value].obs = 'split';
+            //Check if the output arrow has a value
+            for (let i = 0; i < element.children.length; i++) {
+              let child = element.children[i];
+              if (child.tagName.includes("outgoing")) {
+
+                let idArrow = child.innerHTML;
+                let tempElement = elementRegistry.get(idArrow);
+                let isTrueBranchTmp = getExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch");
+
+                if (isTrueBranchTmp != undefined) {
+                  if (isTrueBranchTmp != '') {
+          
+                    if (isTrueBranchTmp == true || isTrueBranchTmp == 'true')
+                      myObjs[element.attributes.id.value].obsTrueArrow = idArrow;
+                    else
+                      myObjs[element.attributes.id.value].obsFalseArrow = idArrow;
+          
+                  }
+                }
+              }
+            }
+
           }
         }
         else {
@@ -261,6 +283,28 @@ function processElements(params) {
             }
             else {
               myObjs[element.attributes.id.value].observedProposition = undefined; // This will be set when the labes are created            
+            }
+
+            //Check if the output arrow has a value
+            for (let i = 0; i < element.children.length; i++) {
+              let child = element.children[i];
+              if (child.tagName.includes("outgoing")) {
+
+                let idArrow = child.innerHTML;
+                let tempElement = elementRegistry.get(idArrow);
+                let isTrueBranchTmp = getExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch");
+
+                if (isTrueBranchTmp != undefined) {
+                  if (isTrueBranchTmp != '') {
+          
+                    if (isTrueBranchTmp == true || isTrueBranchTmp == 'true')
+                      myObjs[element.attributes.id.value].obsTrueArrow = idArrow;
+                    else
+                      myObjs[element.attributes.id.value].obsFalseArrow = idArrow;
+          
+                  }
+                }
+              }
             }
           }
         }
@@ -369,7 +413,7 @@ function processSequenceFlow(params) {
         if (isTrueBranchTmp != '') {
           myObjs['arrows'][idArrow].isTrueBranch = isTrueBranchTmp;
 
-          if (myObjs['arrows'][idArrow].isTrueBranch == 'true')
+          if (isTrueBranchTmp == true || isTrueBranchTmp == 'true')
             myObjs[source].obsTrueArrow = idArrow;
           else
             myObjs[source].obsFalseArrow = idArrow;
