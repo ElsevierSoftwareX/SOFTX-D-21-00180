@@ -55,14 +55,9 @@ CustomRules.prototype.init = function () {
    */
   function canConnect(source, target) {
 
-    // // only judge about custom elements
-    // if (!isCustom(source) && !isCustom(target)) {
-    //   return;
-    // }
-
     if (window.creatingRelativeConstraint) {
 
-      // allow connection between tasks
+      // allow connection between tasks and specific elements
       let allowedElements = ['bpmn:UserTask', 'bpmn:ServiceTask', 'bpmn:ScriptTask', 'bpmn:SendTask', 'bpmn:ReceiveTask', 'bpmn:ExclusiveGateway', 'bpmn:ParallelGateway', 'bpmn:IntermediateCatchEvent', 'bpmn:IntermediateThrowEvent', 'bpmn:StartEvent', 'bpmn:EndEvent'];
       if (isAny(source, allowedElements) && !source.labelTarget) {
         if (isAny(target, allowedElements) && !target.labelTarget) {
@@ -77,7 +72,6 @@ CustomRules.prototype.init = function () {
           return false;
         }
       }
-
     }
   }
 

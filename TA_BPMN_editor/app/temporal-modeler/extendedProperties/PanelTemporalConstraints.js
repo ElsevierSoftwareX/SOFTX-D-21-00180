@@ -113,7 +113,6 @@ var validateMinDuration_relativeConstraint = function (element, values, node) {
 /** Check minDuration < maxDuration */
 var validateMaxDuration_contingent = function (element, values, node) {
   let val = values.maxDuration;
-  // let valMinDuration = element.businessObject.minDuration;
   let valMinDuration = getExtensionElementValue(element, 'TDuration', 'minDuration');
 
   if (node.childElementCount > 0) {
@@ -136,7 +135,6 @@ var validateMaxDuration_contingent = function (element, values, node) {
 /** Check minDuration <= maxDuration */
 var validateMaxDuration_noContingent = function (element, values, node) {
   let val = values.maxDuration;
-  // let valMinDuration = element.businessObject.minDuration;
   let valMinDuration = getExtensionElementValue(element, 'TDuration', 'minDuration');
 
   if (node.childElementCount > 0) {
@@ -159,7 +157,6 @@ var validateMaxDuration_noContingent = function (element, values, node) {
 /** Check minDuration <= maxDuration or inf */
 var validateMaxDuration_sequenceFlow = function (element, values, node) {
   let val = values.maxDuration;
-  // let valMinDuration = element.businessObject.minDuration;
   let valMinDuration = getExtensionElementValue(element, 'TDuration', 'minDuration');
   if (valMinDuration === undefined) valMinDuration = 0;
 
@@ -269,7 +266,6 @@ export default function (group, element, bpmnFactory, translate) {
       return returnObject;
     };
   };
-
 
   /** @function setValues
    * Custom function sets values from the extensionElements, 
@@ -444,7 +440,7 @@ export default function (group, element, bpmnFactory, translate) {
           description: 'Select the value true or false',
           label: 'Value',
           modelProperty: 'isTrueBranch',
-          // Default configuration, the property is not created id it does not change/click
+          // Default configuration, the property is not created if it does not change/click
           // TODO force to create the property in the XML file
           get: getValue(getBusinessObject(element), "tempcon", "TPLiteralValue", "isTrueBranch"),
           set: setValue(getBusinessObject(element), "tempcon", "TPLiteralValue", "isTrueBranch"),
@@ -494,7 +490,6 @@ export default function (group, element, bpmnFactory, translate) {
 
     // gatewaySplitJoin was moved to tab General     
 
-    // if (getValue(getBusinessObject(element), "tempcon", "TGatewaySplitJoin", "gatewaySplitJoin")(element)['gatewaySplitJoin'] == 'split') {
     if (checkSplitJoin(element) == 'split') {
       group.entries.push(entryFactory.textField(translate, {
         id: 'observedProposition',

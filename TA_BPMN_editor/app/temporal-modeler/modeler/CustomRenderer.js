@@ -27,8 +27,9 @@ import {
   classes as svgClasses
 } from 'tiny-svg';
 
-var COLOR_GREEN = '#52B415',
+var COLOR_GREEN_TRIANG = '#52B415',
   COLOR_RED = '#cc0000',
+  COLOR_GREEN = '#00cc00',
   COLOR_YELLOW = '#ffc800';
 
 import Ids from 'ids';
@@ -62,9 +63,9 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
     points = [halfSide, 0, side, side, 0, side];
 
     attrs = computeStyle(attrs, {
-      stroke: COLOR_GREEN,
+      stroke: COLOR_GREEN_TRIANG,
       strokeWidth: 2,
-      fill: COLOR_GREEN
+      fill: COLOR_GREEN_TRIANG
     });
 
     var polygon = svgCreate('polygon');
@@ -229,19 +230,19 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
     if (element.businessObject.maxDuration != undefined)
       maxD = element.businessObject.maxDuration;
 
-    let colorFrame = "#00cc00";
+    let colorFrame = COLOR_GREEN;
 
-    // if (minD <= 0) colorFrame = "#cc0000";
+    // if (minD <= 0) colorFrame = COLOR_RED;
     if ((minD != '' && !Number.isInteger(parseFloat(minD))) ||
       (maxD != '' && !Number.isInteger(parseFloat(maxD))))
-      colorFrame = "#cc0000";
+      colorFrame = COLOR_RED;
 
     minD = Number(minD);
     maxD = (maxD != "" ? maxD : Infinity);
-    if (maxD <= minD) colorFrame = "#cc0000";
+    if (maxD <= minD) colorFrame = COLOR_RED;
 
     var attrs = computeStyle(attrs, {
-      stroke: colorFrame, //COLOR_GREEN,
+      stroke: colorFrame, 
       strokeWidth: 2,
       strokeDasharray: '20,10,5,5,5,10',
       strokeLinecap: 'square',
@@ -410,10 +411,10 @@ CustomRenderer.prototype.drawConnection = function (p, element) {
     if (maxD === "") maxD = Infinity;
 
     let colorFrame;
-    if (minD < 0) colorFrame = "#cc0000";
-    if (maxD < minD) colorFrame = "#cc0000";
+    if (minD < 0) colorFrame = COLOR_RED;
+    if (maxD < minD) colorFrame = COLOR_RED;
     if ((minD != 0 && !Number.isInteger(parseFloat(minD))) ||
-      (maxD != Infinity && !Number.isInteger(parseFloat(maxD)))) colorFrame = "#cc0000";
+      (maxD != Infinity && !Number.isInteger(parseFloat(maxD)))) colorFrame = COLOR_RED;
 
     if (colorFrame != undefined) {
       shape.style.stroke = colorFrame;
@@ -473,7 +474,7 @@ function drawShape_contingent(
   if (getExtensionElementValue(element, 'TDuration', 'maxDuration') != undefined)
     maxD = getExtensionElementValue(element, 'TDuration', 'maxDuration');
 
-  let colorFrame = "#00cc00";
+  let colorFrame = COLOR_GREEN;
   if (isContingent) colorFrame = "#0000cc";
 
   if (window.elementsUpdated.indexOf(element.businessObject.id) >= 0)
@@ -481,19 +482,19 @@ function drawShape_contingent(
 
   if (window.elementsError.indexOf(element.businessObject.id) >= 0) colorFrame = "#cc00cc";
 
-  if (minD === "" || maxD === "") colorFrame = "#cc0000";
-  if (minD < 0) colorFrame = "#cc0000";
-  if (!Number.isInteger(parseFloat(minD)) || !Number.isInteger(parseFloat(maxD))) colorFrame = "#cc0000";
+  if (minD === "" || maxD === "") colorFrame = COLOR_RED;
+  if (minD < 0) colorFrame = COLOR_RED;
+  if (!Number.isInteger(parseFloat(minD)) || !Number.isInteger(parseFloat(maxD))) colorFrame = COLOR_RED;
 
   minD = Number(minD);
   maxD = Number(maxD);
 
   if (isContingent) {
-    if (minD <= 0) colorFrame = "#cc0000";
-    if (maxD <= minD) colorFrame = "#cc0000";
+    if (minD <= 0) colorFrame = COLOR_RED;
+    if (maxD <= minD) colorFrame = COLOR_RED;
   }
   else
-    if (maxD < minD) colorFrame = "#cc0000";
+    if (maxD < minD) colorFrame = COLOR_RED;
 
   if (isAny(element, ["bpmn:IntermediateCatchEvent", "bpmn:TimerEventDefinition"])) {
 
@@ -504,28 +505,28 @@ function drawShape_contingent(
     let gatewaySplitJoin = window.bpmnjs.checkSplitJoin(element);
 
     if (gatewaySplitJoin === undefined) {
-      colorFrame = "#cc0000";
+      colorFrame = COLOR_RED;
     }
     else if (gatewaySplitJoin === '') {
-      colorFrame = "#cc0000";
+      colorFrame = COLOR_RED;
     }
     // if split, it should have 1 input and 2 outputs
     else if (gatewaySplitJoin === 'split') {
       if (element.businessObject.incoming)
-        if (element.businessObject.incoming.length != 1) colorFrame = "#cc0000";
+        if (element.businessObject.incoming.length != 1) colorFrame = COLOR_RED;
       if (element.businessObject.outgoing)
-        if (element.businessObject.outgoing.length != 2) colorFrame = "#cc0000";
+        if (element.businessObject.outgoing.length != 2) colorFrame = COLOR_RED;
       if (element.businessObject.observedProposition)
-        if (element.businessObject.observedProposition.length > 1) colorFrame = "#cc0000";
+        if (element.businessObject.observedProposition.length > 1) colorFrame = COLOR_RED;
 
 
     }
     // if join, it should have 2 input and 1 outputs
     else if (gatewaySplitJoin === 'join') {
       if (element.businessObject.incoming)
-        if (element.businessObject.incoming.length != 2) colorFrame = "#cc0000";
+        if (element.businessObject.incoming.length != 2) colorFrame = COLOR_RED;
       if (element.businessObject.outgoing)
-        if (element.businessObject.outgoing.length != 1) colorFrame = "#cc0000";
+        if (element.businessObject.outgoing.length != 1) colorFrame = COLOR_RED;
     }
 
     eventBus.fire("tempcon.changed", { element: element });
