@@ -455,7 +455,7 @@ export default function (group, element, bpmnFactory, translate) {
   }
 
   // ---------------------------- Events -------------------------
-  if (is(element, 'bpmn:IntermediateCatchEvent')) {
+  if (is(element, 'bpmn:IntermediateCatchEvent') || is(element, 'bpmn:IntermediateThrowEvent')) {
     if (element.businessObject.eventDefinitions.length > 0) {
       // For IntermediateCatchEvent
       let strOptions = ['bpmn:MessageEventDefinition', 'bpmn:SignalEventDefinition'];

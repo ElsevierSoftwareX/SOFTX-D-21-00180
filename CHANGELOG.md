@@ -2,6 +2,13 @@
 
 ## TimeAwareBPMN-js
 
+v1.1.1 - 20211105
+
+- Add DataObjectReference to the palette
+- Allow multiple inputs and outputs to ParallelGateway
+- Fix problem of value computation in SequenceFlows output from XOR
+- Add IntermediateThrowEvents
+
 v1.1.0 - to be released 
 
 - Fixed the syntax of XSD for temporal constraints specification in BPMN v2 documents.

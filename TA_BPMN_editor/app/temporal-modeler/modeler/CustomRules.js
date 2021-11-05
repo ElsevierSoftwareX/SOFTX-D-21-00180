@@ -63,7 +63,7 @@ CustomRules.prototype.init = function () {
     if (window.creatingRelativeConstraint) {
 
       // allow connection between tasks
-      let allowedElements = ['bpmn:UserTask', 'bpmn:ServiceTask', 'bpmn:ScriptTask', 'bpmn:SendTask', 'bpmn:ReceiveTask', 'bpmn:ExclusiveGateway', 'bpmn:ParallelGateway', 'bpmn:IntermediateCatchEvent', 'bpmn:StartEvent', 'bpmn:EndEvent'];
+      let allowedElements = ['bpmn:UserTask', 'bpmn:ServiceTask', 'bpmn:ScriptTask', 'bpmn:SendTask', 'bpmn:ReceiveTask', 'bpmn:ExclusiveGateway', 'bpmn:ParallelGateway', 'bpmn:IntermediateCatchEvent', 'bpmn:IntermediateThrowEvent', 'bpmn:StartEvent', 'bpmn:EndEvent'];
       if (isAny(source, allowedElements) && !source.labelTarget) {
         if (isAny(target, allowedElements) && !target.labelTarget) {
           return { type: 'custom:connection' };

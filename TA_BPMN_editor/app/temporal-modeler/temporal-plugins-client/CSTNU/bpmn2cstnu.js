@@ -1095,7 +1095,7 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
           setTwoNodesToEdges(paramsContingent);
         }
         //  ---------------------- Events ---------------//
-        else if (elementName.includes("intermediateCatchEvent")) {
+        else if (elementName.includes("intermediateCatchEvent") || elementName.includes("intermediateThrowEvent")  ) {
           // Subtypes are
           //  bpmn:timerEventDefinition   // This is a bit different TODO
           //  bpmn:messageEventDefinition

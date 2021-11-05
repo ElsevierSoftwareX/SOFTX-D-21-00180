@@ -102,7 +102,8 @@ PaletteProvider.prototype.getPaletteEntries = function (element) {
       'bpmn:StartEvent', 'event', 'bpmn-icon-start-event-none'
     ),
     'create.intermediate-event': createAction(
-      'bpmn:IntermediateThrowEvent', 'event', 'bpmn-icon-intermediate-event-none'
+      'bpmn:IntermediateThrowEvent', 'event', 'bpmn-icon-intermediate-event-none',
+       'Create Intermediate/Boundary Event'
     ),
     'create.end-event': createAction(
       'bpmn:EndEvent', 'event', 'bpmn-icon-end-event-none'
@@ -120,6 +121,7 @@ PaletteProvider.prototype.getPaletteEntries = function (element) {
    'create.data-object': createAction(
     'bpmn:DataObjectReference', 'data-object', 'bpmn-icon-data-object'
   ),
+  
     'create.participant-expanded': {
       group: 'collaboration',
       className: 'bpmn-icon-participant',

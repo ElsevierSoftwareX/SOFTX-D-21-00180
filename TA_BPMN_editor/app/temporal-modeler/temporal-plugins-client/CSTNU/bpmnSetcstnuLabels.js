@@ -532,9 +532,9 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
         }
         else if (elementName.includes("subProcess")) {
           processElements(params);
-        }
+        } 
         //  ---------------------- Events ---------------//
-        else if (elementName.includes("intermediateCatchEvent")) {
+        else if (elementName.includes("intermediateCatchEvent") || elementName.includes("intermediateThrowEvent") ) {
           // Subtypes are
           //  bpmn:timerEventDefinition   // This is a bit different TODO
           //  bpmn:messageEventDefinition

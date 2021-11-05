@@ -70,6 +70,24 @@ export var INTERMEDIATE_EVENT = [
             type: 'bpmn:IntermediateCatchEvent',
             eventDefinitionType: 'bpmn:SignalEventDefinition'
         }
+    },
+    {
+        label: 'Message Intermediate Throw Event',
+        actionName: 'replace-with-message-intermediate-throw',
+        className: 'bpmn-icon-intermediate-event-throw-message',
+        target: {
+            type: 'bpmn:IntermediateThrowEvent',
+            eventDefinitionType: 'bpmn:MessageEventDefinition'
+        }
+    },
+    {
+        label: 'Signal Intermediate Throw Event',
+        actionName: 'replace-with-signal-intermediate-throw',
+        className: 'bpmn-icon-intermediate-event-throw-signal',
+        target: {
+            type: 'bpmn:IntermediateThrowEvent',
+            eventDefinitionType: 'bpmn:SignalEventDefinition'
+        }
     }
 ];
 
