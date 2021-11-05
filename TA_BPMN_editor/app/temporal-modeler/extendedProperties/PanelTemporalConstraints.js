@@ -212,6 +212,27 @@ var validateMaxDuration_relative = function (element, values, node) {
 };
 
 
+/** Check observedProposition.length == 1 */
+var validate_observedProposition = function (element, values, node) {  
+  let val = values.observedProposition.length;
+  
+  if (node.childElementCount > 0) {
+    if (node.childNodes[2].className.includes("bpp-field-description")) {
+      node.childNodes[1].style.border = '';
+    }
+  }
+  if (val != '1') {
+    if (node.childElementCount > 0) {
+      if (node.childNodes[2].className.includes("bpp-field-description")) {
+        node.childNodes[1].style.border = '2px solid red';
+      }
+    }
+  }
+
+  return values.observedProposition.length == 1;
+};
+
+
 
 function getExtensionElementValue(element, typeName, property) {
   return window.bpmnjs.getExtensionElementValue(element, typeName, property);
@@ -497,7 +518,8 @@ export default function (group, element, bpmnFactory, translate) {
         label: 'Letter representing the boolean condition',
         modelProperty: 'observedProposition',
         get: getValue(getBusinessObject(element), "tempcon", "TXorProposition", "observedProposition"),
-        set: setValue(getBusinessObject(element), "tempcon", "TXorProposition", "observedProposition")
+        set: setValue(getBusinessObject(element), "tempcon", "TXorProposition", "observedProposition"),
+        validate: validate_observedProposition
       }));
     }
     set_group_propositionalLabel(group);

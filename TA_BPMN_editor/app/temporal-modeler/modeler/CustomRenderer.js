@@ -39,7 +39,6 @@ var RENDERER_IDS = new Ids();
 const HIGH_PRIORITY = 1500,
   TASK_BORDER_RADIUS = 2;
 
-
 /**
  * A renderer that knows how to render custom elements.
  */
@@ -53,7 +52,6 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
   this.bpmnRenderer = bpmnRenderer;
   this.textRenderer = textRenderer;
   this.eventBus = eventBus;
-
 
   this.drawTriangle = function (p, side) {
     var halfSide = side / 2,
@@ -185,7 +183,6 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
     markers[id] = marker;
   }
 
-
   function colorEscape(str) {
     return str.replace(/[()\s,#]+/g, '_');
   }
@@ -224,7 +221,6 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
     let minD = "";
     let maxD = "";
 
-
     if (element.businessObject.minDuration != undefined)
       minD = element.businessObject.minDuration;
     if (element.businessObject.maxDuration != undefined)
@@ -242,7 +238,7 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
     if (maxD <= minD) colorFrame = COLOR_RED;
 
     var attrs = computeStyle(attrs, {
-      stroke: colorFrame, 
+      stroke: colorFrame,
       strokeWidth: 2,
       strokeDasharray: '20,10,5,5,5,10',
       strokeLinecap: 'square',
@@ -251,7 +247,6 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
     });
 
     let theElement = svgAppend(p, createLine(element.waypoints, attrs));
-
 
     // // TODO: Add a label with minD-maxD
     // // The next code adds the text, 
@@ -289,7 +284,6 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
     // });
 
     return theElement;
-
   };
 
   this.getCustomConnectionPath = function (connection) {
@@ -315,7 +309,6 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
 inherits(CustomRenderer, BaseRenderer);
 
 CustomRenderer.$inject = ['eventBus', 'styles', "bpmnRenderer", "textRenderer"];
-
 
 CustomRenderer.prototype.canRender = function (element) {
   // return /^custom:/.test(element.type);
@@ -372,7 +365,6 @@ CustomRenderer.prototype.drawShape = function (p, element) {
   }
 
   return shape;
-
 };
 
 CustomRenderer.prototype.getShapePath = function (shape) {
@@ -421,10 +413,11 @@ CustomRenderer.prototype.drawConnection = function (p, element) {
       // shape.style.strokeWidth = "4px";
     }
 
+    // TODO check connected elements to update them, like Gateways
+
     return shape;
   }
 };
-
 
 CustomRenderer.prototype.getConnectionPath = function (connection) {
 
@@ -434,7 +427,6 @@ CustomRenderer.prototype.getConnectionPath = function (connection) {
     return this.getCustomConnectionPath(connection);
   }
 };
-
 
 // from https://github.com/bpmn-io/bpmn-js/blob/master/lib/draw/BpmnRenderer.js
 function drawRect(parentNode, width, height, borderRadius, strokeColor) {
@@ -499,7 +491,7 @@ function drawShape_contingent(
   if (isAny(element, ["bpmn:IntermediateCatchEvent", "bpmn:TimerEventDefinition"])) {
 
   }
-  if (isAny(element, ["bpmn:ExclusiveGateway"])){ //, "bpmn:ParallelGateway"])) {
+  if (isAny(element, ["bpmn:ExclusiveGateway", "bpmn:ParallelGateway"])) {
     //Check it has a type: split or join 
     // let gatewaySplitJoin = getExtensionElementValue(element, "TGatewaySplitJoin", "gatewaySplitJoin");
     let gatewaySplitJoin = window.bpmnjs.checkSplitJoin(element);
@@ -512,25 +504,14 @@ function drawShape_contingent(
     }
     // if split, it should have 1 input and 2 outputs
     else if (gatewaySplitJoin === 'split') {
-      if (element.businessObject.incoming)
-        if (element.businessObject.incoming.length != 1) colorFrame = COLOR_RED;
-      if (element.businessObject.outgoing)
-        if (element.businessObject.outgoing.length != 2) colorFrame = COLOR_RED;
-      if (element.businessObject.observedProposition)
-        if (element.businessObject.observedProposition.length > 1) colorFrame = COLOR_RED;
+      if (isAny(element, ["bpmn:ExclusiveGateway"])) {
+        let observedPropositionTmp = getExtensionElementValue(element, "TXorProposition", "observedProposition");
 
-
+        if (observedPropositionTmp)
+          if (observedPropositionTmp.length > 1) colorFrame = COLOR_RED;
+      }
     }
-    // if join, it should have 2 input and 1 outputs
-    else if (gatewaySplitJoin === 'join') {
-      if (element.businessObject.incoming)
-        if (element.businessObject.incoming.length != 2) colorFrame = COLOR_RED;
-      if (element.businessObject.outgoing)
-        if (element.businessObject.outgoing.length != 1) colorFrame = COLOR_RED;
-    }
-
     eventBus.fire("tempcon.changed", { element: element });
-
   }
 
   let temWidth = element.width - 20;
@@ -560,8 +541,6 @@ function drawShape_contingent(
     transform: "translate(" + temWidth + ", -7)",
   });
 }
-
-
 
 function getExtensionElementValue(element, typeName, property) {
   return window.bpmnjs.getExtensionElementValue(element, typeName, property);
