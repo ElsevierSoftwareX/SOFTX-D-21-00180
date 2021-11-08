@@ -436,7 +436,7 @@ export default function (group, element, bpmnFactory, translate) {
       modelProperty: 'propositionalLabel'
     }));
   }
-
+  
   if (is(element, 'bpmn:SequenceFlow')) {
     group.entries.push(entryFactory.label({
       id: 'fromLabel',
