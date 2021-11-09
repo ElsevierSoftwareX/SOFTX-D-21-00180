@@ -313,14 +313,14 @@ function sendCSTNUtoEvaluate(cstnuXml, myObjs) {
 
                     if (currentObj) {
 
-                        divModalContent.innerText += "\nFound a constraint violation on node: " + strNodeId + " (" + currentObj.id + "), its temporal constraint cannot be satisfied.";
+                        divModalContent.innerText += "\nFound a constraint violation on node " + strNodeId + " (" + currentObj.id + "): its temporal constraint cannot be satisfied.";
                         window.elementsError.push(currentObj.id);
                         let tempElement = window.bpmnjs.get('elementRegistry').get(currentObj.id);
                         eventBus.fire('element.changed', { element: tempElement });
 
                     }
                     else {
-                        divModalContent.innerText += "\nFound a constraint violation on node: " + strNodeId + ", its temporal constraint cannot be satisfied.";
+                        divModalContent.innerText += "\nFound a constraint violation on node " + strNodeId + ": its temporal constraint cannot be satisfied.";
                     }
 
                 }
