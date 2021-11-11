@@ -2,12 +2,13 @@
 
 ## TimeAwareBPMN-js
 
-v1.1.1 - 20211105
+v1.1.1 - 20211111
 
 - Add DataObjectReference to the palette
 - Allow multiple inputs and outputs to ParallelGateway
 - Fix problem of value computation in SequenceFlows output from XOR
 - Add IntermediateThrowEvents
+- Change, if a sequenceFlow is presented, show an error on -Propagate conditions- and before doing the verification
 
 v1.1.0 - to be released 
 

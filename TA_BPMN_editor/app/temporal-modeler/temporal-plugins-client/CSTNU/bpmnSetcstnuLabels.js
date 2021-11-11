@@ -534,6 +534,29 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
           processSequenceFlow(params);
         }
 
+        if (elementName.includes("messageFlow")) {
+          myLogObj.errors += "\n" + elementName + " no processed, messageFlow are not supported";
+          countObjs.elementsWithError++;
+        }
+
+      }
+    }
+  }
+
+
+  for (i = 0; i < xmlDoc.children[0].children.length; i++) {
+    let elementP = xmlDoc.children[0].children[i];
+    if (elementP.nodeName.includes("collaboration")) {
+
+      for (j = 0; j < elementP.children.length; j++) {
+        let element = elementP.children[j];
+        let elementName = element.nodeName;
+        // ---------------------------- MessageFlow -------------------------//
+        if (elementName.includes("messageFlow")) {
+          myLogObj.errors += "\n" + elementName + " no processed, messageFlow are not supported";
+          countObjs.elementsWithError++;
+        }
+
       }
     }
   }
