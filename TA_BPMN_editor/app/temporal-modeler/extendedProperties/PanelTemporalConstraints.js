@@ -46,7 +46,7 @@ var validateMinDuration_noContingent = function (element, values, node) {
   if (val === undefined || (isNaN(val) || Number(val) < 0) || !Number.isInteger(parseFloat(val))) {
     if (node.childElementCount > 0) {
       if (node.childNodes[2].className.includes("bpp-field-description")) {
-        node.childNodes[2].innerText = 'Min duration should be an integer bigger than 0';
+        node.childNodes[2].innerText = 'Min duration should be 0 or an integer bigger than 0';
         node.childNodes[1].style.border = '2px solid red';
       }
     }
@@ -73,7 +73,7 @@ var validateMinDuration_sequenceFlow = function (element, values, node) {
       if ((isNaN(val) || Number(val) < 0) || !Number.isInteger(parseFloat(val))) {
         if (node.childElementCount > 0) {
           if (node.childNodes[2].className.includes("bpp-field-description")) {
-            node.childNodes[2].innerText = 'Min duration should be an integer bigger than 0';
+            node.childNodes[2].innerText = 'Min duration should be 0 or an integer bigger than 0';
             node.childNodes[1].style.border = '2px solid red';
           }
         }
@@ -101,7 +101,7 @@ var validateMinDuration_relativeConstraint = function (element, values, node) {
       if (isNaN(val) || !Number.isInteger(parseFloat(val))) {
         if (node.childElementCount > 0) {
           if (node.childNodes[2].className.includes("bpp-field-description")) {
-            node.childNodes[2].innerText = 'Min duration should be an integer bigger than 0';
+            node.childNodes[2].innerText = 'Min duration should be 0 or an integer bigger than 0';
             node.childNodes[1].style.border = '2px solid red';
           }
         }
@@ -472,7 +472,7 @@ export default function (group, element, bpmnFactory, translate) {
   }
 
   // ---------------------------- Events -------------------------
-  if (is(element, 'bpmn:IntermediateCatchEvent') || is(element, 'bpmn:IntermediateThrowEvent')) {
+  if (is(element, 'bpmn:IntermediateCatchEvent') ) {
     if (element.businessObject.eventDefinitions.length > 0) {
       // For IntermediateCatchEvent
       let strOptions = ['bpmn:MessageEventDefinition', 'bpmn:SignalEventDefinition'];
@@ -480,6 +480,24 @@ export default function (group, element, bpmnFactory, translate) {
       if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
         set_group_minDuration(group, validateMinDuration_contingent);
         set_group_maxDuration(group, validateMaxDuration_contingent);
+        set_group_propositionalLabel(group);
+      }
+      // bpmn:TimerEventDefinition  it is different, minDuration is the same as maxDuration
+      strOptions = ['bpmn:TimerEventDefinition'];
+      // TODO check bpmn:TimerEventDefinition  it is different                      
+      if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
+        // set_group_minDuration(group, validateMinDuration_contingent);
+        set_group_maxDuration(group, validateMaxDuration_contingent);
+        set_group_propositionalLabel(group);
+      }
+    }
+  }
+  if (is(element, 'bpmn:IntermediateThrowEvent')) {
+    if (element.businessObject.eventDefinitions.length > 0) {
+      // For IntermediateCatchEvent
+      let strOptions = ['bpmn:MessageEventDefinition', 'bpmn:SignalEventDefinition'];
+      // TODO Check if eventDefinitions can have more than 1 element     
+      if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
         set_group_propositionalLabel(group);
       }
       // bpmn:TimerEventDefinition  it is different, minDuration is the same as maxDuration

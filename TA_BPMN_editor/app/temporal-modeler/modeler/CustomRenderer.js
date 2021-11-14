@@ -478,15 +478,15 @@ function drawShape_contingent(
   if (minD < 0) colorFrame = COLOR_RED;
   if (!Number.isInteger(parseFloat(minD)) || !Number.isInteger(parseFloat(maxD))) colorFrame = COLOR_RED;
 
-  minD = Number(minD);
-  maxD = Number(maxD);
+  let minD_num = Number(minD);
+  let maxD_num = Number(maxD);
 
   if (isContingent) {
-    if (minD <= 0) colorFrame = COLOR_RED;
-    if (maxD <= minD) colorFrame = COLOR_RED;
+    if (minD_num <= 0) colorFrame = COLOR_RED;
+    if (maxD_num <= minD_num) colorFrame = COLOR_RED;
   }
   else
-    if (maxD < minD) colorFrame = COLOR_RED;
+    if (maxD_num < minD_num) colorFrame = COLOR_RED;
 
   if (isAny(element, ["bpmn:IntermediateCatchEvent", "bpmn:TimerEventDefinition"])) {
 
