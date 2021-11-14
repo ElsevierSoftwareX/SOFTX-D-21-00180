@@ -121,7 +121,9 @@ PaletteProvider.prototype.getPaletteEntries = function (element) {
    'create.data-object': createAction(
     'bpmn:DataObjectReference', 'data-object', 'bpmn-icon-data-object'
   ),
-  
+  'create.data-store': createAction(
+    'bpmn:DataStoreReference', 'data-store', 'bpmn-icon-data-store'
+  ),
     'create.participant-expanded': {
       group: 'collaboration',
       className: 'bpmn-icon-participant',
