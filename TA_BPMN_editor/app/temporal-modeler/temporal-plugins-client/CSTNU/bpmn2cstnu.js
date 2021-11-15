@@ -78,7 +78,7 @@ export default function bpmn2cstnu(bpmn, customElements, fileName) {
   textMessage += '\n' + 'Warnings: ' + countObjs.elementsWithWarning;
   if (countObjs.elementsWithWarning > 0)
     divModalContent.innerText += '\n' + myLogObj.warnings;
-
+debugger
   return { xmlString, myLogObj, countObjs, myObjs, textMessage };
 }
 
@@ -1058,11 +1058,11 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
         let paramsNormal = { elementType: 'TASK', element, graph, bpmnPlane, "edgeType": "normal", myLogObj, countObjs, myObjs };
         let elementName = element.nodeName; //.toLowerCase()           
         // ---------------- Tasks --------------- //            
-        if (elementName.includes("task")) {
-          myLogObj.warnings += "\n " + elementName + " " + " not allowed in this version of the CSTNU plug-in \n "; // +element.attributes.id 
-          countObjs.elementsWithWarning++;
-        }
-        else if (elementName.includes("userTask")) {
+        // if (elementName.includes("task")) {
+        //   myLogObj.warnings += "\n " + elementName + " " + " not allowed in this version of the CSTNU plug-in \n "; // +element.attributes.id 
+        //   countObjs.elementsWithWarning++;
+        // }
+        if (elementName.includes("userTask")) {
           setTwoNodesToEdges(paramsContingent);
         }
         else if (elementName.includes("serviceTask")) {
@@ -1095,10 +1095,10 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
           }
           setTwoNodesToEdges(paramsNormal);
         }
-        else if (elementName.includes("boundaryEvent")) {
-          myLogObj.warnings += "\n" + elementName + " no processed";
-          countObjs.elementsWithWarning++;
-        }
+        // else if (elementName.includes("boundaryEvent")) { // TODO
+        //   myLogObj.warnings += "\n" + elementName + " no processed";
+        //   countObjs.elementsWithWarning++;
+        // }
         else if (elementName.includes("startEvent")) {
           //Need to know how many to decide Z or Z_i
           countObjs.startEventsTotal += 1;
@@ -1124,10 +1124,25 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
           paramsNormal.elementType = 'GATEWAY';
           setTwoNodesToEdges(paramsNormal);
         }
-        // Non considerated    
-        else {
+        // Elements allowed in the models but not considered in the translation
+        else if (elementName.includes("association") ||
+        elementName.includes("Pool") ||
+        elementName.includes("laneSet") ||
+        elementName.includes("dataObject") ||
+        elementName.includes("dataObjectReference") ||
+        elementName.includes("dataStoreReference") ||
+        elementName.includes("textAnnotation") ||
+        elementName.includes("eventBasedGateway")
+        ) {
           myLogObj.warnings += "\n" + elementName + " no processed";
           countObjs.elementsWithWarning++;
+        }
+        // Non considerated    
+        else {
+          // myLogObj.warnings += "\n" + elementName + " no processed";
+          // countObjs.elementsWithWarning++;
+          myLogObj.errors += "\n " + elementName + " " + " not allowed in this version of the CSTNU plug-in \n "; // +element.attributes.id 
+          countObjs.elementsWithError++;
         }
       }
     }
