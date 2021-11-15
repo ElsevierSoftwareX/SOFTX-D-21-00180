@@ -473,7 +473,7 @@ export default function (group, element, bpmnFactory, translate) {
 
   // ---------------------------- Events -------------------------
   if (is(element, 'bpmn:IntermediateCatchEvent') ) {
-    if (element.businessObject.eventDefinitions.length > 0) {
+    if (element.businessObject.eventDefinitions && element.businessObject.eventDefinitions.length > 0) {
       // For IntermediateCatchEvent
       let strOptions = ['bpmn:MessageEventDefinition', 'bpmn:SignalEventDefinition'];
       // TODO Check if eventDefinitions can have more than 1 element     
@@ -486,26 +486,20 @@ export default function (group, element, bpmnFactory, translate) {
       strOptions = ['bpmn:TimerEventDefinition'];
       // TODO check bpmn:TimerEventDefinition  it is different                      
       if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
-        // set_group_minDuration(group, validateMinDuration_contingent);
-        set_group_maxDuration(group, validateMaxDuration_contingent);
+        // set_group_minDuration(group, validateMinDuration_contingent); // This is updated on CustomEvents
+        set_group_maxDuration(group, validateMaxDuration_noContingent);
         set_group_propositionalLabel(group);
       }
     }
   }
   if (is(element, 'bpmn:IntermediateThrowEvent')) {
-    if (element.businessObject.eventDefinitions.length > 0) {
+    if (element.businessObject.eventDefinitions && element.businessObject.eventDefinitions.length > 0) {
       // For IntermediateCatchEvent
       let strOptions = ['bpmn:MessageEventDefinition', 'bpmn:SignalEventDefinition'];
       // TODO Check if eventDefinitions can have more than 1 element     
       if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
-        set_group_propositionalLabel(group);
-      }
-      // bpmn:TimerEventDefinition  it is different, minDuration is the same as maxDuration
-      strOptions = ['bpmn:TimerEventDefinition'];
-      // TODO check bpmn:TimerEventDefinition  it is different                      
-      if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
-        // set_group_minDuration(group, validateMinDuration_contingent);
-        set_group_maxDuration(group, validateMaxDuration_contingent);
+        set_group_minDuration(group, validateMinDuration_noContingent);
+        set_group_maxDuration(group, validateMaxDuration_noContingent);
         set_group_propositionalLabel(group);
       }
     }

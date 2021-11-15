@@ -342,13 +342,28 @@ CustomRenderer.prototype.drawShape = function (p, element) {
       "bpmn:UserTask",
       "bpmn:ServiceTask",
       "bpmn:ReceiveTask",
-      "bpmn:SubProcess",
-      "bpmn:IntermediateCatchEvent"
+      "bpmn:SubProcess"
     ])
   ) {
 
-    // svgRemove(shape);
     drawShape_contingent(p, element, this.textRenderer, true, this.eventBus);
+  }
+  if (isAny(element, ["bpmn:IntermediateCatchEvent"])) {
+    let strOptions = ['bpmn:MessageEventDefinition', 'bpmn:SignalEventDefinition'];
+    if (element.businessObject.eventDefinitions && element.businessObject.eventDefinitions.length > 0) {
+      if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
+        drawShape_contingent(p, element, this.textRenderer, true, this.eventBus);
+      }
+    }
+  }
+
+  if (isAny(element, ["bpmn:IntermediateCatchEvent"])) {
+    let strOptions = ['bpmn:TimerEventDefinition'];
+    if (element.businessObject.eventDefinitions && element.businessObject.eventDefinitions.length > 0) {
+      if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
+        drawShape_contingent(p, element, this.textRenderer, false, this.eventBus);
+      }
+    }
   }
 
   if (
@@ -360,8 +375,16 @@ CustomRenderer.prototype.drawShape = function (p, element) {
       "bpmn:EventBasedGateway"
     ])
   ) {
-    // svgRemove(shape);
     drawShape_contingent(p, element, this.textRenderer, false, this.eventBus);
+  }
+
+  if (isAny(element, ["bpmn:IntermediateThrowEvent"])) {
+    let strOptions = ['bpmn:MessageEventDefinition', 'bpmn:SignalEventDefinition'];
+    if (element.businessObject.eventDefinitions && element.businessObject.eventDefinitions.length > 0) {
+      if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
+        drawShape_contingent(p, element, this.textRenderer, false, this.eventBus);
+      }
+    }
   }
 
   return shape;
@@ -474,6 +497,13 @@ function drawShape_contingent(
 
   if (window.elementsError.indexOf(element.businessObject.id) >= 0) colorFrame = "#cc00cc";
 
+  // if (isAny(element, ["bpmn:IntermediateCatchEvent"])) {
+  //   let strOptions = ['bpmn:TimerEventDefinition']; // TimerEventDefinition does not have 
+  //   if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
+  //     drawShape_contingent(p, element, this.textRenderer, true, this.eventBus);
+  //   }
+  // }
+
   if (minD === "" || maxD === "") colorFrame = COLOR_RED;
   if (minD < 0) colorFrame = COLOR_RED;
   if (!Number.isInteger(parseFloat(minD)) || !Number.isInteger(parseFloat(maxD))) colorFrame = COLOR_RED;
@@ -489,7 +519,6 @@ function drawShape_contingent(
     if (maxD_num < minD_num) colorFrame = COLOR_RED;
 
   if (isAny(element, ["bpmn:IntermediateCatchEvent", "bpmn:TimerEventDefinition"])) {
-
   }
   if (isAny(element, ["bpmn:ExclusiveGateway", "bpmn:ParallelGateway"])) {
     // Check it has a type: split or join 
@@ -533,7 +562,7 @@ function drawShape_contingent(
   if (is(element, "bpmn:Gateway")) {
     temWidth = -25;
   }
-  if (is(element, "bpmn:IntermediateCatchEvent")) {
+  if (is(element, "bpmn:IntermediateCatchEvent") || is(element, "bpmn:IntermediateThrowEvent")) {
     temWidth = -40;
   }
 
