@@ -1,3 +1,14 @@
+/** temporal-modeler/modeler/CustomContextPadProvider
+ * 
+ * The contextPad is the set of icons that are shown when a element is selected.
+ * This module modifies the contextPad to present the suported elements.
+ * The main changes are:
+ *     - Remove the task and event 
+ *     - Add userTask and IntermediateCatchEvent with eventDefinitionType: 'bpmn:MessageEventDefinition'
+ *     - Add relativeConstraint 
+ * 
+ */
+
 import inherits from 'inherits';
 
 import ContextPadProvider from 'bpmn-js/lib/features/context-pad/ContextPadProvider';
@@ -34,6 +45,7 @@ export default function CustomContextPadProvider(injector, connect, translate, c
 
     var actions = cached(element);
     delete actions["append.append-task"];
+    delete actions["append.intermediate-event"];
 
     var businessObject = element.businessObject;
     window.creatingRelativeConstraint = undefined;
@@ -54,6 +66,24 @@ export default function CustomContextPadProvider(injector, connect, translate, c
 
       create.start(event, shape, element);
     }
+    // To create a intermediate event from the context menu
+    function appendIntermediateEvent(event, element) {
+      
+      if (autoPlace){ 
+        const shape = elementFactory.createShape(assign({ type: 'bpmn:IntermediateCatchEvent' }, { eventDefinitionType: 'bpmn:MessageEventDefinition' }));
+
+        autoPlace.append(element, shape);
+      } else {
+        appendIntermediateEventStart(event, element);
+      }
+    }
+
+    function appendIntermediateEventStart(event) {
+      const shape = elementFactory.createShape(assign({ type: 'bpmn:IntermediateCatchEvent' }, { eventDefinitionType: 'bpmn:MessageEventDefinition' }));
+
+      create.start(event, shape, element);
+    }
+
 
     function startConnect(event, element, autoActivate) {
       window.creatingRelativeConstraint = true;
@@ -104,6 +134,21 @@ export default function CustomContextPadProvider(injector, connect, translate, c
           action: {
             click: appendUserTask,
             dragstart: appendUserTaskStart
+          }
+        }
+      });
+    }
+
+    // To create a message intermediate cathc event from the context menu of the specified objects
+    if (isAny(businessObject, ['bpmn:Task', 'bpmn:Gateway', 'bpmn:IntermediateCatchEvent', 'bpmn:IntermediateThrowEvent', 'bpmn:StartEvent', 'bpmn:EndEvent']) && !element.labelTarget) {
+      assign(actions, {
+        'append.intermediate-event': {
+          group: 'model',
+          className: 'bpmn-icon-intermediate-event-catch-message',
+          title: translate('Append Intermediate/Boundary Event'),
+          action: {
+            click: appendIntermediateEvent,
+            dragstart: appendIntermediateEventStart
           }
         }
       });
