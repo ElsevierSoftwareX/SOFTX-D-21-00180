@@ -239,7 +239,7 @@ function processElements(params) {
         myLogObj.errors += '\n' + element.nodeName + '(' + element.attributes.id.value + ')' + ' invalid number of incoming/outcoming arrows \n';
         countObjs.elementsWithError += 1;
         return;
-      }      
+      }
     }
   }
   else {
@@ -324,6 +324,12 @@ function processSequenceFlow(params) {
 
   let idArrow = element.attributes.id.value;
   let tempElement, isTrueBranchTmp;
+
+  if (source == undefined || target == undefined) {
+    myLogObj.errors += "\n Invalid edge " + idArrow + ", source  " + source + ' and target ' + target;
+    countObjs.elementsWithError += 1;
+    return;
+  }
 
   myObjs['arrows'][idArrow] = { id: idArrow, source: source, target: target };
   myObjs[source].outputs.push(idArrow);
