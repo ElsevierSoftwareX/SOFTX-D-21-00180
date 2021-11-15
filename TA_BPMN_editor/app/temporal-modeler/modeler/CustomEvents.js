@@ -28,7 +28,7 @@ export default function CustomEvents(eventBus, commandStack, elementRegistry) {
           let tempElement = window.bpmnjs.get('elementRegistry').get(currentElement.businessObject.id);
           let minDuration = window.bpmnjs.getExtensionElementValue(tempElement, 'typeName', 'minDuration');
           let maxDuration = window.bpmnjs.getExtensionElementValue(tempElement, 'typeName', 'maxDuration');
-          if (maxDuration && minDuration && minDuration!=maxDuration) {
+          if (minDuration!=maxDuration) {
             window.bpmnjs.setExtensionElementValue(tempElement, 'typeName', 'minDuration', maxDuration);
             try {
               eventBus.fire('element.changed', { element: tempElement });
