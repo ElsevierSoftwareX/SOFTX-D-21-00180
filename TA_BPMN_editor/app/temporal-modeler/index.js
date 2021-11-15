@@ -292,6 +292,7 @@ CustomModeler.prototype.checkSplitJoin = function (element) {
   return type;
 };
 
+// Funtion to get temporal constraint values from the extension elements 
 CustomModeler.prototype.getExtensionElementValue = function (element, typeName, property) {
   let businessObject = element.businessObject || element;
 
@@ -340,3 +341,50 @@ function getExtensionElement(element, type) {
     });
   }
 }
+
+// Function to set temporal constraint values in the extension elements 
+CustomModeler.prototype.setExtensionElementValue = function (element, typeName, property, value) {
+
+  const moddle = window.bpmnjs.get('moddle');
+  const modeling = window.bpmnjs.get('modeling');
+  let businessObject = element.businessObject || element;
+
+  let tempConType;
+  if (businessObject.$type.includes('Task')) {
+    tempConType = "TTask";
+  } else if (businessObject.$type.includes('Gateway')) {
+    tempConType = "TGateway";
+  } else if (businessObject.$type.includes('Event') && !businessObject.$type.includes('StartEvent') && !businessObject.$type.includes('EndEvent')) {
+    tempConType = "TEvent";
+  } else if (businessObject.$type.includes('Flow')) {
+    tempConType = "TSequenceFlow";
+  }
+
+  if (tempConType) {
+
+    let prefixTypeElement = "tempcon:" + tempConType;
+
+    const extensionElements = element.businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
+    let tempConElement = getExtensionElement(element.businessObject, prefixTypeElement);
+
+    if (Array.isArray(tempConElement))
+      tempConElement = tempConElement[0];
+    if (!tempConElement) {
+      tempConElement = moddle.create(prefixTypeElement);
+      extensionElements.get('values').push(tempConElement);
+      let duration = moddle.create("tempcon:TDuration");
+      tempConElement["duration"] = duration;
+    }
+    if (property != 'observedProposition' && property != 'isTrueBranch')
+      tempConElement.duration[property] = value;
+    else
+      tempConElement[property] = value;
+
+
+    modeling.updateProperties(element, {
+      extensionElements
+    });
+  }
+};
+
+
