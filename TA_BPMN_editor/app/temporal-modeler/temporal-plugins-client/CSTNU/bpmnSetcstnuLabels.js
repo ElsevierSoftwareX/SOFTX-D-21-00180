@@ -331,6 +331,12 @@ function processSequenceFlow(params) {
     return;
   }
 
+  if (myObjs[source] == undefined || myObjs[target] == undefined) {
+    myLogObj.errors += "\n Invalid edge " + idArrow + ", source  " + source + ' and target ' + target;
+    countObjs.elementsWithError += 1;
+    return;
+  }
+
   myObjs['arrows'][idArrow] = { id: idArrow, source: source, target: target };
   myObjs[source].outputs.push(idArrow);
   myObjs[target].inputs.push(idArrow);
@@ -432,7 +438,7 @@ function processSequenceFlow(params) {
  * @param {Object} myObjs 
  */
 function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
-  let i = 0, j = 0;
+  let i = 0, j = 0, k = 0;
 
   for (i = 0; i < xmlDoc.children[0].children.length; i++) {
     let elementP = xmlDoc.children[0].children[i];
@@ -462,21 +468,62 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
         else if (elementName.includes("receiveTask")) {
           processElements(params);
         }
-        else if (elementName.includes("subProcess")) {
-          processElements(params);
-        }
+        // else if (elementName.includes("subProcess")) {
+        //   processElements(params);
+        // }
         //  ---------------------- Events ---------------//
-        else if (elementName.includes("intermediateCatchEvent") || elementName.includes("intermediateThrowEvent")) {
+        else if (elementName.includes("intermediateCatchEvent")) {
+
           // Subtypes are
           //  bpmn:timerEventDefinition   // This is a bit different TODO
           //  bpmn:messageEventDefinition
           //  bpnm:singleEventDefinition
-          processElements(params);
+
+          for (k = 0; k < element.children.length; k++) {
+            let eventElement = element.children[k];
+
+            if (eventElement.nodeName.includes('messageEventDefinition') ||
+              eventElement.nodeName.includes('singleEventDefinition')) {
+              processElements(params);
+            }
+            else if (eventElement.nodeName.includes('timerEventDefinition')) {
+              processElements(params);
+            }
+            else if (eventElement.nodeName.includes('EventDefinition')) {
+              myLogObj.errors += "\n " + elementName + "-" + eventElement.nodeName + " not allowed in this version of the CSTNU plug-in \n "; // +element.attributes.id 
+              countObjs.elementsWithError++;
+            }
+
+          }
         }
-        else if (elementName.includes("boundaryEvent")) {
-          myLogObj.warnings += "\n" + elementName + " no processed";
-          countObjs.elementsWithWarning++;
+        else if (elementName.includes("intermediateThrowEvent")) {
+
+          // Subtypes are
+          //  bpmn:timerEventDefinition   // This is a bit different TODO
+          //  bpmn:messageEventDefinition
+          //  bpnm:singleEventDefinition
+
+          for (k = 0; k < element.children.length; k++) {
+            let eventElement = element.children[k];
+
+            if (eventElement.nodeName.includes('messageEventDefinition') ||
+              eventElement.nodeName.includes('singleEventDefinition')) {
+              processElements(params);
+
+            }
+            else if (eventElement.nodeName.includes('EventDefinition')) {
+              myLogObj.errors += "\n " + elementName + "-" + eventElement.nodeName + " not allowed in this version of the CSTNU plug-in \n "; // +element.attributes.id 
+              countObjs.elementsWithError++;
+            }
+
+          }
         }
+
+
+        // else if (elementName.includes("boundaryEvent")) {
+        //   myLogObj.warnings += "\n" + elementName + " no processed";
+        //   countObjs.elementsWithWarning++;
+        // }
         else if (elementName.includes("startEvent")) {
           // Need to know how many to decide Z or Z_i
           countObjs.startEventsTotal += 1;
@@ -499,9 +546,22 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
         // else if(elementName.includes( "eventBasedGateway")){
         //   processElements(params);
         // }         
+        // Elements allowed in the models but not considered in the translation
+        else if (elementName.includes("association") ||
+          elementName.includes("Pool") ||
+          elementName.includes("laneSet") ||
+          elementName.includes("dataObject") ||
+          elementName.includes("dataObjectReference") ||
+          elementName.includes("dataStoreReference") ||
+          elementName.includes("textAnnotation") ||
+          elementName.includes("eventBasedGateway")
+        ) {
+          myLogObj.warnings += "\n" + elementName + " no processed";
+          countObjs.elementsWithWarning++;
+        }
         // Non considerated    
         else {
-          myLogObj.warnings += "\n" + elementName + " no processed";
+          myLogObj.warnings += "\n" + elementName + " not allowed in this version of the CSTNU plug-in \n ";
           countObjs.elementsWithWarning++;
         }
       }

@@ -78,7 +78,7 @@ export default function bpmn2cstnu(bpmn, customElements, fileName) {
   textMessage += '\n' + 'Warnings: ' + countObjs.elementsWithWarning;
   if (countObjs.elementsWithWarning > 0)
     divModalContent.innerText += '\n' + myLogObj.warnings;
-debugger
+  
   return { xmlString, myLogObj, countObjs, myObjs, textMessage };
 }
 
@@ -405,7 +405,7 @@ function checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs) {
 
     if (gatewaySplitJoinTmp != undefined) { // Read it
       if (gatewaySplitJoinTmp.includes('split')) {
-        
+
         if (element.nodeName.includes("exclusiveGateway")) {
           let tmpElement = elementRegistry.get(element.attributes.id.value);
           let observedPropositionTmp = getExtensionElementValue(tmpElement, "TXorProposition", "observedProposition");
@@ -422,7 +422,7 @@ function checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs) {
         }
       }
       else if (gatewaySplitJoinTmp.includes('join')) {
-        
+
         if (element.nodeName.includes("exclusiveGateway")) {
           myObjs[element.attributes.id.value].obs = 'join';
         }
@@ -478,7 +478,7 @@ function setTwoNodesToEdges(params) {
       countObjs[elementType] = 0;
     let elementTypeNumber = countObjs[elementType] + 1;
 
-    myObjs[element.attributes.id.value] = { taskNumber: taskNumber, nodeName: '', name: '', id: '', elementType: elementType, elementTypeNumber: elementTypeNumber, cstnuNodeIds: [], cstnuEdgeIds: [], inputs: [], outputs: [], edgeType: edgeType, id_s: '', id_e:'' };
+    myObjs[element.attributes.id.value] = { taskNumber: taskNumber, nodeName: '', name: '', id: '', elementType: elementType, elementTypeNumber: elementTypeNumber, cstnuNodeIds: [], cstnuEdgeIds: [], inputs: [], outputs: [], edgeType: edgeType, id_s: '', id_e: '' };
     myObjs[element.attributes.id.value].id = element.attributes.id.value;
     myObjs[element.attributes.id.value].nodeName = element.nodeName;
     if (element.attributes.name != undefined) myObjs[element.attributes.id.value].name = element.attributes.name.value.replace(/(\r\n|\n|\r)/gm, "") + ' ';
@@ -638,7 +638,7 @@ function createOneNode(params) {
     myObjs[element.attributes.id.value].id = element.attributes.id.value;
     myObjs[element.attributes.id.value].nodeName = element.nodeName;
     if (element.attributes.name != undefined) myObjs[element.attributes.id.value].name = element.attributes.name.value.replace(/(\r\n|\n|\r)/gm, "") + ' ';
-    
+
     // Nodes
     let id_node = elementType + "_" + elementTypeNumber + "_" + element.attributes.id.value;
     myObjs[element.attributes.id.value].id_node = id_node;
@@ -801,7 +801,7 @@ function setTwoEdges_relativeConstraint(params) {
     myObjs        // Dictionary to match bpmnId:cstnId
   } = params;
 
-  
+
 
   let tmpObj = checkMinMax_relativeConstraint(element, myLogObj, edgeType);
   let minD = tmpObj.minDuration;
@@ -1081,8 +1081,8 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
         //   setTwoNodesToEdges(paramsContingent);
         // }
         //  ---------------------- Events ---------------//
-        else if (elementName.includes("intermediateCatchEvent") || elementName.includes("intermediateThrowEvent")  ) {
-          
+        else if (elementName.includes("intermediateCatchEvent") ) {
+
           // Subtypes are
           //  bpmn:timerEventDefinition   // This is a bit different TODO
           //  bpmn:messageEventDefinition
@@ -1091,9 +1091,41 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
           for (k = 0; k < element.children.length; k++) {
             let eventElement = element.children[k];
 
+            if (eventElement.nodeName.includes('messageEventDefinition') ||
+              eventElement.nodeName.includes('singleEventDefinition')) {
+              setTwoNodesToEdges(paramsContingent);
+            }
+            else if(eventElement.nodeName.includes('timerEventDefinition')){
+                setTwoNodesToEdges(paramsNormal);
+            }
+            else if(eventElement.nodeName.includes('EventDefinition')){
+              myLogObj.errors += "\n " + elementName + "-" + eventElement.nodeName + " not allowed in this version of the CSTNU plug-in \n "; // +element.attributes.id 
+              countObjs.elementsWithError++;
+            }
 
           }
-          setTwoNodesToEdges(paramsNormal);
+        }
+        else if ( elementName.includes("intermediateThrowEvent")) {
+
+          // Subtypes are
+          //  bpmn:timerEventDefinition   // This is a bit different TODO
+          //  bpmn:messageEventDefinition
+          //  bpnm:singleEventDefinition
+
+          for (k = 0; k < element.children.length; k++) {
+            let eventElement = element.children[k];
+
+            if (eventElement.nodeName.includes('messageEventDefinition') ||
+              eventElement.nodeName.includes('singleEventDefinition')) {
+                setTwoNodesToEdges(paramsNormal);
+
+            }
+            else if(eventElement.nodeName.includes('EventDefinition')){
+              myLogObj.errors += "\n " + elementName + "-" + eventElement.nodeName + " not allowed in this version of the CSTNU plug-in \n "; // +element.attributes.id 
+              countObjs.elementsWithError++;
+            }
+
+          }
         }
         // else if (elementName.includes("boundaryEvent")) { // TODO
         //   myLogObj.warnings += "\n" + elementName + " no processed";
@@ -1120,19 +1152,19 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
           paramsNormal.elementType = 'XOR';
           setTwoNodesToEdges(paramsNormal);
         }
-        else if (elementName.includes("eventBasedGateway")) {
-          paramsNormal.elementType = 'GATEWAY';
-          setTwoNodesToEdges(paramsNormal);
-        }
+        // else if (elementName.includes("eventBasedGateway")) {
+        //   paramsNormal.elementType = 'GATEWAY';
+        //   setTwoNodesToEdges(paramsNormal);
+        // }
         // Elements allowed in the models but not considered in the translation
         else if (elementName.includes("association") ||
-        elementName.includes("Pool") ||
-        elementName.includes("laneSet") ||
-        elementName.includes("dataObject") ||
-        elementName.includes("dataObjectReference") ||
-        elementName.includes("dataStoreReference") ||
-        elementName.includes("textAnnotation") ||
-        elementName.includes("eventBasedGateway")
+          elementName.includes("Pool") ||
+          elementName.includes("laneSet") ||
+          elementName.includes("dataObject") ||
+          elementName.includes("dataObjectReference") ||
+          elementName.includes("dataStoreReference") ||
+          elementName.includes("textAnnotation") ||
+          elementName.includes("eventBasedGateway")
         ) {
           myLogObj.warnings += "\n" + elementName + " no processed";
           countObjs.elementsWithWarning++;
