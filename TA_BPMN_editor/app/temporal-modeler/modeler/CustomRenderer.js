@@ -517,9 +517,7 @@ function drawShape_contingent(
   }
   else
     if (maxD_num < minD_num) colorFrame = COLOR_RED;
-
-  if (isAny(element, ["bpmn:IntermediateCatchEvent", "bpmn:TimerEventDefinition"])) {
-  }
+  
   if (isAny(element, ["bpmn:ExclusiveGateway", "bpmn:ParallelGateway"])) {
     // Check it has a type: split or join 
     // let gatewaySplitJoin = getExtensionElementValue(element, "TGatewaySplitJoin", "gatewaySplitJoin");

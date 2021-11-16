@@ -6,7 +6,6 @@
  */
 //** 20210530
 
-
 /**@function bpmnSetcstnuLabels
  * @description
  * Main function of the module. After reading the BPMN elements and creates a graph, 
@@ -41,7 +40,6 @@ export default function bpmnSetcstnuLabels(bpmn) {
 
   // Read the elements in the XML and create the dictionary with the elements
   createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs);
-
 
   // ------------------ Create labels ------------------ //
   let cps = []; // Current Partial Scenario: variable that will contains the labels
@@ -112,7 +110,6 @@ export default function bpmnSetcstnuLabels(bpmn) {
         setExtensionElementValue(tempElement, "TDuration", "propositionalLabel", Array.from(node.cps).join(""));
         eventBus.fire('element.changed', { element: tempElement });
 
-
         myObjs[node.id].outputs.forEach(adj => {
           cps = Array.from(node.cps);
           if (isSplit) {
@@ -127,9 +124,7 @@ export default function bpmnSetcstnuLabels(bpmn) {
         isSplit = false;
         tempProposition = '';
       }
-
     }
-
   }
   else { // No zNode found in the model 
     myLogObj.errors += '\n No zNode found in the model  \n';
@@ -137,15 +132,17 @@ export default function bpmnSetcstnuLabels(bpmn) {
   }
 
   // Update message of error 
-  myLogObj.errors = 'Elements with error: ' + countObjs.elementsWithError + '\n\n' + myLogObj.errors;
-  myLogObj.warnings = 'Elements with warning: ' + countObjs.elementsWithWarning + '\n\n' + myLogObj.warnings;
+  myLogObj.errors = 'Elements with error: ' + countObjs.elementsWithError + '\n' + myLogObj.errors;
+  myLogObj.warnings = 'Elements with warning: ' + countObjs.elementsWithWarning + '\n' + myLogObj.warnings;
 
   let textMessage = 'Errors: ' + countObjs.elementsWithError;
   let divModalContent = document.getElementById("divModalContent");
 
   if (countObjs.elementsWithError > 0)
     textMessage += '\n' + myLogObj.errors;
+
   textMessage += '\n' + 'Warnings: ' + countObjs.elementsWithWarning;
+
   if (countObjs.elementsWithWarning > 0)
     divModalContent.innerText += '\n' + myLogObj.warnings;
 
@@ -175,7 +172,6 @@ function processElements(params) {
     if (element.nodeName.includes("exclusiveGateway") || element.nodeName.includes("parallelGateway")) {
 
       let sourceElement = elementRegistry.get(element.attributes.id.value);
-      // let gatewaySplitJoinTmp = getExtensionElementValue(sourceElement, "TGatewaySplitJoin", "gatewaySplitJoin");
       let gatewaySplitJoinTmp = window.bpmnjs.checkSplitJoin(sourceElement);
 
       if (gatewaySplitJoinTmp != undefined) { // Read it
@@ -221,12 +217,10 @@ function processElements(params) {
                       myObjs[element.attributes.id.value].obsTrueArrow = idArrow;
                     else
                       myObjs[element.attributes.id.value].obsFalseArrow = idArrow;
-
                   }
                 }
               }
             }
-
           }
         }
         else {
@@ -259,13 +253,11 @@ function processStartEndElements(params) {
     myObjs        // Dictionary to match bpmnId:cstnId
   } = params;
 
-  let nodeLabel = '', nodeType = '', nodeNumber = '';
+  let  nodeType = '', nodeNumber = '';
 
   if (element.nodeName.includes("startEvent")) {
-    nodeLabel += 'Z';
     nodeType = 'START';
     if (countObjs.startEventsTotal > 1) {
-      nodeLabel += countObjs.startEvents;
       nodeNumber = String(countObjs.startEvents);
       countObjs.startEvents += 1;
     }
@@ -277,10 +269,8 @@ function processStartEndElements(params) {
     }
   }
   else if (element.nodeName.includes("endEvent")) {
-    nodeLabel += 'Ω';
     nodeType = 'END';
     if (countObjs.endEventsTotal > 1) {
-      nodeLabel += countObjs.endEvents;
       nodeNumber = String(countObjs.endEvents);
       countObjs.endEvents += 1;
     }
@@ -355,7 +345,6 @@ function processSequenceFlow(params) {
             myObjs[source].obsTrueArrow = idArrow;
           else
             myObjs[source].obsFalseArrow = idArrow;
-
         }
         else {
 
@@ -473,12 +462,10 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
         // }
         //  ---------------------- Events ---------------//
         else if (elementName.includes("intermediateCatchEvent")) {
-
           // Subtypes are
           //  bpmn:timerEventDefinition   // This is a bit different TODO
           //  bpmn:messageEventDefinition
           //  bpnm:singleEventDefinition
-
           for (k = 0; k < element.children.length; k++) {
             let eventElement = element.children[k];
 
@@ -493,33 +480,25 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
               myLogObj.errors += "\n " + elementName + "-" + eventElement.nodeName + " not allowed in this version of the CSTNU plug-in \n "; // +element.attributes.id 
               countObjs.elementsWithError++;
             }
-
           }
         }
         else if (elementName.includes("intermediateThrowEvent")) {
-
           // Subtypes are
-          //  bpmn:timerEventDefinition   // This is a bit different TODO
           //  bpmn:messageEventDefinition
           //  bpnm:singleEventDefinition
-
           for (k = 0; k < element.children.length; k++) {
             let eventElement = element.children[k];
 
             if (eventElement.nodeName.includes('messageEventDefinition') ||
               eventElement.nodeName.includes('singleEventDefinition')) {
               processElements(params);
-
             }
             else if (eventElement.nodeName.includes('EventDefinition')) {
               myLogObj.errors += "\n " + elementName + "-" + eventElement.nodeName + " not allowed in this version of the CSTNU plug-in \n "; // +element.attributes.id 
               countObjs.elementsWithError++;
             }
-
           }
         }
-
-
         // else if (elementName.includes("boundaryEvent")) {
         //   myLogObj.warnings += "\n" + elementName + " no processed";
         //   countObjs.elementsWithWarning++;
@@ -560,9 +539,9 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
           countObjs.elementsWithWarning++;
         }
         // Non considerated    
-        else {
-          myLogObj.warnings += "\n" + elementName + " not allowed in this version of the CSTNU plug-in \n ";
-          countObjs.elementsWithWarning++;
+        else {          
+          myLogObj.errors += "\n " + elementName + " " + " not allowed in this version of the CSTNU plug-in \n "; // +element.attributes.id 
+          countObjs.elementsWithError++;
         }
       }
     }
@@ -598,13 +577,7 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
         // ---------------------------- SequenceFlow -------------------------//
         if (elementName.includes("sequenceFlow")) {
           processSequenceFlow(params);
-        }
-
-        if (elementName.includes("messageFlow")) {
-          myLogObj.errors += "\n" + elementName + " no processed, messageFlow are not supported";
-          countObjs.elementsWithError++;
-        }
-
+        }  
       }
     }
   }
@@ -619,10 +592,9 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
         let elementName = element.nodeName;
         // ---------------------------- MessageFlow -------------------------//
         if (elementName.includes("messageFlow")) {
-          myLogObj.errors += "\n" + elementName + " no processed, messageFlow are not supported";
+          myLogObj.errors += "\n" + elementName + " not allowed in this version of the CSTNU plug-in";
           countObjs.elementsWithError++;
         }
-
       }
     }
   }
@@ -669,7 +641,6 @@ function setExtensionElementValue(element, typeName, property, value) {
       tempConElement.duration[property] = value;
     else
       tempConElement[property] = value;
-
 
     modeling.updateProperties(element, {
       extensionElements

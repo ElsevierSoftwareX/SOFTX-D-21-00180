@@ -63,17 +63,7 @@ PaletteProvider.prototype.getPaletteEntries = function (element) {
     create.start(event, elementFactory.createParticipantShape(collapsed));
   }
 
-  assign(actions, {
-    // 'custom-triangle': createAction(
-    //   'custom:triangle', 'custom', 'icon-custom-triangle'
-    // ),
-    // 'custom-circle': createAction(
-    //   'custom:circle', 'custom', 'icon-custom-circle'
-    // ),
-    // 'custom-separator': {
-    //   group: 'custom',
-    //   separator: true
-    // },
+  assign(actions, {    
     'lasso-tool': {
       group: 'tools',
       className: 'bpmn-icon-lasso-tool',

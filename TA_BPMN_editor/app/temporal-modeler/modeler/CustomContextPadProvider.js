@@ -82,13 +82,13 @@ export default function CustomContextPadProvider(injector, connect, translate, c
       const shape = elementFactory.createShape(assign({ type: 'bpmn:IntermediateCatchEvent' }, { eventDefinitionType: 'bpmn:MessageEventDefinition' }));
 
       create.start(event, shape, element);
-    }
-
+    }    
 
     function startConnect(event, element, autoActivate) {
       window.creatingRelativeConstraint = true;
       connect.start(event, element, autoActivate);
     }
+    
     if (isAny(businessObject, ['custom:triangle', 'custom:circle'])) {
       assign(actions, {
         'connect': {
