@@ -46,7 +46,7 @@ var validateMinDuration_noContingent = function (element, values, node) {
   if (val === undefined || (isNaN(val) || Number(val) < 0) || !Number.isInteger(parseFloat(val))) {
     if (node.childElementCount > 0) {
       if (node.childNodes[2].className.includes("bpp-field-description")) {
-        node.childNodes[2].innerText = 'Min duration should be an integer bigger than 0';
+        node.childNodes[2].innerText = 'Min duration should be 0 or an integer bigger than 0';
         node.childNodes[1].style.border = '2px solid red';
       }
     }
@@ -73,7 +73,7 @@ var validateMinDuration_sequenceFlow = function (element, values, node) {
       if ((isNaN(val) || Number(val) < 0) || !Number.isInteger(parseFloat(val))) {
         if (node.childElementCount > 0) {
           if (node.childNodes[2].className.includes("bpp-field-description")) {
-            node.childNodes[2].innerText = 'Min duration should be an integer bigger than 0';
+            node.childNodes[2].innerText = 'Min duration should be 0 or an integer bigger than 0';
             node.childNodes[1].style.border = '2px solid red';
           }
         }
@@ -101,7 +101,7 @@ var validateMinDuration_relativeConstraint = function (element, values, node) {
       if (isNaN(val) || !Number.isInteger(parseFloat(val))) {
         if (node.childElementCount > 0) {
           if (node.childNodes[2].className.includes("bpp-field-description")) {
-            node.childNodes[2].innerText = 'Min duration should be an integer bigger than 0';
+            node.childNodes[2].innerText = 'Min duration should be 0 or an integer bigger than 0';
             node.childNodes[1].style.border = '2px solid red';
           }
         }
@@ -113,7 +113,6 @@ var validateMinDuration_relativeConstraint = function (element, values, node) {
 /** Check minDuration < maxDuration */
 var validateMaxDuration_contingent = function (element, values, node) {
   let val = values.maxDuration;
-  // let valMinDuration = element.businessObject.minDuration;
   let valMinDuration = getExtensionElementValue(element, 'TDuration', 'minDuration');
 
   if (node.childElementCount > 0) {
@@ -136,7 +135,6 @@ var validateMaxDuration_contingent = function (element, values, node) {
 /** Check minDuration <= maxDuration */
 var validateMaxDuration_noContingent = function (element, values, node) {
   let val = values.maxDuration;
-  // let valMinDuration = element.businessObject.minDuration;
   let valMinDuration = getExtensionElementValue(element, 'TDuration', 'minDuration');
 
   if (node.childElementCount > 0) {
@@ -159,7 +157,6 @@ var validateMaxDuration_noContingent = function (element, values, node) {
 /** Check minDuration <= maxDuration or inf */
 var validateMaxDuration_sequenceFlow = function (element, values, node) {
   let val = values.maxDuration;
-  // let valMinDuration = element.businessObject.minDuration;
   let valMinDuration = getExtensionElementValue(element, 'TDuration', 'minDuration');
   if (valMinDuration === undefined) valMinDuration = 0;
 
@@ -212,6 +209,27 @@ var validateMaxDuration_relative = function (element, values, node) {
   }
 
   return !isNaN(val) && Number(val) > 0;
+};
+
+
+/** Check observedProposition.length == 1 */
+var validate_observedProposition = function (element, values, node) {  
+  let val = values.observedProposition.length;
+  
+  if (node.childElementCount > 0) {
+    if (node.childNodes[2].className.includes("bpp-field-description")) {
+      node.childNodes[1].style.border = '';
+    }
+  }
+  if (val != '1') {
+    if (node.childElementCount > 0) {
+      if (node.childNodes[2].className.includes("bpp-field-description")) {
+        node.childNodes[1].style.border = '2px solid red';
+      }
+    }
+  }
+
+  return values.observedProposition.length == 1;
 };
 
 
@@ -269,7 +287,6 @@ export default function (group, element, bpmnFactory, translate) {
       return returnObject;
     };
   };
-
 
   /** @function setValues
    * Custom function sets values from the extensionElements, 
@@ -419,7 +436,7 @@ export default function (group, element, bpmnFactory, translate) {
       modelProperty: 'propositionalLabel'
     }));
   }
-
+  
   if (is(element, 'bpmn:SequenceFlow')) {
     group.entries.push(entryFactory.label({
       id: 'fromLabel',
@@ -444,7 +461,7 @@ export default function (group, element, bpmnFactory, translate) {
           description: 'Select the value true or false',
           label: 'Value',
           modelProperty: 'isTrueBranch',
-          // Default configuration, the property is not created id it does not change/click
+          // Default configuration, the property is not created if it does not change/click
           // TODO force to create the property in the XML file
           get: getValue(getBusinessObject(element), "tempcon", "TPLiteralValue", "isTrueBranch"),
           set: setValue(getBusinessObject(element), "tempcon", "TPLiteralValue", "isTrueBranch"),
@@ -455,8 +472,8 @@ export default function (group, element, bpmnFactory, translate) {
   }
 
   // ---------------------------- Events -------------------------
-  if (is(element, 'bpmn:IntermediateCatchEvent')) {
-    if (element.businessObject.eventDefinitions.length > 0) {
+  if (is(element, 'bpmn:IntermediateCatchEvent') ) {
+    if (element.businessObject.eventDefinitions && element.businessObject.eventDefinitions.length > 0) {
       // For IntermediateCatchEvent
       let strOptions = ['bpmn:MessageEventDefinition', 'bpmn:SignalEventDefinition'];
       // TODO Check if eventDefinitions can have more than 1 element     
@@ -469,8 +486,20 @@ export default function (group, element, bpmnFactory, translate) {
       strOptions = ['bpmn:TimerEventDefinition'];
       // TODO check bpmn:TimerEventDefinition  it is different                      
       if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
-        // set_group_minDuration(group, validateMinDuration_contingent);
-        set_group_maxDuration(group, validateMaxDuration_contingent);
+        // set_group_minDuration(group, validateMinDuration_contingent); // This is updated on CustomEvents
+        set_group_maxDuration(group, validateMaxDuration_noContingent);
+        set_group_propositionalLabel(group);
+      }
+    }
+  }
+  if (is(element, 'bpmn:IntermediateThrowEvent')) {
+    if (element.businessObject.eventDefinitions && element.businessObject.eventDefinitions.length > 0) {
+      // For IntermediateCatchEvent
+      let strOptions = ['bpmn:MessageEventDefinition', 'bpmn:SignalEventDefinition'];
+      // TODO Check if eventDefinitions can have more than 1 element     
+      if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
+        set_group_minDuration(group, validateMinDuration_noContingent);
+        set_group_maxDuration(group, validateMaxDuration_noContingent);
         set_group_propositionalLabel(group);
       }
     }
@@ -494,7 +523,6 @@ export default function (group, element, bpmnFactory, translate) {
 
     // gatewaySplitJoin was moved to tab General     
 
-    // if (getValue(getBusinessObject(element), "tempcon", "TGatewaySplitJoin", "gatewaySplitJoin")(element)['gatewaySplitJoin'] == 'split') {
     if (checkSplitJoin(element) == 'split') {
       group.entries.push(entryFactory.textField(translate, {
         id: 'observedProposition',
@@ -502,13 +530,14 @@ export default function (group, element, bpmnFactory, translate) {
         label: 'Letter representing the boolean condition',
         modelProperty: 'observedProposition',
         get: getValue(getBusinessObject(element), "tempcon", "TXorProposition", "observedProposition"),
-        set: setValue(getBusinessObject(element), "tempcon", "TXorProposition", "observedProposition")
+        set: setValue(getBusinessObject(element), "tempcon", "TXorProposition", "observedProposition"),
+        validate: validate_observedProposition
       }));
     }
     set_group_propositionalLabel(group);
   }
 
-  if (is(element, 'bpmn:ParallelGateway')) { //||
+  if (is(element, 'bpmn:ParallelGateway')) { 
 
     set_group_minDuration(group, validateMinDuration_noContingent);
     set_group_maxDuration(group, validateMaxDuration_noContingent);

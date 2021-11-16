@@ -10,7 +10,7 @@ import inherits from 'inherits';
 
 import CustomModule from './modeler';
 import TCEvaluations from './temporal-plugins-client';
-import { getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
+import { is, getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
 
 
 export default function CustomModeler(options) {
@@ -280,12 +280,19 @@ CustomModeler.prototype.checkSplitJoin = function (element) {
   let type;
 
   if (incoming && outgoing) {
-    if (incoming.length == 2 && outgoing.length == 1) type = 'join';
-    else if (incoming.length == 1 && outgoing.length == 2) type = 'split';
+    if (is(element, 'bpmn:ExclusiveGateway')) {
+      if (incoming.length == 2 && outgoing.length == 1) type = 'join';
+      else if (incoming.length == 1 && outgoing.length == 2) type = 'split';
+    }
+    else if (is(element, 'bpmn:ParallelGateway')) {
+      if (incoming.length >= 2 && outgoing.length == 1) type = 'join';
+      else if (incoming.length == 1 && outgoing.length >= 2) type = 'split';
+    }
   }
   return type;
 };
 
+// Funtion to get temporal constraint values from the extension elements 
 CustomModeler.prototype.getExtensionElementValue = function (element, typeName, property) {
   let businessObject = element.businessObject || element;
 
@@ -334,3 +341,50 @@ function getExtensionElement(element, type) {
     });
   }
 }
+
+// Function to set temporal constraint values in the extension elements 
+CustomModeler.prototype.setExtensionElementValue = function (element, typeName, property, value) {
+
+  const moddle = window.bpmnjs.get('moddle');
+  const modeling = window.bpmnjs.get('modeling');
+  let businessObject = element.businessObject || element;
+
+  let tempConType;
+  if (businessObject.$type.includes('Task')) {
+    tempConType = "TTask";
+  } else if (businessObject.$type.includes('Gateway')) {
+    tempConType = "TGateway";
+  } else if (businessObject.$type.includes('Event') && !businessObject.$type.includes('StartEvent') && !businessObject.$type.includes('EndEvent')) {
+    tempConType = "TEvent";
+  } else if (businessObject.$type.includes('Flow')) {
+    tempConType = "TSequenceFlow";
+  }
+
+  if (tempConType) {
+
+    let prefixTypeElement = "tempcon:" + tempConType;
+
+    const extensionElements = element.businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
+    let tempConElement = getExtensionElement(element.businessObject, prefixTypeElement);
+
+    if (Array.isArray(tempConElement))
+      tempConElement = tempConElement[0];
+    if (!tempConElement) {
+      tempConElement = moddle.create(prefixTypeElement);
+      extensionElements.get('values').push(tempConElement);
+      let duration = moddle.create("tempcon:TDuration");
+      tempConElement["duration"] = duration;
+    }
+    if (property != 'observedProposition' && property != 'isTrueBranch')
+      tempConElement.duration[property] = value;
+    else
+      tempConElement[property] = value;
+
+
+    modeling.updateProperties(element, {
+      extensionElements
+    });
+  }
+};
+
+

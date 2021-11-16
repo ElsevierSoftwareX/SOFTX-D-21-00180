@@ -10,7 +10,6 @@ export default function CustomEvents(eventBus, commandStack, elementRegistry) {
   // catch change event on properties panel
   eventBus.on('propertiesPanel.changed', (event) => {
     var currentElement = event.current.element;
-
     if (is(currentElement, "bpmn:ExclusiveGateway")) {
       if (currentElement.businessObject.outgoing != undefined) {
         for (let i = 0; i < currentElement.businessObject.outgoing.length; i++) {
@@ -22,20 +21,21 @@ export default function CustomEvents(eventBus, commandStack, elementRegistry) {
     }
 
     if (is(currentElement, 'bpmn:IntermediateCatchEvent')) {
-      if (currentElement.businessObject.eventDefinitions.length > 0) {
+      if (currentElement.businessObject.eventDefinitions && currentElement.businessObject.eventDefinitions.length > 0) {
         let strOptions = ['bpmn:TimerEventDefinition'];
         if (strOptions.includes(currentElement.businessObject.eventDefinitions[0].$type)) {
           //Update element in BPMN
           let tempElement = window.bpmnjs.get('elementRegistry').get(currentElement.businessObject.id);
-          if (tempElement.businessObject.maxDuration) {
-            tempElement.businessObject.minDuration = tempElement.businessObject.maxDuration;
+          let minDuration = window.bpmnjs.getExtensionElementValue(tempElement, 'typeName', 'minDuration');
+          let maxDuration = window.bpmnjs.getExtensionElementValue(tempElement, 'typeName', 'maxDuration');
+          if (minDuration != maxDuration) { // To prevent generation of infinite events
+            window.bpmnjs.setExtensionElementValue(tempElement, 'typeName', 'minDuration', maxDuration);
             try {
               eventBus.fire('element.changed', { element: tempElement });
 
             } catch (error) {
               console.log('Error when fire element.changed ' + tempElement.businessObject.id);
             }
-
           }
         }
       }

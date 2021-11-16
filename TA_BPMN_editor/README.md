@@ -12,7 +12,7 @@ The tool was designed to be extended, by adding verification programs as plug-in
 This version contains a plug-in that connects with the Java tool CSTNU to evaluate the dynamic controllability. 
 
 The base code of this editor is [bpmn-io](https://github.com/bpmn-io/).<br>
-We realized the exstension considering the following patterns:
+We realized the extension considering the following patterns:
  1. [properties-panel-extension with custom properties](https://github.com/bpmn-io/bpmn-js-examples/tree/master/properties-panel-extension), and 
  2. [custom-elements](https://github.com/bpmn-io/bpmn-js-examples/tree/master/custom-elements).
 

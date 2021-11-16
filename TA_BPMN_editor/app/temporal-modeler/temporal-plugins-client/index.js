@@ -10,11 +10,9 @@ import evalOther from './OTHER';
 
 let evaluationModules = [evalCSTNU, evalOther];
 
-
 function getEvaluationModules() {
   return evaluationModules;
 }
-
 
 export default {
   getEvaluationModules: getEvaluationModules

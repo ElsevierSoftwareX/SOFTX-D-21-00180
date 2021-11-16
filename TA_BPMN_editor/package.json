@@ -1,6 +1,6 @@
 {
   "name": "timeawarebpmn-editor",
-  "version": "0.0.0",
+  "version": "1.2.0",
   "description": "Editor and viewer of time-aware BPMN processes",
   "main": "app/index.js",
   "scripts": {
@@ -23,7 +23,7 @@
   "contributors": [
     {
       "name": "Roberto Posenato",
-      "url": ""
+      "url": "https://gitlab.com/posenato"
     },
     {
       "name": "Francesca Zerbato",

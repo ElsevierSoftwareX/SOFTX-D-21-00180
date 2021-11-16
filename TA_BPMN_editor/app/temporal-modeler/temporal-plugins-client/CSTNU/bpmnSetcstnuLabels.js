@@ -6,7 +6,6 @@
  */
 //** 20210530
 
-
 /**@function bpmnSetcstnuLabels
  * @description
  * Main function of the module. After reading the BPMN elements and creates a graph, 
@@ -41,7 +40,6 @@ export default function bpmnSetcstnuLabels(bpmn) {
 
   // Read the elements in the XML and create the dictionary with the elements
   createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs);
-
 
   // ------------------ Create labels ------------------ //
   let cps = []; // Current Partial Scenario: variable that will contains the labels
@@ -112,7 +110,6 @@ export default function bpmnSetcstnuLabels(bpmn) {
         setExtensionElementValue(tempElement, "TDuration", "propositionalLabel", Array.from(node.cps).join(""));
         eventBus.fire('element.changed', { element: tempElement });
 
-
         myObjs[node.id].outputs.forEach(adj => {
           cps = Array.from(node.cps);
           if (isSplit) {
@@ -127,9 +124,7 @@ export default function bpmnSetcstnuLabels(bpmn) {
         isSplit = false;
         tempProposition = '';
       }
-
     }
-
   }
   else { // No zNode found in the model 
     myLogObj.errors += '\n No zNode found in the model  \n';
@@ -137,15 +132,17 @@ export default function bpmnSetcstnuLabels(bpmn) {
   }
 
   // Update message of error 
-  myLogObj.errors = 'Elements with error: ' + countObjs.elementsWithError + '\n\n' + myLogObj.errors;
-  myLogObj.warnings = 'Elements with warning: ' + countObjs.elementsWithWarning + '\n\n' + myLogObj.warnings;
+  myLogObj.errors = 'Elements with error: ' + countObjs.elementsWithError + '\n' + myLogObj.errors;
+  myLogObj.warnings = 'Elements with warning: ' + countObjs.elementsWithWarning + '\n' + myLogObj.warnings;
 
   let textMessage = 'Errors: ' + countObjs.elementsWithError;
   let divModalContent = document.getElementById("divModalContent");
 
   if (countObjs.elementsWithError > 0)
     textMessage += '\n' + myLogObj.errors;
+
   textMessage += '\n' + 'Warnings: ' + countObjs.elementsWithWarning;
+
   if (countObjs.elementsWithWarning > 0)
     divModalContent.innerText += '\n' + myLogObj.warnings;
 
@@ -174,44 +171,18 @@ function processElements(params) {
 
     if (element.nodeName.includes("exclusiveGateway") || element.nodeName.includes("parallelGateway")) {
 
-      // Check incoming and outgoing to detect split or join 
-      // This is use to add or remove observations (letters) in the propositions
-      let nIncoming = 0, nOutgoing = 0;
-      for (let i = 0; i < element.children.length; i++) {
-        let child = element.children[i];
-        if (child.tagName.includes("incoming")) {
-          nIncoming++;
-        }
-        else if (child.tagName.includes("outgoing")) {
-          nOutgoing++;
-        }
-      }
-
       let sourceElement = elementRegistry.get(element.attributes.id.value);
-      // let gatewaySplitJoinTmp = getExtensionElementValue(sourceElement, "TGatewaySplitJoin", "gatewaySplitJoin");
       let gatewaySplitJoinTmp = window.bpmnjs.checkSplitJoin(sourceElement);
 
-      if (gatewaySplitJoinTmp != undefined) { //Read it
+      if (gatewaySplitJoinTmp != undefined) { // Read it
         if (gatewaySplitJoinTmp.includes('join')) {
 
-          // if join, it should have 2 inputs and 1 output
-          if (nIncoming != 2 || nOutgoing != 1) {
-            myLogObj.errors += '\n' + element.nodeName + '(' + element.attributes.id.value + ')' + ' invalid number of incoming/outcoming arrows \n';
-            countObjs.elementsWithError += 1;
-            return;
-          }
           if (element.nodeName.includes("exclusiveGateway")) {
             myObjs[element.attributes.id.value].obs = 'join';
           }
         }
         else if (gatewaySplitJoinTmp.includes('split')) {
 
-          // if split, it should have 1 input and 2 outputs
-          if (nIncoming != 1 || nOutgoing != 2) {
-            myLogObj.errors += '\n' + element.nodeName + '(' + element.attributes.id.value + ')' + ' invalid number of incoming/outcoming arrows \n';
-            countObjs.elementsWithError += 1;
-            return;
-          }
           if (element.nodeName.includes("exclusiveGateway")) {
 
             let observedPropositionTmp = getExtensionElementValue(sourceElement, "TXorProposition", "observedProposition");
@@ -229,6 +200,27 @@ function processElements(params) {
               myObjs[element.attributes.id.value].observedProposition = undefined; // This will be set when the labels are created            
             }
             myObjs[element.attributes.id.value].obs = 'split';
+
+            // Check if the output arrow has a value
+            for (let i = 0; i < element.children.length; i++) {
+              let child = element.children[i];
+              if (child.tagName.includes("outgoing")) {
+
+                let idArrow = child.innerHTML;
+                let tempElement = elementRegistry.get(idArrow);
+                let isTrueBranchTmp = getExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch");
+
+                if (isTrueBranchTmp != undefined) {
+                  if (isTrueBranchTmp != '') {
+
+                    if (isTrueBranchTmp == true || isTrueBranchTmp == 'true')
+                      myObjs[element.attributes.id.value].obsTrueArrow = idArrow;
+                    else
+                      myObjs[element.attributes.id.value].obsFalseArrow = idArrow;
+                  }
+                }
+              }
+            }
           }
         }
         else {
@@ -237,38 +229,10 @@ function processElements(params) {
           return;
         }
       }
-      else { // Set it
-        // If 2 inputs and 1 output, join
-        if (nIncoming == 2 || nOutgoing == 1) {
-          myObjs[element.attributes.id.value].obs = 'join';
-        }
-        // If 1 input and 2 outputs, split
-        else if (nIncoming == 1 || nOutgoing == 2) {
-          myObjs[element.attributes.id.value].obs = 'split';
-
-          if (element.nodeName.includes("exclusiveGateway")) {
-
-            let observedPropositionTmp = getExtensionElementValue(sourceElement, "TXorProposition", "observedProposition");
-
-            if (observedPropositionTmp != undefined) {
-              myObjs[element.attributes.id.value].observedProposition = observedPropositionTmp.trim().charAt(0);
-              // Check and remove from array of possible letters 
-              const index = myObjs['nodeObservation'].indexOf(myObjs[element.attributes.id.value].observedProposition);
-              if (index > -1) {
-                myObjs['nodeObservation'].splice(index, 1);
-              }
-              countObjs.nObservedProposition += 1;
-            }
-            else {
-              myObjs[element.attributes.id.value].observedProposition = undefined; // This will be set when the labes are created            
-            }
-          }
-        }
-        else {
-          myLogObj.errors += '\n' + element.nodeName + '(' + element.attributes.id.value + ')' + ' invalid number of incoming/outcoming arrows \n';
-          countObjs.elementsWithError += 1;
-          return;
-        }
+      else {
+        myLogObj.errors += '\n' + element.nodeName + '(' + element.attributes.id.value + ')' + ' invalid number of incoming/outcoming arrows \n';
+        countObjs.elementsWithError += 1;
+        return;
       }
     }
   }
@@ -289,13 +253,11 @@ function processStartEndElements(params) {
     myObjs        // Dictionary to match bpmnId:cstnId
   } = params;
 
-  let nodeLabel = '', nodeType = '', nodeNumber = '';
+  let  nodeType = '', nodeNumber = '';
 
   if (element.nodeName.includes("startEvent")) {
-    nodeLabel += 'Z';
     nodeType = 'START';
     if (countObjs.startEventsTotal > 1) {
-      nodeLabel += countObjs.startEvents;
       nodeNumber = String(countObjs.startEvents);
       countObjs.startEvents += 1;
     }
@@ -307,10 +269,8 @@ function processStartEndElements(params) {
     }
   }
   else if (element.nodeName.includes("endEvent")) {
-    nodeLabel += 'Ω';
     nodeType = 'END';
     if (countObjs.endEventsTotal > 1) {
-      nodeLabel += countObjs.endEvents;
       nodeNumber = String(countObjs.endEvents);
       countObjs.endEvents += 1;
     }
@@ -348,12 +308,24 @@ function processSequenceFlow(params) {
   let elementRegistry = window.bpmnjs.get('elementRegistry');
   let modeling = window.bpmnjs.get('modeling');
 
-  //Get cstnuId of the connected nodes
+  // Get cstnuId of the connected nodes
   let source = element.attributes.sourceRef.value;
   let target = element.attributes.targetRef.value;
 
   let idArrow = element.attributes.id.value;
   let tempElement, isTrueBranchTmp;
+
+  if (source == undefined || target == undefined) {
+    myLogObj.errors += "\n Invalid edge " + idArrow + ", source  " + source + ' and target ' + target;
+    countObjs.elementsWithError += 1;
+    return;
+  }
+
+  if (myObjs[source] == undefined || myObjs[target] == undefined) {
+    myLogObj.errors += "\n Invalid edge " + idArrow + ", source  " + source + ' and target ' + target;
+    countObjs.elementsWithError += 1;
+    return;
+  }
 
   myObjs['arrows'][idArrow] = { id: idArrow, source: source, target: target };
   myObjs[source].outputs.push(idArrow);
@@ -369,16 +341,21 @@ function processSequenceFlow(params) {
         if (isTrueBranchTmp != '') {
           myObjs['arrows'][idArrow].isTrueBranch = isTrueBranchTmp;
 
-          if (myObjs['arrows'][idArrow].isTrueBranch == 'true')
+          if (isTrueBranchTmp == true || isTrueBranchTmp == 'true')
             myObjs[source].obsTrueArrow = idArrow;
           else
             myObjs[source].obsFalseArrow = idArrow;
-
         }
         else {
 
           let tempElement = elementRegistry.get(idArrow);
-          if (myObjs[source].obsTrueArrow == undefined) {
+          if (myObjs[source].obsTrueArrow == undefined && myObjs[source].obsFalseArrow == undefined) {
+            tempElement.businessObject.isTrueBranch = 'true';
+            setExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch", "true");
+            tempElement.businessObject.name = 'True';
+            myObjs[source].obsTrueArrow = idArrow;
+          }
+          else if (myObjs[source].obsTrueArrow == undefined) {
             tempElement.businessObject.isTrueBranch = 'true';
             setExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch", "true");
             tempElement.businessObject.name = 'True';
@@ -450,7 +427,7 @@ function processSequenceFlow(params) {
  * @param {Object} myObjs 
  */
 function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
-  let i = 0, j = 0;
+  let i = 0, j = 0, k = 0;
 
   for (i = 0; i < xmlDoc.children[0].children.length; i++) {
     let elementP = xmlDoc.children[0].children[i];
@@ -458,7 +435,7 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
       for (j = 0; j < elementP.children.length; j++) {
         let element = elementP.children[j];
         let params = { element, myLogObj, countObjs, myObjs };
-        let elementName = element.nodeName; //.toLowerCase(isInclude)           
+        let elementName = element.nodeName; // .toLowerCase(isInclude)           
         // ---------------- Tasks --------------- //     
 
         if (elementName.includes("task")) {
@@ -480,27 +457,58 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
         else if (elementName.includes("receiveTask")) {
           processElements(params);
         }
-        else if (elementName.includes("subProcess")) {
-          processElements(params);
-        }
+        // else if (elementName.includes("subProcess")) {
+        //   processElements(params);
+        // }
         //  ---------------------- Events ---------------//
         else if (elementName.includes("intermediateCatchEvent")) {
           // Subtypes are
           //  bpmn:timerEventDefinition   // This is a bit different TODO
           //  bpmn:messageEventDefinition
           //  bpnm:singleEventDefinition
-          processElements(params);
+          for (k = 0; k < element.children.length; k++) {
+            let eventElement = element.children[k];
+
+            if (eventElement.nodeName.includes('messageEventDefinition') ||
+              eventElement.nodeName.includes('singleEventDefinition')) {
+              processElements(params);
+            }
+            else if (eventElement.nodeName.includes('timerEventDefinition')) {
+              processElements(params);
+            }
+            else if (eventElement.nodeName.includes('EventDefinition')) {
+              myLogObj.errors += "\n " + elementName + "-" + eventElement.nodeName + " not allowed in this version of the CSTNU plug-in \n "; // +element.attributes.id 
+              countObjs.elementsWithError++;
+            }
+          }
         }
-        else if (elementName.includes("boundaryEvent")) {
-          myLogObj.warnings += "\n" + elementName + " no processed";
-          countObjs.elementsWithWarning++;
+        else if (elementName.includes("intermediateThrowEvent")) {
+          // Subtypes are
+          //  bpmn:messageEventDefinition
+          //  bpnm:singleEventDefinition
+          for (k = 0; k < element.children.length; k++) {
+            let eventElement = element.children[k];
+
+            if (eventElement.nodeName.includes('messageEventDefinition') ||
+              eventElement.nodeName.includes('singleEventDefinition')) {
+              processElements(params);
+            }
+            else if (eventElement.nodeName.includes('EventDefinition')) {
+              myLogObj.errors += "\n " + elementName + "-" + eventElement.nodeName + " not allowed in this version of the CSTNU plug-in \n "; // +element.attributes.id 
+              countObjs.elementsWithError++;
+            }
+          }
         }
+        // else if (elementName.includes("boundaryEvent")) {
+        //   myLogObj.warnings += "\n" + elementName + " no processed";
+        //   countObjs.elementsWithWarning++;
+        // }
         else if (elementName.includes("startEvent")) {
-          //Need to know how many to decide Z or Z_i
+          // Need to know how many to decide Z or Z_i
           countObjs.startEventsTotal += 1;
         }
         else if (elementName.includes("endEvent")) {
-          //Need to know how many to decide Omega or Omega_i
+          // Need to know how many to decide Omega or Omega_i
           countObjs.endEventsTotal += 1;
         }
         // ---------------------------- SequenceFlow -------------------------//
@@ -517,10 +525,23 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
         // else if(elementName.includes( "eventBasedGateway")){
         //   processElements(params);
         // }         
-        // Non considerated    
-        else {
+        // Elements allowed in the models but not considered in the translation
+        else if (elementName.includes("association") ||
+          elementName.includes("Pool") ||
+          elementName.includes("laneSet") ||
+          elementName.includes("dataObject") ||
+          elementName.includes("dataObjectReference") ||
+          elementName.includes("dataStoreReference") ||
+          elementName.includes("textAnnotation") ||
+          elementName.includes("eventBasedGateway")
+        ) {
           myLogObj.warnings += "\n" + elementName + " no processed";
           countObjs.elementsWithWarning++;
+        }
+        // Non considerated    
+        else {          
+          myLogObj.errors += "\n " + elementName + " " + " not allowed in this version of the CSTNU plug-in \n "; // +element.attributes.id 
+          countObjs.elementsWithError++;
         }
       }
     }
@@ -556,8 +577,24 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
         // ---------------------------- SequenceFlow -------------------------//
         if (elementName.includes("sequenceFlow")) {
           processSequenceFlow(params);
-        }
+        }  
+      }
+    }
+  }
 
+
+  for (i = 0; i < xmlDoc.children[0].children.length; i++) {
+    let elementP = xmlDoc.children[0].children[i];
+    if (elementP.nodeName.includes("collaboration")) {
+
+      for (j = 0; j < elementP.children.length; j++) {
+        let element = elementP.children[j];
+        let elementName = element.nodeName;
+        // ---------------------------- MessageFlow -------------------------//
+        if (elementName.includes("messageFlow")) {
+          myLogObj.errors += "\n" + elementName + " not allowed in this version of the CSTNU plug-in";
+          countObjs.elementsWithError++;
+        }
       }
     }
   }
@@ -604,7 +641,6 @@ function setExtensionElementValue(element, typeName, property, value) {
       tempConElement.duration[property] = value;
     else
       tempConElement[property] = value;
-
 
     modeling.updateProperties(element, {
       extensionElements

@@ -63,17 +63,7 @@ PaletteProvider.prototype.getPaletteEntries = function (element) {
     create.start(event, elementFactory.createParticipantShape(collapsed));
   }
 
-  assign(actions, {
-    // 'custom-triangle': createAction(
-    //   'custom:triangle', 'custom', 'icon-custom-triangle'
-    // ),
-    // 'custom-circle': createAction(
-    //   'custom:circle', 'custom', 'icon-custom-circle'
-    // ),
-    // 'custom-separator': {
-    //   group: 'custom',
-    //   separator: true
-    // },
+  assign(actions, {    
     'lasso-tool': {
       group: 'tools',
       className: 'bpmn-icon-lasso-tool',
@@ -102,7 +92,8 @@ PaletteProvider.prototype.getPaletteEntries = function (element) {
       'bpmn:StartEvent', 'event', 'bpmn-icon-start-event-none'
     ),
     'create.intermediate-event': createAction(
-      'bpmn:IntermediateThrowEvent', 'event', 'bpmn-icon-intermediate-event-none'
+      'bpmn:IntermediateThrowEvent', 'event', 'bpmn-icon-intermediate-event-none',
+       'Create Intermediate/Boundary Event'
     ),
     'create.end-event': createAction(
       'bpmn:EndEvent', 'event', 'bpmn-icon-end-event-none'
@@ -116,7 +107,13 @@ PaletteProvider.prototype.getPaletteEntries = function (element) {
     // 'create.subprocess-expanded': createAction(
     //   'bpmn:SubProcess', 'activity', 'bpmn-icon-subprocess-expanded', 'Create expanded SubProcess',
     //   { isExpanded: true }
-    // ),
+    // ),    
+   'create.data-object': createAction(
+    'bpmn:DataObjectReference', 'data-object', 'bpmn-icon-data-object'
+  ),
+  'create.data-store': createAction(
+    'bpmn:DataStoreReference', 'data-store', 'bpmn-icon-data-store'
+  ),
     'create.participant-expanded': {
       group: 'collaboration',
       className: 'bpmn-icon-participant',

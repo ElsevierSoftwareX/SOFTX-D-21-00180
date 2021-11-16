@@ -59,7 +59,6 @@ const moduleInfo = {
 
 export default { moduleInfo };
 
-
 function removeNotesUpdatedError() {
 
     const eventBus = window.bpmnjs.get('eventBus');
@@ -111,10 +110,8 @@ function setCSTNULabels(bpmnXml, customElements) {
 
         divModalContent.innerText = myLogObj.errors;
         if (countObjs.elementsWithWarning > 0)
-            divModalContent.innerText += '\n' + myLogObj.warnings;
-
+            divModalContent.innerText += '\n\n' + myLogObj.warnings;
     }
-
 }
 
 function evaluateCSTNU(bpmnXml, customElements) {
@@ -128,7 +125,6 @@ function downloadCSTNU(bpmnXml, customElements) {
 function allowCloseModal(allow) {
     let modal = document.getElementById("divModalMessages");
     let span = document.getElementsByClassName("close")[0];
-
 
     if (allow) {
         // When the user clicks on <span> (x), close the modal
@@ -151,9 +147,7 @@ function allowCloseModal(allow) {
     }
 }
 
-
 function showModalExportCSTNU(bpmnXml, customElements, action) {
-
 
     // Get the modal
     let modal = document.getElementById("divModalMessages");
@@ -174,7 +168,6 @@ function showModalExportCSTNU(bpmnXml, customElements, action) {
     let myLogObj = tmpObj.myLogObj;
     let countObjs = tmpObj.countObjs;
     let myObjs = tmpObj.myObjs;
-
 
     if (countObjs.elementsWithError > 0) {
         // In case we want to allow to process/download it with errors
@@ -206,7 +199,7 @@ function showModalExportCSTNU(bpmnXml, customElements, action) {
 
         divModalContent.innerText = myLogObj.errors;
         if (countObjs.elementsWithWarning > 0)
-            divModalContent.innerText += '\n' + myLogObj.warnings;
+            divModalContent.innerText += '\n\n' + myLogObj.warnings;
     }
     else {
 
@@ -229,9 +222,7 @@ function showModalExportCSTNU(bpmnXml, customElements, action) {
             }
             modal.style.display = "none";
         }
-
     }
-
 }
 
 function sendCSTNUtoEvaluate(cstnuXml, myObjs) {
@@ -250,7 +241,6 @@ function sendCSTNUtoEvaluate(cstnuXml, myObjs) {
 
     divModalContent.innerText = "Start checking ... ";
     allowCloseModal(false);
-
 
     removeNotesUpdatedError();
 
@@ -273,7 +263,6 @@ function sendCSTNUtoEvaluate(cstnuXml, myObjs) {
 
             if (jsonRes.status === "error") {
                 divModalContent.innerText = "Error while processing the evaluation \n\n" + jsonRes.error;
-
             }
             else {
 
@@ -312,36 +301,30 @@ function sendCSTNUtoEvaluate(cstnuXml, myObjs) {
                     divModalContent.innerText = "The given network is NOT dynamically controllable.";
 
                     if (currentObj) {
-
-                        divModalContent.innerText += "\nNegative loop in node: " + strNodeId + " (" + currentObj.id + ").";
+                        divModalContent.innerText += "\nFound a constraint violation on node " + strNodeId + " (" + currentObj.id + "): its temporal constraint cannot be satisfied.";
                         window.elementsError.push(currentObj.id);
                         let tempElement = window.bpmnjs.get('elementRegistry').get(currentObj.id);
                         eventBus.fire('element.changed', { element: tempElement });
-
                     }
                     else {
-                        divModalContent.innerText += "\nNegative loop in node: " + strNodeId + ".";
+                        divModalContent.innerText += "\nFound a constraint violation on node " + strNodeId + ": its temporal constraint cannot be satisfied.";
                     }
-
                 }
                 else {
                     divModalContent.innerText = "Error while processing the evaluation parameter 'consistency' not found.";
                 }
             }
-
         }
         else { // If the connection or response is NOT OK 
 
             if (http.readyState == 4 && http.status != 200) {
                 divModalContent.innerText = "Error connecting to the server, status " + http.status + " " + http.statusText;
                 allowCloseModal(true);
-
             }
         }
     };
 
     http.send(cstnuXml);
-
 }
 
 

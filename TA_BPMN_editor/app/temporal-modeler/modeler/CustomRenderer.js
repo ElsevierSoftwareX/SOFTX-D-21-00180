@@ -27,8 +27,9 @@ import {
   classes as svgClasses
 } from 'tiny-svg';
 
-var COLOR_GREEN = '#52B415',
+var COLOR_GREEN_TRIANG = '#52B415',
   COLOR_RED = '#cc0000',
+  COLOR_GREEN = '#00cc00',
   COLOR_YELLOW = '#ffc800';
 
 import Ids from 'ids';
@@ -37,7 +38,6 @@ var RENDERER_IDS = new Ids();
 
 const HIGH_PRIORITY = 1500,
   TASK_BORDER_RADIUS = 2;
-
 
 /**
  * A renderer that knows how to render custom elements.
@@ -53,7 +53,6 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
   this.textRenderer = textRenderer;
   this.eventBus = eventBus;
 
-
   this.drawTriangle = function (p, side) {
     var halfSide = side / 2,
       points,
@@ -62,9 +61,9 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
     points = [halfSide, 0, side, side, 0, side];
 
     attrs = computeStyle(attrs, {
-      stroke: COLOR_GREEN,
+      stroke: COLOR_GREEN_TRIANG,
       strokeWidth: 2,
-      fill: COLOR_GREEN
+      fill: COLOR_GREEN_TRIANG
     });
 
     var polygon = svgCreate('polygon');
@@ -184,7 +183,6 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
     markers[id] = marker;
   }
 
-
   function colorEscape(str) {
     return str.replace(/[()\s,#]+/g, '_');
   }
@@ -223,25 +221,24 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
     let minD = "";
     let maxD = "";
 
-
     if (element.businessObject.minDuration != undefined)
       minD = element.businessObject.minDuration;
     if (element.businessObject.maxDuration != undefined)
       maxD = element.businessObject.maxDuration;
 
-    let colorFrame = "#00cc00";
+    let colorFrame = COLOR_GREEN;
 
-    // if (minD <= 0) colorFrame = "#cc0000";
+    // if (minD <= 0) colorFrame = COLOR_RED;
     if ((minD != '' && !Number.isInteger(parseFloat(minD))) ||
       (maxD != '' && !Number.isInteger(parseFloat(maxD))))
-      colorFrame = "#cc0000";
+      colorFrame = COLOR_RED;
 
     minD = Number(minD);
     maxD = (maxD != "" ? maxD : Infinity);
-    if (maxD <= minD) colorFrame = "#cc0000";
+    if (maxD <= minD) colorFrame = COLOR_RED;
 
     var attrs = computeStyle(attrs, {
-      stroke: colorFrame, //COLOR_GREEN,
+      stroke: colorFrame,
       strokeWidth: 2,
       strokeDasharray: '20,10,5,5,5,10',
       strokeLinecap: 'square',
@@ -250,7 +247,6 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
     });
 
     let theElement = svgAppend(p, createLine(element.waypoints, attrs));
-
 
     // // TODO: Add a label with minD-maxD
     // // The next code adds the text, 
@@ -288,7 +284,6 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
     // });
 
     return theElement;
-
   };
 
   this.getCustomConnectionPath = function (connection) {
@@ -314,7 +309,6 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
 inherits(CustomRenderer, BaseRenderer);
 
 CustomRenderer.$inject = ['eventBus', 'styles', "bpmnRenderer", "textRenderer"];
-
 
 CustomRenderer.prototype.canRender = function (element) {
   // return /^custom:/.test(element.type);
@@ -348,13 +342,28 @@ CustomRenderer.prototype.drawShape = function (p, element) {
       "bpmn:UserTask",
       "bpmn:ServiceTask",
       "bpmn:ReceiveTask",
-      "bpmn:SubProcess",
-      "bpmn:IntermediateCatchEvent"
+      "bpmn:SubProcess"
     ])
   ) {
 
-    // svgRemove(shape);
     drawShape_contingent(p, element, this.textRenderer, true, this.eventBus);
+  }
+  if (isAny(element, ["bpmn:IntermediateCatchEvent"])) {
+    let strOptions = ['bpmn:MessageEventDefinition', 'bpmn:SignalEventDefinition'];
+    if (element.businessObject.eventDefinitions && element.businessObject.eventDefinitions.length > 0) {
+      if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
+        drawShape_contingent(p, element, this.textRenderer, true, this.eventBus);
+      }
+    }
+  }
+
+  if (isAny(element, ["bpmn:IntermediateCatchEvent"])) {
+    let strOptions = ['bpmn:TimerEventDefinition'];
+    if (element.businessObject.eventDefinitions && element.businessObject.eventDefinitions.length > 0) {
+      if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
+        drawShape_contingent(p, element, this.textRenderer, false, this.eventBus);
+      }
+    }
   }
 
   if (
@@ -366,12 +375,19 @@ CustomRenderer.prototype.drawShape = function (p, element) {
       "bpmn:EventBasedGateway"
     ])
   ) {
-    // svgRemove(shape);
     drawShape_contingent(p, element, this.textRenderer, false, this.eventBus);
   }
 
-  return shape;
+  if (isAny(element, ["bpmn:IntermediateThrowEvent"])) {
+    let strOptions = ['bpmn:MessageEventDefinition', 'bpmn:SignalEventDefinition'];
+    if (element.businessObject.eventDefinitions && element.businessObject.eventDefinitions.length > 0) {
+      if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
+        drawShape_contingent(p, element, this.textRenderer, false, this.eventBus);
+      }
+    }
+  }
 
+  return shape;
 };
 
 CustomRenderer.prototype.getShapePath = function (shape) {
@@ -410,20 +426,21 @@ CustomRenderer.prototype.drawConnection = function (p, element) {
     if (maxD === "") maxD = Infinity;
 
     let colorFrame;
-    if (minD < 0) colorFrame = "#cc0000";
-    if (maxD < minD) colorFrame = "#cc0000";
+    if (minD < 0) colorFrame = COLOR_RED;
+    if (maxD < minD) colorFrame = COLOR_RED;
     if ((minD != 0 && !Number.isInteger(parseFloat(minD))) ||
-      (maxD != Infinity && !Number.isInteger(parseFloat(maxD)))) colorFrame = "#cc0000";
+      (maxD != Infinity && !Number.isInteger(parseFloat(maxD)))) colorFrame = COLOR_RED;
 
     if (colorFrame != undefined) {
       shape.style.stroke = colorFrame;
       // shape.style.strokeWidth = "4px";
     }
 
+    // TODO check connected elements to update them, like Gateways
+
     return shape;
   }
 };
-
 
 CustomRenderer.prototype.getConnectionPath = function (connection) {
 
@@ -433,7 +450,6 @@ CustomRenderer.prototype.getConnectionPath = function (connection) {
     return this.getCustomConnectionPath(connection);
   }
 };
-
 
 // from https://github.com/bpmn-io/bpmn-js/blob/master/lib/draw/BpmnRenderer.js
 function drawRect(parentNode, width, height, borderRadius, strokeColor) {
@@ -473,7 +489,7 @@ function drawShape_contingent(
   if (getExtensionElementValue(element, 'TDuration', 'maxDuration') != undefined)
     maxD = getExtensionElementValue(element, 'TDuration', 'maxDuration');
 
-  let colorFrame = "#00cc00";
+  let colorFrame = COLOR_GREEN;
   if (isContingent) colorFrame = "#0000cc";
 
   if (window.elementsUpdated.indexOf(element.businessObject.id) >= 0)
@@ -481,55 +497,48 @@ function drawShape_contingent(
 
   if (window.elementsError.indexOf(element.businessObject.id) >= 0) colorFrame = "#cc00cc";
 
-  if (minD === "" || maxD === "") colorFrame = "#cc0000";
-  if (minD < 0) colorFrame = "#cc0000";
-  if (!Number.isInteger(parseFloat(minD)) || !Number.isInteger(parseFloat(maxD))) colorFrame = "#cc0000";
+  // if (isAny(element, ["bpmn:IntermediateCatchEvent"])) {
+  //   let strOptions = ['bpmn:TimerEventDefinition']; // TimerEventDefinition does not have 
+  //   if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
+  //     drawShape_contingent(p, element, this.textRenderer, true, this.eventBus);
+  //   }
+  // }
 
-  minD = Number(minD);
-  maxD = Number(maxD);
+  if (minD === "" || maxD === "") colorFrame = COLOR_RED;
+  if (minD < 0) colorFrame = COLOR_RED;
+  if (!Number.isInteger(parseFloat(minD)) || !Number.isInteger(parseFloat(maxD))) colorFrame = COLOR_RED;
+
+  let minD_num = Number(minD);
+  let maxD_num = Number(maxD);
 
   if (isContingent) {
-    if (minD <= 0) colorFrame = "#cc0000";
-    if (maxD <= minD) colorFrame = "#cc0000";
+    if (minD_num <= 0) colorFrame = COLOR_RED;
+    if (maxD_num <= minD_num) colorFrame = COLOR_RED;
   }
   else
-    if (maxD < minD) colorFrame = "#cc0000";
-
-  if (isAny(element, ["bpmn:IntermediateCatchEvent", "bpmn:TimerEventDefinition"])) {
-
-  }
+    if (maxD_num < minD_num) colorFrame = COLOR_RED;
+  
   if (isAny(element, ["bpmn:ExclusiveGateway", "bpmn:ParallelGateway"])) {
-    //Check it has a type: split or join 
+    // Check it has a type: split or join 
     // let gatewaySplitJoin = getExtensionElementValue(element, "TGatewaySplitJoin", "gatewaySplitJoin");
     let gatewaySplitJoin = window.bpmnjs.checkSplitJoin(element);
 
     if (gatewaySplitJoin === undefined) {
-      colorFrame = "#cc0000";
+      colorFrame = COLOR_RED;
     }
     else if (gatewaySplitJoin === '') {
-      colorFrame = "#cc0000";
+      colorFrame = COLOR_RED;
     }
     // if split, it should have 1 input and 2 outputs
     else if (gatewaySplitJoin === 'split') {
-      if (element.businessObject.incoming)
-        if (element.businessObject.incoming.length != 1) colorFrame = "#cc0000";
-      if (element.businessObject.outgoing)
-        if (element.businessObject.outgoing.length != 2) colorFrame = "#cc0000";
-      if (element.businessObject.observedProposition)
-        if (element.businessObject.observedProposition.length > 1) colorFrame = "#cc0000";
+      if (isAny(element, ["bpmn:ExclusiveGateway"])) {
+        let observedPropositionTmp = getExtensionElementValue(element, "TXorProposition", "observedProposition");
 
-
+        if (observedPropositionTmp)
+          if (observedPropositionTmp.length > 1) colorFrame = COLOR_RED;
+      }
     }
-    // if join, it should have 2 input and 1 outputs
-    else if (gatewaySplitJoin === 'join') {
-      if (element.businessObject.incoming)
-        if (element.businessObject.incoming.length != 2) colorFrame = "#cc0000";
-      if (element.businessObject.outgoing)
-        if (element.businessObject.outgoing.length != 1) colorFrame = "#cc0000";
-    }
-
     eventBus.fire("tempcon.changed", { element: element });
-
   }
 
   let temWidth = element.width - 20;
@@ -551,7 +560,7 @@ function drawShape_contingent(
   if (is(element, "bpmn:Gateway")) {
     temWidth = -25;
   }
-  if (is(element, "bpmn:IntermediateCatchEvent")) {
+  if (is(element, "bpmn:IntermediateCatchEvent") || is(element, "bpmn:IntermediateThrowEvent")) {
     temWidth = -40;
   }
 
@@ -559,8 +568,6 @@ function drawShape_contingent(
     transform: "translate(" + temWidth + ", -7)",
   });
 }
-
-
 
 function getExtensionElementValue(element, typeName, property) {
   return window.bpmnjs.getExtensionElementValue(element, typeName, property);

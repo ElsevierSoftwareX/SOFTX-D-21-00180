@@ -35,7 +35,7 @@ export default function (group, element, translate) {
     }));
   }
 
-  if (is(element, 'bpmn:ParallelGateway')) { //||
+  if (is(element, 'bpmn:ParallelGateway')) { 
 
     group.entries.push(entryFactory.selectBox(translate, {
       id: 'gatewaySplitJoin',
