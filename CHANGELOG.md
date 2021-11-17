@@ -2,6 +2,12 @@
 
 ## TimeAwareBPMN-js
 
+v1.2.1 - 20211117 
+
+- Remove IntermediateCatchEvent-timerEventDefinition elements
+- Add simple IntermediateThrowEvent (without eventDefinitions)
+- Fix change color in frames when name of the element has '_'
+
 v1.2.0 - 20211116 
 
 - Add DataObjectReference to the palette
