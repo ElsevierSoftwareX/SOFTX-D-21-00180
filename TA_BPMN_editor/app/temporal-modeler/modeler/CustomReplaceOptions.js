@@ -53,15 +53,15 @@ export var INTERMEDIATE_EVENT = [
             eventDefinitionType: 'bpmn:MessageEventDefinition'
         }
     },
-    {
-        label: 'Timer Intermediate Catch Event',
-        actionName: 'replace-with-timer-intermediate-catch',
-        className: 'bpmn-icon-intermediate-event-catch-timer',
-        target: {
-            type: 'bpmn:IntermediateCatchEvent',
-            eventDefinitionType: 'bpmn:TimerEventDefinition'
-        }
-    },
+    // {
+    //     label: 'Timer Intermediate Catch Event',
+    //     actionName: 'replace-with-timer-intermediate-catch',
+    //     className: 'bpmn-icon-intermediate-event-catch-timer',
+    //     target: {
+    //         type: 'bpmn:IntermediateCatchEvent',
+    //         eventDefinitionType: 'bpmn:TimerEventDefinition'
+    //     }
+    // },
     {
         label: 'Signal Intermediate Catch Event',
         actionName: 'replace-with-signal-intermediate-catch',

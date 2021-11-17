@@ -357,14 +357,14 @@ CustomRenderer.prototype.drawShape = function (p, element) {
     }
   }
 
-  if (isAny(element, ["bpmn:IntermediateCatchEvent"])) {
-    let strOptions = ['bpmn:TimerEventDefinition'];
-    if (element.businessObject.eventDefinitions && element.businessObject.eventDefinitions.length > 0) {
-      if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
-        drawShape_contingent(p, element, this.textRenderer, false, this.eventBus);
-      }
-    }
-  }
+  // if (isAny(element, ["bpmn:IntermediateCatchEvent"])) {
+  //   let strOptions = ['bpmn:TimerEventDefinition'];
+  //   if (element.businessObject.eventDefinitions && element.businessObject.eventDefinitions.length > 0) {
+  //     if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
+  //       drawShape_contingent(p, element, this.textRenderer, false, this.eventBus);
+  //     }
+  //   }
+  // }
 
   if (
     isAny(element, [

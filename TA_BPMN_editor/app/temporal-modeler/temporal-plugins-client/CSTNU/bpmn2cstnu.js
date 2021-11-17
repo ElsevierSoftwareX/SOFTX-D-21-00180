@@ -1072,9 +1072,9 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
               eventElement.nodeName.includes('singleEventDefinition')) {
               setTwoNodesToEdges(paramsContingent);
             }
-            else if(eventElement.nodeName.includes('timerEventDefinition')){
-                setTwoNodesToEdges(paramsNormal);
-            }
+            // else if(eventElement.nodeName.includes('timerEventDefinition')){ // TODO
+            //     setTwoNodesToEdges(paramsNormal);
+            // }
             else if(eventElement.nodeName.includes('EventDefinition')){
               myLogObj.errors += "\n " + elementName + "-" + eventElement.nodeName + " not allowed in this version of the CSTNU plug-in \n "; // +element.attributes.id 
               countObjs.elementsWithError++;

@@ -482,14 +482,14 @@ export default function (group, element, bpmnFactory, translate) {
         set_group_maxDuration(group, validateMaxDuration_contingent);
         set_group_propositionalLabel(group);
       }
-      // bpmn:TimerEventDefinition  it is different, minDuration is the same as maxDuration
-      strOptions = ['bpmn:TimerEventDefinition'];
-      // TODO check bpmn:TimerEventDefinition  it is different                      
-      if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
-        // set_group_minDuration(group, validateMinDuration_contingent); // This is updated on CustomEvents
-        set_group_maxDuration(group, validateMaxDuration_noContingent);
-        set_group_propositionalLabel(group);
-      }
+      // // bpmn:TimerEventDefinition  it is different, minDuration is the same as maxDuration
+      // strOptions = ['bpmn:TimerEventDefinition'];
+      // // TODO check bpmn:TimerEventDefinition  it is different                      
+      // if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
+      //   // set_group_minDuration(group, validateMinDuration_contingent); // This is updated on CustomEvents
+      //   set_group_maxDuration(group, validateMaxDuration_noContingent);
+      //   set_group_propositionalLabel(group);
+      // }
     }
   }
   if (is(element, 'bpmn:IntermediateThrowEvent')) {

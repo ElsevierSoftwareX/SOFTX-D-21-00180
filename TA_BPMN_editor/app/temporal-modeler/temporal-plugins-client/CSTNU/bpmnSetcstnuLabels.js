@@ -473,9 +473,9 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
               eventElement.nodeName.includes('singleEventDefinition')) {
               processElements(params);
             }
-            else if (eventElement.nodeName.includes('timerEventDefinition')) {
-              processElements(params);
-            }
+            // else if (eventElement.nodeName.includes('timerEventDefinition')) { // TODO
+            //   processElements(params);
+            // }
             else if (eventElement.nodeName.includes('EventDefinition')) {
               myLogObj.errors += "\n " + elementName + "-" + eventElement.nodeName + " not allowed in this version of the CSTNU plug-in \n "; // +element.attributes.id 
               countObjs.elementsWithError++;
