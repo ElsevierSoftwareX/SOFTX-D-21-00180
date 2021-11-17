@@ -45,6 +45,14 @@ export var START_EVENT_SUB_PROCESS = [
 export var INTERMEDIATE_EVENT = [
 
     {
+        label: 'Intermediate Throw Event',
+        actionName: 'replace-with-none-intermediate-throw',
+        className: 'bpmn-icon-intermediate-event-none',
+        target: {
+            type: 'bpmn:IntermediateThrowEvent'
+        }
+    },
+    {
         label: 'Message Intermediate Catch Event',
         actionName: 'replace-with-message-intermediate-catch',
         className: 'bpmn-icon-intermediate-event-catch-message',

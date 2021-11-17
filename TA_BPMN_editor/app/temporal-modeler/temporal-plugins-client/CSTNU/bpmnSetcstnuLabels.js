@@ -253,7 +253,7 @@ function processStartEndElements(params) {
     myObjs        // Dictionary to match bpmnId:cstnId
   } = params;
 
-  let  nodeType = '', nodeNumber = '';
+  let nodeType = '', nodeNumber = '';
 
   if (element.nodeName.includes("startEvent")) {
     nodeType = 'START';
@@ -465,12 +465,12 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
           // Subtypes are
           //  bpmn:timerEventDefinition   // This is a bit different TODO
           //  bpmn:messageEventDefinition
-          //  bpnm:singleEventDefinition
+          //  bpnm:signalEventDefinition
           for (k = 0; k < element.children.length; k++) {
             let eventElement = element.children[k];
 
             if (eventElement.nodeName.includes('messageEventDefinition') ||
-              eventElement.nodeName.includes('singleEventDefinition')) {
+              eventElement.nodeName.includes('signalEventDefinition')) {
               processElements(params);
             }
             // else if (eventElement.nodeName.includes('timerEventDefinition')) { // TODO
@@ -483,21 +483,28 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
           }
         }
         else if (elementName.includes("intermediateThrowEvent")) {
+          // no-subtype
           // Subtypes are
           //  bpmn:messageEventDefinition
-          //  bpnm:singleEventDefinition
+          //  bpnm:signalEventDefinition
           for (k = 0; k < element.children.length; k++) {
             let eventElement = element.children[k];
 
             if (eventElement.nodeName.includes('messageEventDefinition') ||
-              eventElement.nodeName.includes('singleEventDefinition')) {
+              eventElement.nodeName.includes('signalEventDefinition')) {
               processElements(params);
             }
             else if (eventElement.nodeName.includes('EventDefinition')) {
               myLogObj.errors += "\n " + elementName + "-" + eventElement.nodeName + " not allowed in this version of the CSTNU plug-in \n "; // +element.attributes.id 
               countObjs.elementsWithError++;
             }
+            else {
+              // No subtype -- none
+              processElements(params);
+
+            }
           }
+
         }
         // else if (elementName.includes("boundaryEvent")) {
         //   myLogObj.warnings += "\n" + elementName + " no processed";
@@ -539,7 +546,7 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
           countObjs.elementsWithWarning++;
         }
         // Non considerated    
-        else {          
+        else {
           myLogObj.errors += "\n " + elementName + " " + " not allowed in this version of the CSTNU plug-in \n "; // +element.attributes.id 
           countObjs.elementsWithError++;
         }
@@ -577,7 +584,7 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
         // ---------------------------- SequenceFlow -------------------------//
         if (elementName.includes("sequenceFlow")) {
           processSequenceFlow(params);
-        }  
+        }
       }
     }
   }

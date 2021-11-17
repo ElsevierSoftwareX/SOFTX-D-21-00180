@@ -385,6 +385,10 @@ CustomRenderer.prototype.drawShape = function (p, element) {
         drawShape_contingent(p, element, this.textRenderer, false, this.eventBus);
       }
     }
+    if(element.businessObject.eventDefinitions === undefined){
+      drawShape_contingent(p, element, this.textRenderer, false, this.eventBus);
+    }
+
   }
 
   return shape;

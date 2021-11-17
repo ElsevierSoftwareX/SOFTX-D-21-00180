@@ -45,7 +45,7 @@ export default function CustomContextPadProvider(injector, connect, translate, c
 
     var actions = cached(element);
     delete actions["append.append-task"];
-    delete actions["append.intermediate-event"];
+    // delete actions["append.intermediate-event"];
 
     var businessObject = element.businessObject;
     window.creatingRelativeConstraint = undefined;
@@ -139,20 +139,20 @@ export default function CustomContextPadProvider(injector, connect, translate, c
       });
     }
 
-    // To create a message intermediate cathc event from the context menu of the specified objects
-    if (isAny(businessObject, ['bpmn:Task', 'bpmn:Gateway', 'bpmn:IntermediateCatchEvent', 'bpmn:IntermediateThrowEvent', 'bpmn:StartEvent', 'bpmn:EndEvent']) && !element.labelTarget) {
-      assign(actions, {
-        'append.intermediate-event': {
-          group: 'model',
-          className: 'bpmn-icon-intermediate-event-catch-message',
-          title: translate('Append Intermediate/Boundary Event'),
-          action: {
-            click: appendIntermediateEvent,
-            dragstart: appendIntermediateEventStart
-          }
-        }
-      });
-    }
+    // // To create a message intermediate cathc event from the context menu of the specified objects
+    // if (isAny(businessObject, ['bpmn:Task', 'bpmn:Gateway', 'bpmn:IntermediateCatchEvent', 'bpmn:IntermediateThrowEvent', 'bpmn:StartEvent', 'bpmn:EndEvent']) && !element.labelTarget) {
+    //   assign(actions, {
+    //     'append.intermediate-event': {
+    //       group: 'model',
+    //       className: 'bpmn-icon-intermediate-event-catch-message',
+    //       title: translate('Append Intermediate/Boundary Event'),
+    //       action: {
+    //         click: appendIntermediateEvent,
+    //         dragstart: appendIntermediateEventStart
+    //       }
+    //     }
+    //   });
+    // }
 
     return actions;
   };

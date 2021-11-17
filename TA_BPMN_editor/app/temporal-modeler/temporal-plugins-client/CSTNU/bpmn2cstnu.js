@@ -77,7 +77,7 @@ export default function bpmn2cstnu(bpmn, customElements, fileName) {
   textMessage += '\n' + 'Warnings: ' + countObjs.elementsWithWarning;
   if (countObjs.elementsWithWarning > 0)
     divModalContent.innerText += '\n' + myLogObj.warnings;
-  
+
   return { xmlString, myLogObj, countObjs, myObjs, textMessage };
 }
 
@@ -1039,7 +1039,8 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
         let element = elementP.children[j];
         let paramsContingent = { elementType: 'TASK', element, graph, bpmnPlane, "edgeType": "contingent", myLogObj, countObjs, myObjs };
         let paramsNormal = { elementType: 'TASK', element, graph, bpmnPlane, "edgeType": "normal", myLogObj, countObjs, myObjs };
-        let elementName = element.nodeName; //.toLowerCase()           
+        let elementName = element.nodeName; //.toLowerCase()     
+
         // ---------------- Tasks --------------- //    
         if (elementName.includes("userTask")) {
           setTwoNodesToEdges(paramsContingent);
@@ -1060,44 +1061,48 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
         //   setTwoNodesToEdges(paramsContingent);
         // }
         //  ---------------------- Events ---------------//
-        else if (elementName.includes("intermediateCatchEvent") ) {
+        else if (elementName.includes("intermediateCatchEvent")) {
           // Subtypes are
           //  bpmn:timerEventDefinition   // This is a bit different TODO
           //  bpmn:messageEventDefinition
-          //  bpnm:singleEventDefinition
+          //  bpnm:signalEventDefinition
           for (k = 0; k < element.children.length; k++) {
             let eventElement = element.children[k];
 
             if (eventElement.nodeName.includes('messageEventDefinition') ||
-              eventElement.nodeName.includes('singleEventDefinition')) {
+              eventElement.nodeName.includes('signalEventDefinition')) {
               setTwoNodesToEdges(paramsContingent);
             }
             // else if(eventElement.nodeName.includes('timerEventDefinition')){ // TODO
             //     setTwoNodesToEdges(paramsNormal);
             // }
-            else if(eventElement.nodeName.includes('EventDefinition')){
+            else if (eventElement.nodeName.includes('EventDefinition')) {
               myLogObj.errors += "\n " + elementName + "-" + eventElement.nodeName + " not allowed in this version of the CSTNU plug-in \n "; // +element.attributes.id 
               countObjs.elementsWithError++;
             }
 
           }
         }
-        else if ( elementName.includes("intermediateThrowEvent")) {
+        else if (elementName.includes("intermediateThrowEvent")) {
+          // no-subtype
           // Subtypes are
           //  bpmn:messageEventDefinition
-          //  bpnm:singleEventDefinition
+          //  bpnm:signalEventDefinition
           for (k = 0; k < element.children.length; k++) {
             let eventElement = element.children[k];
 
             if (eventElement.nodeName.includes('messageEventDefinition') ||
-              eventElement.nodeName.includes('singleEventDefinition')) {
-                setTwoNodesToEdges(paramsNormal);
+              eventElement.nodeName.includes('signalEventDefinition')) {
+              setTwoNodesToEdges(paramsNormal);
             }
-            else if(eventElement.nodeName.includes('EventDefinition')){
+            else if (eventElement.nodeName.includes('EventDefinition')) {
               myLogObj.errors += "\n " + elementName + "-" + eventElement.nodeName + " not allowed in this version of the CSTNU plug-in \n "; // +element.attributes.id 
               countObjs.elementsWithError++;
             }
-
+            else {
+              // No subtype - none
+              setTwoNodesToEdges(paramsNormal);
+            }
           }
         }
         // else if (elementName.includes("boundaryEvent")) { // TODO

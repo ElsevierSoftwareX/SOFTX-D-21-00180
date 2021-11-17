@@ -213,9 +213,9 @@ var validateMaxDuration_relative = function (element, values, node) {
 
 
 /** Check observedProposition.length == 1 */
-var validate_observedProposition = function (element, values, node) {  
+var validate_observedProposition = function (element, values, node) {
   let val = values.observedProposition.length;
-  
+
   if (node.childElementCount > 0) {
     if (node.childNodes[2].className.includes("bpp-field-description")) {
       node.childNodes[1].style.border = '';
@@ -436,7 +436,7 @@ export default function (group, element, bpmnFactory, translate) {
       modelProperty: 'propositionalLabel'
     }));
   }
-  
+
   if (is(element, 'bpmn:SequenceFlow')) {
     group.entries.push(entryFactory.label({
       id: 'fromLabel',
@@ -472,7 +472,7 @@ export default function (group, element, bpmnFactory, translate) {
   }
 
   // ---------------------------- Events -------------------------
-  if (is(element, 'bpmn:IntermediateCatchEvent') ) {
+  if (is(element, 'bpmn:IntermediateCatchEvent')) {
     if (element.businessObject.eventDefinitions && element.businessObject.eventDefinitions.length > 0) {
       // For IntermediateCatchEvent
       let strOptions = ['bpmn:MessageEventDefinition', 'bpmn:SignalEventDefinition'];
@@ -493,7 +493,12 @@ export default function (group, element, bpmnFactory, translate) {
     }
   }
   if (is(element, 'bpmn:IntermediateThrowEvent')) {
-    if (element.businessObject.eventDefinitions && element.businessObject.eventDefinitions.length > 0) {
+    if (element.businessObject.eventDefinitions === undefined) {
+      set_group_minDuration(group, validateMinDuration_noContingent);
+      set_group_maxDuration(group, validateMaxDuration_noContingent);
+      set_group_propositionalLabel(group);
+    }
+    else if (element.businessObject.eventDefinitions && element.businessObject.eventDefinitions.length > 0) {
       // For IntermediateCatchEvent
       let strOptions = ['bpmn:MessageEventDefinition', 'bpmn:SignalEventDefinition'];
       // TODO Check if eventDefinitions can have more than 1 element     
@@ -537,7 +542,7 @@ export default function (group, element, bpmnFactory, translate) {
     set_group_propositionalLabel(group);
   }
 
-  if (is(element, 'bpmn:ParallelGateway')) { 
+  if (is(element, 'bpmn:ParallelGateway')) {
 
     set_group_minDuration(group, validateMinDuration_noContingent);
     set_group_maxDuration(group, validateMaxDuration_noContingent);
