@@ -285,9 +285,9 @@ function sendCSTNUtoEvaluate(cstnuXml, myObjs) {
                     //Extract information about the node with the negative loop 
                     let strNodeId = jsonEvaluation.negativeLoopNode.replace("❮", "").replace("❯", "");
                     let strNodeIdArg = strNodeId.split("_");
-                    let elementType = strNodeIdArg.slice(-3)[0], elementTypeNumber = strNodeIdArg.slice(-2)[0];
+                    let elementType = strNodeIdArg[1], elementTypeNumber = strNodeIdArg[2]; 
                     let currentObj;
-
+                    
                     let myKeys = Object.keys(myObjs);
                     for (let i = 0; i < myKeys.length; i++) {
                         currentObj = myObjs[myKeys[i]];
@@ -299,7 +299,7 @@ function sendCSTNUtoEvaluate(cstnuXml, myObjs) {
                         currentObj = undefined;
                     }
                     divModalContent.innerText = "The given network is NOT dynamically controllable.";
-
+                    
                     if (currentObj) {
                         divModalContent.innerText += "\nFound a constraint violation on node " + strNodeId + " (" + currentObj.id + "): its temporal constraint cannot be satisfied.";
                         window.elementsError.push(currentObj.id);
