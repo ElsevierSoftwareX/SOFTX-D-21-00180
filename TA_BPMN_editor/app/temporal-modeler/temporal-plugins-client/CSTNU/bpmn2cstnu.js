@@ -632,8 +632,8 @@ function createOneNode(params) {
     myObjs[element.attributes.id.value].nodeName = element.nodeName;
     if (element.attributes.name != undefined) myObjs[element.attributes.id.value].name = element.attributes.name.value.replace(/(\r\n|\n|\r)/gm, "") + ' ';
 
-    // Nodes
-    let id_node = elementType + "_" + elementTypeNumber + "_" + element.attributes.id.value;
+    // Nodes // The N_ is nedded to keep the structure like S_ E_
+    let id_node = "N_" + elementType + "_" + elementTypeNumber + "_" + element.attributes.id.value;
     myObjs[element.attributes.id.value].id_node = id_node;
     let node = graph.ele("node", { id: id_node }, "");
     node.ele("data", { key: "x" }, Number(x) + Number(elementTypeNumber));
@@ -679,18 +679,19 @@ function setTwoEdges_sequenceFlow(params) {
 
   if (myObjs[source] != undefined) {
     if (myObjs[source].elementType === 'START' || myObjs[source].elementType === 'END') {
-      sourceTaskId = myObjs[source].elementType + "_" + myObjs[source].elementTypeNumber + "_" + source;
+      // Start and End event elements generates one node, there is no S or E
+      sourceTaskId = myObjs[source].id_node;
     }
     else {
-      sourceTaskId = 'E_' + myObjs[source].elementType + "_" + myObjs[source].elementTypeNumber + "_" + source;
+      sourceTaskId = myObjs[source].id_e; // "E_" + myObjs[source].elementType + "_" + myObjs[source].elementTypeNumber + "_" + source;
     }
   }
   if (myObjs[target] != undefined) {
     if (myObjs[target].elementType === 'START' || myObjs[target].elementType === 'END') {
-      targetTaskId = myObjs[target].elementType + '_' + myObjs[target].elementTypeNumber + "_" + target;
+      targetTaskId = myObjs[target].id_node; // "N_" + myObjs[target].elementType + '_' + myObjs[target].elementTypeNumber + "_" + target;
     }
     else {
-      targetTaskId = 'S_' + myObjs[target].elementType + '_' + myObjs[target].elementTypeNumber + "_" + target;
+      targetTaskId = myObjs[target].id_s; // "S_" + myObjs[target].elementType + '_' + myObjs[target].elementTypeNumber + "_" + target;
     }
   }
 
