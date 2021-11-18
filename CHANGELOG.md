@@ -2,6 +2,10 @@
 
 ## TimeAwareBPMN-js
 
+v1.2.1 - 20211118
+
+-  Update naming of nodes START and END in CSTNU
+
 v1.2.1 - 20211117 
 
 - Remove IntermediateCatchEvent-timerEventDefinition elements
