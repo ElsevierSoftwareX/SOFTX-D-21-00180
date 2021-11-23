@@ -256,6 +256,16 @@ export var BOUNDARY_EVENT = [
             type: 'bpmn:BoundaryEvent',
             eventDefinitionType: 'bpmn:MessageEventDefinition'
         }
+    },
+    {
+        label: 'Message Boundary Event (non-interrupting)',
+        actionName: 'replace-with-non-interrupting-message-boundary',
+        className: 'bpmn-icon-intermediate-event-catch-non-interrupting-message',
+        target: {
+            type: 'bpmn:BoundaryEvent',
+            eventDefinitionType: 'bpmn:MessageEventDefinition',
+            cancelActivity: false
+        }
     }
 ];
 

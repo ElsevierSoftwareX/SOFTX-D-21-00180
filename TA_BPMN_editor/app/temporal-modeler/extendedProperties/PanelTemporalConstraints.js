@@ -211,6 +211,33 @@ var validateMaxDuration_relative = function (element, values, node) {
   return !isNaN(val) && Number(val) > 0;
 };
 
+/** Check maxDuration_boudary < maxDuration_attachedToRef */
+var validateMaxDuration_BoundaryEvent = function (element, values, node) {
+  let val = values.maxDuration;
+
+  if (node.childElementCount > 0) {
+    if (node.childNodes[2].className.includes("bpp-field-description")) {
+      node.childNodes[2].innerHTML = '&nbsp;';
+      node.childNodes[1].style.border = '';
+    }
+  }
+
+  let attachedTo = element.businessObject.attachedToRef;
+  if (attachedTo) {
+    let valMaxDuration_attached = getExtensionElementValue(attachedTo, 'TDuration', 'maxDuration');
+
+    
+    if (val === undefined || (isNaN(val) || Number(val) >= Number(valMaxDuration_attached)) || Number(val) < 0 || !Number.isInteger(parseFloat(val))) {
+      if (node.childElementCount > 0) {
+        if (node.childNodes[2].className.includes("bpp-field-description")) {
+          node.childNodes[2].innerText = 'Max duration should be a number >= 0 and smaller than max duration of the element to which it was attached.';
+          node.childNodes[1].style.border = '2px solid red';
+        }
+      }
+    }
+  }
+  return !isNaN(val) && Number(val) > 0;
+};
 
 /** Check observedProposition.length == 1 */
 var validate_observedProposition = function (element, values, node) {
@@ -505,6 +532,19 @@ export default function (group, element, bpmnFactory, translate) {
       if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
         set_group_minDuration(group, validateMinDuration_noContingent);
         set_group_maxDuration(group, validateMaxDuration_noContingent);
+        set_group_propositionalLabel(group);
+      }
+    }
+  }
+  if (is(element, 'bpmn:BoundaryEvent')) {
+    if (element.businessObject.eventDefinitions && element.businessObject.eventDefinitions.length > 0) {
+      // For IntermediateCatchEvent
+      let strOptions = ['bpmn:MessageEventDefinition'];
+      
+      // TODO Check if eventDefinitions can have more than 1 element     
+      if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
+        // set_group_minDuration(group, validateMinDuration_noContingent);
+        set_group_maxDuration(group, validateMaxDuration_BoundaryEvent);
         set_group_propositionalLabel(group);
       }
     }

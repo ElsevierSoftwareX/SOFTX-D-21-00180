@@ -40,6 +40,28 @@ export default function CustomEvents(eventBus, commandStack, elementRegistry) {
     //     }
     //   }
     // }
+
+
+
+    if (is(currentElement, 'bpmn:BoundaryEvent')) {
+      if (currentElement.businessObject.eventDefinitions && currentElement.businessObject.eventDefinitions.length > 0) {
+        let strOptions = ['bpmn:MessageEventDefinition'];
+        if (strOptions.includes(currentElement.businessObject.eventDefinitions[0].$type)) {
+          //Update element in BPMN. minDuration has to be 0          
+          let tempElement = window.bpmnjs.get('elementRegistry').get(currentElement.businessObject.id);
+          let minDuration = window.bpmnjs.getExtensionElementValue(tempElement, 'typeName', 'minDuration');
+          if (minDuration != 0) { // To prevent generation of infinite events
+            window.bpmnjs.setExtensionElementValue(tempElement, 'typeName', 'minDuration', 0);
+            try {
+              eventBus.fire('element.changed', { element: tempElement });
+
+            } catch (error) {
+              console.log('Error when fire element.changed ' + tempElement.businessObject.id);
+            }
+          }
+        }
+      }
+    }
   });
 
   eventBus.on('tempcon.changed', (event) => {

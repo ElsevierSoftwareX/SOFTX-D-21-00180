@@ -89,7 +89,7 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
   for (let k = 0; k < myKeys.length; k++) {
     currentBPMN_Obj = myObjs.arrows[myKeys[k]];
 
-    if (currentBPMN_Obj.cstnuEdgeIds && currentBPMN_Obj.edgeType === 'normal') {
+    if (currentBPMN_Obj.cstnuEdgeIds && currentBPMN_Obj.edgeType === 'normal' && currentBPMN_Obj.presentInBPMN == true) {
       for (let i = 0; i < currentBPMN_Obj.cstnuEdgeIds.length; i++) {
 
         let edge = xmlCSTNU_Doc.getElementById(currentBPMN_Obj.cstnuEdgeIds[i]);
@@ -118,7 +118,26 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
             else if (currentBPMN_Obj.cstnuEdgeIds[i][0] === 'S') { //Update min value
               tmpElement = elementRegistry.get(currentBPMN_Obj.id);
               if (Number(newValue) != 0) newValue = -Number(newValue);
+              // debugger
+              let minDurationTmp = getExtensionElementValue(tmpElement, "TDuration", "minDuration");
 
+              // if (tmpElement.businessObject.minDuration && tmpElement.businessObject.minDuration != newValue) {
+              if (minDurationTmp && minDurationTmp != newValue) {
+
+                window.elementsUpdated.push(currentBPMN_Obj.id);
+                modeling.updateProperties(tmpElement, {
+                  // minDuration: newValue,
+                  updated: true
+                });
+
+                setExtensionElementValue(tmpElement, "TDuration", "minDuration", newValue);
+                elementsUpdated.push(currentBPMN_Obj.id);
+              }
+            }
+            else if (currentBPMN_Obj.cstnuEdgeIds[i][0] === 'N') { //Update min value
+              tmpElement = elementRegistry.get(currentBPMN_Obj.id);
+              if (Number(newValue) != 0) newValue = -Number(newValue);
+              // debugger
               let minDurationTmp = getExtensionElementValue(tmpElement, "TDuration", "minDuration");
 
               // if (tmpElement.businessObject.minDuration && tmpElement.businessObject.minDuration != newValue) {
