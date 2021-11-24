@@ -241,7 +241,9 @@ var validateMaxDuration_BoundaryEvent = function (element, values, node) {
 
 /** Check observedProposition.length == 1 */
 var validate_observedProposition = function (element, values, node) {
-  let val = values.observedProposition.length;
+  let val;
+  if(values.observedProposition){
+    val = values.observedProposition.length;
 
   if (node.childElementCount > 0) {
     if (node.childNodes[2].className.includes("bpp-field-description")) {
@@ -255,8 +257,8 @@ var validate_observedProposition = function (element, values, node) {
       }
     }
   }
-
-  return values.observedProposition.length == 1;
+  }
+  return val != undefined || val == 1;
 };
 
 
