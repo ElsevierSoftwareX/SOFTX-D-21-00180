@@ -24,7 +24,7 @@ export default function bpmn2cstnu(bpmn, customElements, fileName) {
   myObjs['relative'] = { datainput: [], dataoutput: [] }; // To recover the relative connection 
   myObjs['edges_ids'] = {};  // To avoid duplicated ids
   myObjs['arrows'] = {};  // To create the graph 
-  myObjs['nodeObservation'] = ['P', 'Q', 'R', 'S', 'T', 'U', 'V',];  // pLabels 
+  myObjs['nodeObservation'] = ['A', 'B', 'C', 'D', 'E', 'F'];  // pLabels 
   // To keep track of errors and show them to the user
   let myLogObj = { log: "", errors: "", warnings: "" };
 
@@ -619,7 +619,8 @@ function createOneNode(params) {
     elementType = 'END';
     if (countObjs.endEventsTotal > 1) {
       nodeLabel += countObjs.endEvents;
-      elementTypeNumber = String(countObjs.endEvents);
+      if (countObjs.endEvents > 0)
+        elementTypeNumber = String(countObjs.endEvents);
       countObjs.endEvents += 1;
     }
   }
@@ -635,12 +636,11 @@ function createOneNode(params) {
     if (element.attributes.name != undefined) myObjs[element.attributes.id.value].name = element.attributes.name.value.replace(/(\r\n|\n|\r)/gm, "") + ' ';
 
     // Nodes // The N_ is nedded to keep the structure like S_ E_
-    let id_node = "N_" + elementType + "_" + elementTypeNumber + "_" + element.attributes.id.value;
+    let id_node = nodeLabel; // "N_" + elementType + "_" + elementTypeNumber + "_" + element.attributes.id.value;
     myObjs[element.attributes.id.value].id_node = id_node;
     let node = graph.ele("node", { id: id_node }, "");
     node.ele("data", { key: "x" }, Number(x) + Number(elementTypeNumber));
     node.ele("data", { key: "y" }, Number(y) + Number(elementTypeNumber));
-    node.ele("data", { key: "Label" }, nodeLabel);
 
     countObjs.tasks += 1;
     myObjs[element.attributes.id.value].cstnuNodeIds = [elementType + '_' + elementTypeNumber];
@@ -761,6 +761,26 @@ function createBoundaryNode(params) {
 
   countObjs.edges += 1;
   myObjs['arrows'][idArrow].cstnuEdgeIds.push(edgeId);
+
+
+  // To add the attribute Obs to the node where the bounday event is attached, the s CSTNU node
+  let j;
+  if (graph.children.length > 0) {
+    for (j = 0; j < graph.children.length; j++) {
+      let childObj = graph.children[j];
+      if (childObj && childObj.attribs.id.value === myObjs[target].id_e) {
+        childObj.ele("data", { key: "Obs" }, 'B'); // Add  getExtensionElementValue(tmpElement, "TXorProposition", "observedProposition")
+        // Change XML SD
+      }
+    }
+  }
+  debugger;
+
+  if (element.cancelActivity == "false") { // Non-interrupting
+
+  }
+
+
 
 
 }
@@ -1148,7 +1168,7 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
     let elementP = xmlDoc.children[0].children[i];
     if (elementP.nodeName.includes("process")) {
       for (j = 0; j < elementP.children.length; j++) {
-        let element = elementP.children[j];
+        let element = elementP.children[j]; // TODO check the elementType TASK END START BOUNDARY ??
         let paramsContingent = { elementType: 'TASK', element, graph, bpmnPlane, "edgeType": "contingent", myLogObj, countObjs, myObjs };
         let paramsNormal = { elementType: 'TASK', element, graph, bpmnPlane, "edgeType": "normal", myLogObj, countObjs, myObjs };
         let elementName = element.nodeName; //.toLowerCase()     
@@ -1276,13 +1296,16 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
       }
     }
   }
+
+  let boundaryEventsToProcess = [];
+
   for (i = 0; i < xmlDoc.children[0].children.length; i++) {
     let elementP = xmlDoc.children[0].children[i];
     if (elementP.nodeName.includes("process")) {
       // startEvent and endEvet
       for (j = 0; j < elementP.children.length; j++) {
         let element = elementP.children[j];
-        let paramsNormal = { element, graph, bpmnPlane, "edgeType": "normal", myLogObj, countObjs, myObjs };
+        let paramsNormal = { element, graph, bpmnPlane, "edgeType": "normal", myLogObj, countObjs, myObjs, elementType: 'BOUNDARY' };
         let elementName = element.nodeName;
         // ---------------------------- startEvent and endEvet -------------------------//
         if (elementName.includes("startEvent")) {
@@ -1301,7 +1324,8 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
             if (eventElement && eventElement.nodeName) {
               if (eventElement.nodeName.includes('messageEventDefinition')) {
                 setTwoNodesToEdges(paramsNormal);
-                createBoundaryNode(paramsNormal);
+                // createBoundaryNode(paramsNormal);
+                boundaryEventsToProcess.push(paramsNormal);
                 numberEventDefinitions++;
               }
               else if (eventElement.nodeName.includes('EventDefinition')) {
@@ -1376,7 +1400,14 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
       countObjs.elementsWithError += 1;
     }
   });
+
+  // Added at the end to extend/adapt the elements according to the rules for bounday events
+  for (i = 0; i < boundaryEventsToProcess.length; i++) {
+    createBoundaryNode(boundaryEventsToProcess[i]); // each i contains boundaryEvent element in the structure paramsNormal
+  }
 }
+
+
 
 function getExtensionElementValue(element, typeName, property) {
   return window.bpmnjs.getExtensionElementValue(element, typeName, property);

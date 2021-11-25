@@ -24,7 +24,8 @@ export default function bpmnSetcstnuLabels(bpmn) {
   // the edges will be stores in the element (key) arrows
   let myObjs = {};
   myObjs['arrows'] = {};  // Will represent the edges to create the graph
-  myObjs['nodeObservation'] = ['P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'];  // pLabels 
+  myObjs['nodeObservation'] = ['A', 'B', 'C', 'D', 'E', 'F'];  // TODO pLabels allow the nonCapitals 
+          // TOOD check that there are no duplicated leters by the user 
   // To keep track of errors and show them to the user
   let myLogObj = { log: "", errors: "", warnings: "" };
 
@@ -116,7 +117,7 @@ export default function bpmnSetcstnuLabels(bpmn) {
               tempProposition = myObjs[node.id].observedProposition;
             else {
               if (myObjs['nodeObservation'].length > 0) {
-                tempProposition = myObjs['nodeObservation'].shift();
+                tempProposition = 'B'; // myObjs['nodeObservation'].shift();
                 myObjs[node.id].observedProposition = tempProposition;
                 // Assign the same literal to the boundaryEvent and to task attachedToRef
                 // debugger
@@ -405,8 +406,8 @@ function createBoundaryNode(params) {
   myObjs[source].outputs.push(idArrow); // A
   myObjs[target].inputs.push(idArrow);  // Boundary event
 
-  myObjs[source].obs = 'boundaryInterrupting'; // A
-  // myObjs[target].obs = 'boundaryInterrupting'; // Boundary event
+  // myObjs[source].obs = 'boundaryInterrupting'; // A
+  myObjs[target].obs = 'boundaryInterrupting'; // Boundary event
 
   // Add a cross relation
   myObjs[source].boundaryEventRelation = target; // A
@@ -775,6 +776,8 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
       }
     }
   }
+
+  let boundaryEventsToProcess = [];
   for (i = 0; i < xmlDoc.children[0].children.length; i++) {
     let elementP = xmlDoc.children[0].children[i];
     if (elementP.nodeName.includes("process")) {
@@ -800,6 +803,7 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
             if (eventElement && eventElement.nodeName) {
               if (eventElement.nodeName.includes('messageEventDefinition')) {
                 processElements(params);
+                boundaryEventsToProcess.push(params);
                 numberEventDefinitions++;
               }
               else if (eventElement.nodeName.includes('EventDefinition')) {
@@ -858,21 +862,27 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
     }
   }
 
-  for (i = 0; i < xmlDoc.children[0].children.length; i++) {
-    let elementP = xmlDoc.children[0].children[i];
-    if (elementP.nodeName.includes("process")) {
-      // sboundaryEvent
-      for (j = 0; j < elementP.children.length; j++) {
-        let element = elementP.children[j];
-        let params = { element, myLogObj, countObjs, myObjs };
-        let elementName = element.nodeName;
-        // ---------------------------- boundaryEvent -------------------------//
-        if (elementName.includes("boundaryEvent")) {
-          // To fix the connections 
-          createBoundaryNode(params);
-        }
-      }
-    }
+  // 
+  // for (i = 0; i < xmlDoc.children[0].children.length; i++) {
+  //   let elementP = xmlDoc.children[0].children[i];
+  //   if (elementP.nodeName.includes("process")) {
+  //     // boundaryEvent
+  //     for (j = 0; j < elementP.children.length; j++) {
+  //       let element = elementP.children[j];
+  //       let params = { element, myLogObj, countObjs, myObjs };
+  //       let elementName = element.nodeName;
+  //       // ---------------------------- boundaryEvent -------------------------//
+  //       if (elementName.includes("boundaryEvent")) {
+  //         // To fix the connections 
+  //         createBoundaryNode(params);
+  //       }
+  //     }
+  //   }
+  // }
+
+  // Added at the end to extend/adapt the elements according to the rules for bounday events
+  for (i = 0; i < boundaryEventsToProcess.length; i++) {
+    createBoundaryNode(boundaryEventsToProcess[i]); // each i contains boundaryEvent element in the structure params
   }
 
 

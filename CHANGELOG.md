@@ -2,6 +2,10 @@
 
 ## TimeAwareBPMN-js
 
+v1.3.0 - 20211123
+
+- Add Boundary interrupting events
+
 v1.2.1 - 20211118
 
 -  Update naming of nodes START and END in CSTNU
