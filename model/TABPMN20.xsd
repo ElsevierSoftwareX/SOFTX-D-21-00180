@@ -41,6 +41,7 @@
 	<xs:element name="tEvent">
 		<xs:complexType>
 			<xs:all>
+				<xs:element type="tempcon:tProposition" name="observedProposition" />
 				<xs:element type="tempcon:tDuration" name="duration" />
 			</xs:all>
 		</xs:complexType>

@@ -54,6 +54,10 @@
       "superClass": ["Element"],
       "properties": [
         {
+          "name": "observedProposition",
+          "type": "String"
+        },
+        {
           "name": "duration",
           "type": "TDuration"
         }
