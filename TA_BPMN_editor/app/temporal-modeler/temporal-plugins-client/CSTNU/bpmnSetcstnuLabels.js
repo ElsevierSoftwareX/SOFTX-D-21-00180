@@ -24,8 +24,11 @@ export default function bpmnSetcstnuLabels(bpmn) {
   // the edges will be stores in the element (key) arrows
   let myObjs = {};
   myObjs['arrows'] = {};  // Will represent the edges to create the graph
-  myObjs['nodeObservation'] = ['A', 'B', 'C', 'D', 'E', 'F'];  // TODO pLabels allow the nonCapitals 
-          // TOOD check that there are no duplicated leters by the user 
+  myObjs['nodeObservation'] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+    'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+    'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F'];  // TODO pLabels allow the nonCapitals 
+  // TOOD check that there are no duplicated leters by the user 
+  myObjs['nodeObservationUsed'] = [];  // This will be fillef with the used letters to check there are not repeated ones 
   // To keep track of errors and show them to the user
   let myLogObj = { log: "", errors: "", warnings: "" };
 
@@ -105,7 +108,7 @@ export default function bpmnSetcstnuLabels(bpmn) {
               console.log('Error when fire element.changed ' + tempElement.businessObject.id);
             }
           }
-          if (myObjs[node.id].obs === 'boundaryInterrupting') {
+          if (myObjs[node.id].obs === 'boundaryEvent') {
 
             let tempElement = elementRegistry.get(node.id);
 
@@ -117,12 +120,12 @@ export default function bpmnSetcstnuLabels(bpmn) {
               tempProposition = myObjs[node.id].observedProposition;
             else {
               if (myObjs['nodeObservation'].length > 0) {
-                tempProposition = 'B'; // myObjs['nodeObservation'].shift();
+                tempProposition = myObjs['nodeObservation'].shift();
                 myObjs[node.id].observedProposition = tempProposition;
                 // Assign the same literal to the boundaryEvent and to task attachedToRef
                 // debugger
-                myObjs[myObjs[node.id].boundaryEventRelation].observedProposition = tempProposition;
-                // setExtensionElementValue(tempElement, "TXorProposition", "observedProposition", tempProposition);
+                // myObjs[myObjs[node.id].boundaryEventRelation].observedProposition = tempProposition;
+                setExtensionElementValue(tempElement, "TXorProposition", "observedProposition", tempProposition);
               }
               else {
                 myLogObj.errors += '\nMax number of observations reached \n';
@@ -369,45 +372,108 @@ function createBoundaryNode(params) {
     return;
   }
 
-  // Check that the Task A has one output
-  if (myObjs[source].outputs.length != 1) {
-    myLogObj.errors += "\n" + myObjs[source].nodeName + " must have one output sequenceFlow";
-    countObjs.elementsWithError += 1;
-    return;
+  // debugger;
+  // If event non Interrupting
+  if (element.attributes.cancelActivity && element.attributes.cancelActivity.value == "false") {
+     // Check that the Task A has one output
+     if (myObjs[source].outputs.length != 1) {
+      myLogObj.errors += "\n" + myObjs[source].nodeName + " must have one output sequenceFlow";
+      countObjs.elementsWithError += 1;
+      return;
+    }
+    else {
+      myObjs.arrows[myObjs[source].outputs[0]].isTrueBranch = false;
+    }
+
+    // Check that the BoundaryEvent B has one output
+    if (myObjs[source].outputs.length != 1) {
+      myLogObj.errors += "\n" + myObjs[target].nodeName + " must have one output sequenceFlow";
+      countObjs.elementsWithError += 1;
+      return;
+    }
+    // Chenck that the output is connected to a Task
+    else if (!myObjs[myObjs.arrows[myObjs[target].outputs[0]].target].nodeName.includes("Task")) {
+      myLogObj.errors += "\n" + myObjs[target].nodeName + " must be connected to a Task";
+      countObjs.elementsWithError += 1;
+      return;
+    }
+    else {
+      myObjs.arrows[myObjs[target].outputs[0]].isTrueBranch = true;
+    }
+     
+    
+    let taskAfterEvent = myObjs.arrows[myObjs[target].outputs[0]].target;
+    // Check that the task connected to the BoundaryEvent B has one output
+    if (myObjs[taskAfterEvent].outputs.length != 1) {
+      myLogObj.errors += "\n" + myObjs[target].nodeName + " must have one output sequenceFlow";
+      countObjs.elementsWithError += 1;
+      return;
+    }
+    // Chenck that the output is connected to a endEvent
+    else if (!myObjs[myObjs.arrows[myObjs[taskAfterEvent].outputs[0]].target].nodeName.includes("endEvent")) {
+      myLogObj.errors += "\n" + myObjs[taskAfterEvent].nodeName + " (" + myObjs[taskAfterEvent] + ") must be connected to a endEvent";
+      countObjs.elementsWithError += 1;
+      return;
+    }
+
   }
-  // Chenck that the output is connected to a exclusive Gateway
-  else if (!myObjs[myObjs.arrows[myObjs[source].outputs[0]].target].nodeName.includes("exclusiveGateway")) {
-    myLogObj.errors += "\n" + myObjs[source].nodeName + " must be connected to a exclusiveGateway";
-    countObjs.elementsWithError += 1;
-    return;
-  }
-  else {
-    myObjs.arrows[myObjs[source].outputs[0]].isTrueBranch = false;
+  else { // Event interrupting 
+    // Check that the Task A has one output
+    if (myObjs[source].outputs.length != 1) {
+      myLogObj.errors += "\n" + myObjs[source].nodeName + " must have one output sequenceFlow";
+      countObjs.elementsWithError += 1;
+      return;
+    }
+    // Chenck that the output is connected to a exclusive Gateway
+    else if (!myObjs[myObjs.arrows[myObjs[source].outputs[0]].target].nodeName.includes("exclusiveGateway")) {
+      myLogObj.errors += "\n" + myObjs[source].nodeName + " must be connected to a exclusiveGateway";
+      countObjs.elementsWithError += 1;
+      return;
+    }
+    else {
+      myObjs.arrows[myObjs[source].outputs[0]].isTrueBranch = false;
+    }
+
+    // Check that the BoundaryEvent B has one output
+    if (myObjs[source].outputs.length != 1) {
+      myLogObj.errors += "\n" + myObjs[target].nodeName + " must have one output sequenceFlow";
+      countObjs.elementsWithError += 1;
+      return;
+    }
+    // Chenck that the output is connected to a Task
+    else if (!myObjs[myObjs.arrows[myObjs[target].outputs[0]].target].nodeName.includes("Task")) {
+      myLogObj.errors += "\n" + myObjs[target].nodeName + " must be connected to a Task";
+      countObjs.elementsWithError += 1;
+      return;
+    }
+    else {
+      myObjs.arrows[myObjs[target].outputs[0]].isTrueBranch = true;
+    }
+    let taskAfterEvent = myObjs.arrows[myObjs[target].outputs[0]].target;
+    // Check that the task connected to the BoundaryEvent B has one output
+    if (myObjs[taskAfterEvent].outputs.length != 1) {
+      myLogObj.errors += "\n" + myObjs[target].nodeName + " must have one output sequenceFlow";
+      countObjs.elementsWithError += 1;
+      return;
+    }
+    // Chenck that the output is connected to a exclusiveGateway
+    else if (!myObjs[myObjs.arrows[myObjs[taskAfterEvent].outputs[0]].target].nodeName.includes("exclusiveGateway")) {
+      myLogObj.errors += "\n" + myObjs[taskAfterEvent].nodeName + " (" + myObjs[taskAfterEvent] + ") must be connected to a exclusiveGateway";
+      countObjs.elementsWithError += 1;
+      return;
+    }
+    
   }
 
-  // Check that the BoundaryEvent B has one output
-  if (myObjs[source].outputs.length != 1) {
-    myLogObj.errors += "\n" + myObjs[target].nodeName + " must have one output sequenceFlow";
-    countObjs.elementsWithError += 1;
-    return;
-  }
-  // Chenck that the output is connected to a Task
-  else if (!myObjs[myObjs.arrows[myObjs[target].outputs[0]].target].nodeName.includes("Task")) {
-    myLogObj.errors += "\n" + myObjs[target].nodeName + " must be connected to a Task";
-    countObjs.elementsWithError += 1;
-    return;
-  }
-  else {
-    myObjs.arrows[myObjs[target].outputs[0]].isTrueBranch = true;
-  }
+
 
 
   myObjs['arrows'][idArrow] = { id: idArrow, source: source, target: target };
   myObjs[source].outputs.push(idArrow); // A
   myObjs[target].inputs.push(idArrow);  // Boundary event
 
-  // myObjs[source].obs = 'boundaryInterrupting'; // A
-  myObjs[target].obs = 'boundaryInterrupting'; // Boundary event
+  // myObjs[source].obs = 'boundaryEvent'; // A
+  myObjs[target].obs = 'boundaryEvent'; // Boundary event
 
   // Add a cross relation
   myObjs[source].boundaryEventRelation = target; // A
