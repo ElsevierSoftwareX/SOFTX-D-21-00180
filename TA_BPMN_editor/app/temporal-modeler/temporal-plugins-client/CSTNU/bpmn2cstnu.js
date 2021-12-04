@@ -788,7 +788,7 @@ function createBoundaryNode_createEdgeAsBs(params) {
     edge.ele("data", { key: "Type" }, edgeType);
     edge.ele("data", { key: "Value" }, maxD);
     countObjs.edges += 1;
-    myObjs['arrows'][idArrow].cstnuEdgeIds.push(edgeId); 
+    myObjs['arrows'][idArrow].cstnuEdgeIds.push(edgeId);
   }
 
   edgeId = targetTaskId + "-" + sourceTaskId;
@@ -1333,13 +1333,15 @@ function setTwoEdges_relativeConstraint(params) {
         id: edgeId,
         source: sourceTaskId,
         target: targetTaskId,
-        Label: propositionalLabel
+        // Label: propositionalLabel
       },
       ""
     );
 
     edge.ele("data", { key: "Type" }, 'normal '); //edgeType
-    edge.ele("data", { key: "Value" }, maxD);
+    // edge.ele("data", { key: "Value" }, maxD);
+    edge.ele("data", { key: "LabeledValues" }, "{(" + maxD + ", " + propositionalLabel + ") }");
+
     countObjs.edges += 1;
 
   }
@@ -1362,14 +1364,15 @@ function setTwoEdges_relativeConstraint(params) {
       id: edgeId,
       source: targetTaskId,
       target: sourceTaskId,
-      Label: propositionalLabel
+      // Label: propositionalLabel
     },
     ""
   );
 
   if (Number(minD) != 0) minD = -Number(minD);
   edge.ele("data", { key: "Type" }, 'normal'); //edgeType
-  edge.ele("data", { key: "Value" }, minD);
+  // edge.ele("data", { key: "Value" }, minD);
+  edge.ele("data", { key: "LabeledValues" }, "{(" + minD + ", " + propositionalLabel + ") }");
 
   countObjs.edges += 1;
 }
