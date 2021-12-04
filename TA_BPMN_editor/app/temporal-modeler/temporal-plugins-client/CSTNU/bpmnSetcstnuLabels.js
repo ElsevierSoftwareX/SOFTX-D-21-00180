@@ -64,6 +64,7 @@ export default function bpmnSetcstnuLabels(bpmn) {
       visited[node.id] += 1;
       if (node.id && visited[node.id] < 2) {
         if (myObjs[node.id].obs != undefined) {
+          // debugger;
           if (myObjs[node.id].obs === 'join') {
 
             let tempElement = elementRegistry.get(node.id);
@@ -87,12 +88,12 @@ export default function bpmnSetcstnuLabels(bpmn) {
             let tempElement = elementRegistry.get(node.id);
 
             setExtensionElementValue(tempElement, "TGatewaySplitJoin", "gatewaySplitJoin", "split");
-
+// debugger;
             if (myObjs[node.id].observedProposition)
               tempProposition = myObjs[node.id].observedProposition;
             else {
               if (myObjs['nodeObservation'].length > 0) {
-                tempProposition = myObjs['nodeObservation'].shift();
+                tempProposition = myObjs['nodeObservation'].pop();
                 setExtensionElementValue(tempElement, "TXorProposition", "observedProposition", tempProposition);
 
               }
@@ -109,6 +110,7 @@ export default function bpmnSetcstnuLabels(bpmn) {
             }
           }
           if (myObjs[node.id].obs === 'boundaryEvent') {
+            // debugger;
 
             let tempElement = elementRegistry.get(node.id);
 
@@ -120,7 +122,7 @@ export default function bpmnSetcstnuLabels(bpmn) {
               tempProposition = myObjs[node.id].observedProposition;
             else {
               if (myObjs['nodeObservation'].length > 0) {
-                tempProposition = myObjs['nodeObservation'].shift();
+                tempProposition = myObjs['nodeObservation'].pop();
                 myObjs[node.id].observedProposition = tempProposition;
                 // Assign the same literal to the boundaryEvent and to task attachedToRef
                 // debugger
@@ -139,6 +141,16 @@ export default function bpmnSetcstnuLabels(bpmn) {
             //   console.log('Error when fire element.changed ' + tempElement.businessObject.id);
             // }
           }
+          
+          if (myObjs['nodeObservationUsed'].includes(tempProposition) && tempProposition != '') {
+            myLogObj.errors += '\nobservedProposition "' + tempProposition + '" used more than once (' + node.id + ') \n';
+            countObjs.elementsWithError += 1;
+          }
+          else {
+            myObjs['nodeObservationUsed'].push(tempProposition);
+           
+          }
+
 
           myObjs[node.id].label = Array.from(node.cps);
 
@@ -224,15 +236,22 @@ function processElements(params) {
           if (element.nodeName.includes("exclusiveGateway")) {
 
             let observedPropositionTmp = getExtensionElementValue(sourceElement, "TXorProposition", "observedProposition");
-
+// debugger;
             if (observedPropositionTmp != undefined) {
-              myObjs[element.attributes.id.value].observedProposition = observedPropositionTmp.trim().charAt(0);
-              // Check and remove from array of possible letters 
-              const index = myObjs['nodeObservation'].indexOf(myObjs[element.attributes.id.value].observedProposition);
-              if (index > -1) {
-                myObjs['nodeObservation'].splice(index, 1);
+              if (/[a-zA-F]/.test(observedPropositionTmp)) {
+                myObjs[element.attributes.id.value].observedProposition = observedPropositionTmp.trim().charAt(0);
+                // Check and remove from array of possible letters 
+                const index = myObjs['nodeObservation'].indexOf(myObjs[element.attributes.id.value].observedProposition);
+                if (index > -1) {
+                  myObjs['nodeObservation'].splice(index, 1);
+                }
+                countObjs.nObservedProposition += 1;
               }
-              countObjs.nObservedProposition += 1;
+              else {
+                myLogObj.errors += "ObservedProposition (" + observedPropositionTmp + ") not valid in " + element.nodeName + '(' + element.attributes.id.value + ') \n';
+                countObjs.elementsWithError += 1;
+                return;
+              }
             }
             else {
               myObjs[element.attributes.id.value].observedProposition = undefined; // This will be set when the labels are created            
@@ -375,8 +394,8 @@ function createBoundaryNode(params) {
   // debugger;
   // If event non Interrupting
   if (element.attributes.cancelActivity && element.attributes.cancelActivity.value == "false") {
-     // Check that the Task A has one output
-     if (myObjs[source].outputs.length != 1) {
+    // Check that the Task A has one output
+    if (myObjs[source].outputs.length != 1) {
       myLogObj.errors += "\n" + myObjs[source].nodeName + " must have one output sequenceFlow";
       countObjs.elementsWithError += 1;
       return;
@@ -400,8 +419,8 @@ function createBoundaryNode(params) {
     else {
       myObjs.arrows[myObjs[target].outputs[0]].isTrueBranch = true;
     }
-     
-    
+
+
     let taskAfterEvent = myObjs.arrows[myObjs[target].outputs[0]].target;
     // Check that the task connected to the BoundaryEvent B has one output
     if (myObjs[taskAfterEvent].outputs.length != 1) {
@@ -462,7 +481,7 @@ function createBoundaryNode(params) {
       countObjs.elementsWithError += 1;
       return;
     }
-    
+
   }
 
 
@@ -472,8 +491,7 @@ function createBoundaryNode(params) {
   myObjs[source].outputs.push(idArrow); // A
   myObjs[target].inputs.push(idArrow);  // Boundary event
 
-  // myObjs[source].obs = 'boundaryEvent'; // A
-  myObjs[target].obs = 'boundaryEvent'; // Boundary event
+
 
   // Add a cross relation
   myObjs[source].boundaryEventRelation = target; // A
@@ -482,96 +500,33 @@ function createBoundaryNode(params) {
   // debugger
 
 
+  let sourceElement = elementRegistry.get(element.attributes.id.value);
 
+  let observedPropositionTmp = getExtensionElementValue(sourceElement, "TXorProposition", "observedProposition");
+// debugger; 
+  if (observedPropositionTmp != undefined) {
+    if (/[a-zA-F]/.test(observedPropositionTmp)) {
+      myObjs[element.attributes.id.value].observedProposition = observedPropositionTmp.trim().charAt(0);
+      // Check and remove from array of possible letters 
+      const index = myObjs['nodeObservation'].indexOf(myObjs[element.attributes.id.value].observedProposition);
+      if (index > -1) {
+        myObjs['nodeObservation'].splice(index, 1);
+      }
+      countObjs.nObservedProposition += 1;
+    }
+    else {
+      myLogObj.errors += "ObservedProposition (" + observedPropositionTmp + ") not valid in " + element.nodeName + '(' + element.attributes.id.value + ') \n';
+      countObjs.elementsWithError += 1;
+      return;
+    }
+  }
+  else {
+    myObjs[element.attributes.id.value].observedProposition = undefined; // This will be set when the labels are created            
+  }
 
+    // myObjs[source].obs = 'boundaryEvent'; // A
+    myObjs[target].obs = 'boundaryEvent'; // Boundary event
 
-
-
-  // if (myObjs[source].obs != undefined) {
-  //   if (myObjs[source].obs === 'split' && myObjs[source].nodeName.includes("exclusiveGateway")) {
-
-  //     tempElement = elementRegistry.get(element.attributes.id.value);
-  //     isTrueBranchTmp = getExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch");
-
-  //     if (isTrueBranchTmp != undefined) {
-  //       if (isTrueBranchTmp != '') {
-  //         myObjs['arrows'][idArrow].isTrueBranch = isTrueBranchTmp;
-
-  //         if (isTrueBranchTmp == true || isTrueBranchTmp == 'true')
-  //           myObjs[source].obsTrueArrow = idArrow;
-  //         else
-  //           myObjs[source].obsFalseArrow = idArrow;
-  //       }
-  //       else {
-
-  //         let tempElement = elementRegistry.get(idArrow);
-  //         if (myObjs[source].obsTrueArrow == undefined && myObjs[source].obsFalseArrow == undefined) {
-  //           tempElement.businessObject.isTrueBranch = 'true';
-  //           setExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch", "true");
-  //           tempElement.businessObject.name = 'True';
-  //           myObjs[source].obsTrueArrow = idArrow;
-  //         }
-  //         else if (myObjs[source].obsTrueArrow == undefined) {
-  //           tempElement.businessObject.isTrueBranch = 'true';
-  //           setExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch", "true");
-  //           tempElement.businessObject.name = 'True';
-  //           myObjs[source].obsTrueArrow = idArrow;
-  //         }
-  //         else if (myObjs[source].obsFalseArrow == undefined) {
-  //           tempElement.businessObject.isTrueBranch = 'false';
-  //           setExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch", "false");
-  //           tempElement.businessObject.name = 'False';
-  //           myObjs[source].obsFalseArrow = idArrow;
-  //         }
-  //         else {
-  //           myLogObj.errors += "\n Invalid edges " + element.nodeName + ' of split ' + source;
-  //           countObjs.elementsWithError += 1;
-  //           return;
-  //         }
-
-  //         myObjs['arrows'][idArrow].isTrueBranch = getExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch");
-  //         try {
-  //           modeling.updateLabel(tempElement, tempElement.businessObject.name);
-  //           eventBus.fire('element.changed', { element: tempElement });
-
-  //         } catch (error) {
-  //           console.log('Error when fire element.changed ' + tempElement.businessObject.id);
-  //         }
-  //       }
-  //     }
-  //     else {
-
-  //       let tempElement = elementRegistry.get(idArrow);
-
-  //       if (myObjs[source].obsTrueArrow == undefined) {
-  //         tempElement.businessObject.isTrueBranch = 'true';
-  //         setExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch", "true");
-  //         tempElement.businessObject.name = 'True';
-  //         myObjs[source].obsTrueArrow = idArrow;
-  //       }
-  //       else if (myObjs[source].obsFalseArrow == undefined) {
-  //         tempElement.businessObject.isTrueBranch = 'false';
-  //         setExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch", "false");
-  //         tempElement.businessObject.name = 'False';
-  //         myObjs[source].obsFalseArrow = idArrow;
-  //       }
-  //       else {
-  //         myLogObj.errors += "\n Invalid edges " + element.nodeName + ' of split ' + source;
-  //         countObjs.elementsWithError += 1;
-  //         return;
-  //       }
-
-  //       myObjs['arrows'][idArrow].isTrueBranch = getExtensionElementValue(tempElement, "TPLiteralValue", "isTrueBranch");
-  //       try {
-  //         modeling.updateLabel(tempElement, tempElement.businessObject.name);
-  //         eventBus.fire('element.changed', { element: tempElement });
-  //       } catch (error) {
-  //         console.log('Error when fire element.changed ' + tempElement.businessObject.id);
-  //       }
-
-  //     }
-  //   }
-  // }
 }
 
 /**
