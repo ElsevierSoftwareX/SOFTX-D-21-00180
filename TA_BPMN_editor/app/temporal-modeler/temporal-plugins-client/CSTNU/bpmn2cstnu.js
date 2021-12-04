@@ -1266,6 +1266,14 @@ function setTwoEdges_relativeConstraint(params) {
   let propositionalLabel = "⊡";
   if (element.propositionalLabel != undefined)
     propositionalLabel = element.propositionalLabel;
+  if (!/(((¬|¿|)[a-zA-F])+)/.test(propositionalLabel) && propositionalLabel != "⊡") {
+    myLogObj.errors += "\n Relative constraint " + element.id + " has invalid propositional label";
+    countObjs.elementsWithError += 1;
+
+  }
+
+
+
 
   if (myObjs[source] != undefined) {
     if (myObjs[source].elementType === 'START' || myObjs[source].elementType === 'END') {

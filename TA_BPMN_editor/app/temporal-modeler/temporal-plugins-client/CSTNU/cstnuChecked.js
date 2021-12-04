@@ -40,44 +40,47 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
             // debugger;
             // if (currentBPMN_Obj.cstnuEdgeIds[i][0] != 'Z') {
             newLabel = labeled.textContent;
-            newValue = newLabel.split(',')[0].split('(').slice(-1)[0];
+            // newValue = newLabel.split(',')[0].split('(').slice(-1)[0];
+            // debugger;
+            newValue = getNewValue(newLabel);
+            if (newValue) {
+              if (currentBPMN_Obj.cstnuEdgeIds[i][0] === 'S') { //Update max value
+                tmpElement = elementRegistry.get(currentBPMN_Obj.id);
 
-            if (currentBPMN_Obj.cstnuEdgeIds[i][0] === 'S') { //Update max value
-              tmpElement = elementRegistry.get(currentBPMN_Obj.id);
+                maxDurationTmp = getExtensionElementValue(tmpElement, "TDuration", "maxDuration");
 
-              maxDurationTmp = getExtensionElementValue(tmpElement, "TDuration", "maxDuration");
+                if (maxDurationTmp && maxDurationTmp != newValue) {
+                  window.elementsUpdated.push(currentBPMN_Obj.id);
+                  modeling.updateProperties(tmpElement, {
+                    // maxDuration: newValue,
+                    updated: true
+                  });
+                  setExtensionElementValue(tmpElement, "TDuration", "maxDuration", newValue);
+                  elementsUpdated.push(currentBPMN_Obj.id);
+                }
 
-              if (maxDurationTmp && maxDurationTmp != newValue) {
-                window.elementsUpdated.push(currentBPMN_Obj.id);
-                modeling.updateProperties(tmpElement, {
-                  // maxDuration: newValue,
-                  updated: true
-                });
-                setExtensionElementValue(tmpElement, "TDuration", "maxDuration", newValue);
-                elementsUpdated.push(currentBPMN_Obj.id);
               }
+              else if (currentBPMN_Obj.cstnuEdgeIds[i][0] === 'E') { //Update min value
+                tmpElement = elementRegistry.get(currentBPMN_Obj.id);
 
-            }
-            else if (currentBPMN_Obj.cstnuEdgeIds[i][0] === 'E') { //Update min value
-              tmpElement = elementRegistry.get(currentBPMN_Obj.id);
+                if (Number(newValue) != 0) newValue = -Number(newValue);
 
-              if (Number(newValue) != 0) newValue = -Number(newValue);
+                minDurationTmp = getExtensionElementValue(tmpElement, "TDuration", "minDuration");
 
-              minDurationTmp = getExtensionElementValue(tmpElement, "TDuration", "minDuration");
+                if (minDurationTmp && minDurationTmp != newValue) {
+                  window.elementsUpdated.push(currentBPMN_Obj.id);
+                  modeling.updateProperties(tmpElement, {
+                    // minDuration: newValue,
+                    updated: true
+                  });
+                  setExtensionElementValue(tmpElement, "TDuration", "minDuration", newValue);
 
-              if (minDurationTmp && minDurationTmp != newValue) {
-                window.elementsUpdated.push(currentBPMN_Obj.id);
-                modeling.updateProperties(tmpElement, {
-                  // minDuration: newValue,
-                  updated: true
-                });
-                setExtensionElementValue(tmpElement, "TDuration", "minDuration", newValue);
-
-                elementsUpdated.push(currentBPMN_Obj.id);
+                  elementsUpdated.push(currentBPMN_Obj.id);
+                }
               }
-            }
-            else {
-              console.log('No updated ' + currentBPMN_Obj.id + ' ' + currentBPMN_Obj.cstnuEdgeIds);
+              else {
+                console.log('No updated ' + currentBPMN_Obj.id + ' ' + currentBPMN_Obj.cstnuEdgeIds);
+              }
             }
             // }
           }
@@ -103,18 +106,18 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
 
             newLabel = labeled.textContent;
             console.log(newLabel);
-            debugger;
             newValue = getNewValue(newLabel);
+            console.log(newValue);
             // newValue = newLabel.split(',')[0].split('(').slice(-1)[0];
             if (newValue) {
               if (currentBPMN_Obj.cstnuEdgeIds[i][0] === 'E') { //Update max value
                 tmpElement = elementRegistry.get(currentBPMN_Obj.id);
                 maxDurationTmp = getExtensionElementValue(tmpElement, "TDuration", "maxDuration");
+                // debugger;
 
                 // if (tmpElement.businessObject.maxDuration && tmpElement.businessObject.maxDuration != newValue) {
                 if (maxDurationTmp && maxDurationTmp != newValue) {
-                  debugger;
-                  console.log(newValue);
+                  // debugger;
                   setExtensionElementValue(tmpElement, "TDuration", "maxDuration", newValue);
                   window.elementsUpdated.push(currentBPMN_Obj.id);
                   modeling.updateProperties(tmpElement, {
@@ -129,11 +132,12 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
                 if (Number(newValue) != 0) newValue = -Number(newValue);
                 // 
                 minDurationTmp = getExtensionElementValue(tmpElement, "TDuration", "minDuration");
+                // debugger;
 
                 // if (tmpElement.businessObject.minDuration && tmpElement.businessObject.minDuration != newValue) {
                 if (minDurationTmp && minDurationTmp != newValue) {
-                  debugger;
-                  console.log(newValue);
+                  // debugger;
+                  // console.log(newValue);
                   window.elementsUpdated.push(currentBPMN_Obj.id);
                   setExtensionElementValue(tmpElement, "TDuration", "minDuration", newValue);
                   elementsUpdated.push(currentBPMN_Obj.id);
@@ -145,28 +149,29 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
 
                 }
               }
-            }
-            // else if (currentBPMN_Obj.cstnuEdgeIds[i][0] === 'Z' || currentBPMN_Obj.cstnuEdgeIds[i][0] === 'Ω') { 
-            //   tmpElement = elementRegistry.get(currentBPMN_Obj.id);
-            //   if (Number(newValue) != 0) newValue = -Number(newValue);
-            //   // debugger
-            //   let minDurationTmp = getExtensionElementValue(tmpElement, "TDuration", "minDuration");
 
-            //   // if (tmpElement.businessObject.minDuration && tmpElement.businessObject.minDuration != newValue) {
-            //   if (minDurationTmp && minDurationTmp != newValue) {
+              // else if (currentBPMN_Obj.cstnuEdgeIds[i][0] === 'Z' || currentBPMN_Obj.cstnuEdgeIds[i][0] === 'Ω') { 
+              //   tmpElement = elementRegistry.get(currentBPMN_Obj.id);
+              //   if (Number(newValue) != 0) newValue = -Number(newValue);
+              //   // debugger
+              //   let minDurationTmp = getExtensionElementValue(tmpElement, "TDuration", "minDuration");
 
-            //     window.elementsUpdated.push(currentBPMN_Obj.id);
-            //     modeling.updateProperties(tmpElement, {
-            //       // minDuration: newValue,
-            //       updated: true
-            //     });
+              //   // if (tmpElement.businessObject.minDuration && tmpElement.businessObject.minDuration != newValue) {
+              //   if (minDurationTmp && minDurationTmp != newValue) {
 
-            //     setExtensionElementValue(tmpElement, "TDuration", "minDuration", newValue);
-            //     elementsUpdated.push(currentBPMN_Obj.id);
-            //   }
-            // }
-            else {
-              console.log('No updated ' + currentBPMN_Obj.id + ' ' + currentBPMN_Obj.cstnuEdgeIds);
+              //     window.elementsUpdated.push(currentBPMN_Obj.id);
+              //     modeling.updateProperties(tmpElement, {
+              //       // minDuration: newValue,
+              //       updated: true
+              //     });
+
+              //     setExtensionElementValue(tmpElement, "TDuration", "minDuration", newValue);
+              //     elementsUpdated.push(currentBPMN_Obj.id);
+              //   }
+              // }
+              else {
+                console.log('No updated ' + currentBPMN_Obj.id + ' ' + currentBPMN_Obj.cstnuEdgeIds);
+              }
             }
           }
         }
@@ -177,15 +182,20 @@ export default function cstnuChecked(xmlCTNUChecked, myObjs) {
   return elementsUpdated;
 }
 
-
+/**
+ * Get the new values from the labels, which can be like {(4, aA) } or {(-2, A) (-4, aA) }
+ * @param {*} newLabel 
+ * @returns 
+ */
 function getNewValue(newLabel) {
 
+  // In case there are different values 
   let newLabelSplit = newLabel.split(/[{}(),\s]+/);
   let newValue = Number.MAX_SAFE_INTEGER;
   for (let l = 0; l < newLabelSplit.length; l++) {
     let newLabelSplitInteger = parseInt(newLabelSplit[l]);
     if (!isNaN(newLabelSplitInteger)) {
-      if (newLabelSplitInteger > 0 && newValue > newLabelSplitInteger)
+      if (Math.abs(newValue) > Math.abs(newLabelSplitInteger))
         newValue = newLabelSplitInteger;
     }
   }
@@ -202,7 +212,7 @@ function getExtensionElementValue(element, typeName, property) {
 
 
 function setExtensionElementValue(element, typeName, property, value) {
-  console.log(value);
+  // console.log(value);
   const moddle = window.bpmnjs.get('moddle');
   const modeling = window.bpmnjs.get('modeling');
   let businessObject = element.businessObject || element;

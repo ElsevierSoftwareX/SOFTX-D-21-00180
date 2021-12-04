@@ -220,11 +220,15 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
 
     let minD = "";
     let maxD = "";
+    let propositionalLabel = "";
 
     if (element.businessObject.minDuration != undefined)
       minD = element.businessObject.minDuration;
     if (element.businessObject.maxDuration != undefined)
       maxD = element.businessObject.maxDuration;
+    if (element.businessObject.propositionalLabel != undefined)
+      propositionalLabel = element.businessObject.propositionalLabel;
+
 
     let colorFrame = COLOR_GREEN;
 
@@ -236,6 +240,7 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
     minD = Number(minD);
     maxD = (maxD != "" ? maxD : Infinity);
     if (maxD <= minD) colorFrame = COLOR_RED;
+    if (!/(((¬|¿|)[a-zA-F])+)/.test(propositionalLabel) && propositionalLabel != "") colorFrame = COLOR_RED;
 
     var attrs = computeStyle(attrs, {
       stroke: colorFrame,
@@ -548,7 +553,7 @@ function drawShape_contingent(
         let observedPropositionTmp = getExtensionElementValue(element, "TXorProposition", "observedProposition");
 
         if (observedPropositionTmp)
-          if (observedPropositionTmp.length > 1) colorFrame = COLOR_RED;
+          if (observedPropositionTmp.length > 1 || !/[a-zA-F]/.test(observedPropositionTmp)) colorFrame = COLOR_RED;
       }
     }
     eventBus.fire("tempcon.changed", { element: element });
@@ -561,9 +566,13 @@ function drawShape_contingent(
         let attachedTo = element.businessObject.attachedToRef;
         if (attachedTo) {
           let valMaxDuration_attached = getExtensionElementValue(attachedTo, 'TDuration', 'maxDuration');
-          if (Number(maxD) >= Number(valMaxDuration_attached) ) {
+          if (Number(maxD) >= Number(valMaxDuration_attached)) {
             colorFrame = COLOR_RED;
           }
+          let observedPropositionTmp = getExtensionElementValue(element, "TXorProposition", "observedProposition");
+
+          if (observedPropositionTmp)
+            if (observedPropositionTmp.length > 1 || !/[a-zA-F]/.test(observedPropositionTmp)) colorFrame = COLOR_RED;
         }
       }
     }
