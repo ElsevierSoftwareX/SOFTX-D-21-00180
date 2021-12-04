@@ -60,7 +60,7 @@ export default function bpmn2cstnu(bpmn, customElements, fileName) {
   graph.ele("data", { key: "nEdges" }, countObjs.edges);
   graph.ele("data", { key: "nVertices" }, countObjs.nodes);
   graph.ele("data", { key: "Name" }, processName);
-  debugger;
+
   let xmlString = root.end({
     pretty: true,
     indent: "  ",
@@ -825,7 +825,6 @@ function createBoundaryNode_createEdgeAsBs(params) {
 function createBoundaryNode_getPropositionalLabels(elementD, elementBP) {
 
   let elementRegistry = window.bpmnjs.get('elementRegistry');
-  // debugger;
   let propositionalLabel_l = "⊡", propositionalLabel_lnotb;
   let tmpElement = elementRegistry.get(elementD.id);
   let propositionalLabelTmp_l = getExtensionElementValue(tmpElement, "TDuration", "propositionalLabel");
@@ -835,14 +834,12 @@ function createBoundaryNode_getPropositionalLabels(elementD, elementBP) {
   let tmp_l = propositionalLabel_lb.slice(0, -1); // Get all but the last character 
   propositionalLabel_lnotb = tmp_l + '¬' + propositionalLabel_b;
 
-  // debugger;
   if (propositionalLabelTmp_l != undefined)
     if (propositionalLabelTmp_l != '') {
       propositionalLabel_l = propositionalLabelTmp_l;
     }
 
   return [propositionalLabel_l, propositionalLabel_lb, propositionalLabel_lnotb];
-
 
 }
 
@@ -884,8 +881,6 @@ function createBoundaryNode(params, xmlDoc) {
     myObjs        // Dictionary to match bpmnId:cstnId
   } = params;
 
-  // debugger
-  let elementRegistry = window.bpmnjs.get('elementRegistry');
 
   //Get cstnuId of the connected nodes
   let source = element.attributes.attachedToRef.value;
@@ -912,7 +907,6 @@ function createBoundaryNode(params, xmlDoc) {
   let outputElementB = myObjs['arrows'][myObjs[target].outputs[0]];
   let elementBP = myObjs[outputElementB.target];
   let [nodeBP_idx, nodeBP_e] = getGraphNodeFromId(graph, elementBP.id_e);
-  // debugger;
   // Compute propositionalLabels of l, lb, and lnotb
   let [propositionalLabel_l, propositionalLabel_lb, propositionalLabel_lnotb] = createBoundaryNode_getPropositionalLabels(elementD, elementBP);
 
@@ -995,71 +989,16 @@ function createBoundaryNode(params, xmlDoc) {
     // for (j = 0; j < outputElementB.cstnuEdgeIds.length; j++) {
 
     //   let [idx, edgeToUpdate] = getGraphNodeFromId(graph, outputElementB.cstnuEdgeIds[j]);
-    //   debugger;
     //   edgeToUpdate.ele("data", { key: "LabeledValues" }, "{(0, " + propositionalLabel_lb + ") }");
 
     // }
   }
-  else {
-    // Add literals "b" to edged, only for the edges in the structures of boundary events
-    // For interrupting nodes and nonInterrupting nodes 
-    // Find the node B_end, and the edge connected to it, update this edge
-    // Find the node connected to edge, a task node, and update its two edges
-    // Find the node connected to the prev task node and update the edge 
-
-
-
-    // // XML SD chenged, TODO report the change 
-    // debugger;
-    // // Identify the elements (BPMN) and nodes (CSTNU)
-    // let [nodeA_e_idx, nodeA_e] = getGraphNodeFromId(graph, myObjs[source].id_e);
-    // let outputElementA = myObjs['arrows'][myObjs[source].outputs[0]];
-    // let elementD = myObjs[outputElementA.target]; // Here is the gateway
-    // let [nodeD_s_idx, nodeD_s] = getGraphNodeFromId(graph, elementD.id_s);
-    // let outputElementB = myObjs['arrows'][myObjs[target].outputs[0]];
-    // let elementBP = myObjs[outputElementB.target];
-    // let [nodeBP_idx, nodeBP_e] = getGraphNodeFromId(graph, elementBP.id_e);
-
-    // // Create new node ----------------
-    // // Load info from real node 
-    // let tmpObj = getXY(bpmnPlane, elementD.id);
-    // let x = tmpObj.x;
-    // let y = tmpObj.y;
-
-    // let propositionalLabel_l = "⊡", propositionalLabel_lb, propositionalLabel_lnotb;
-    // let tmpElement = elementRegistry.get(elementD.id);
-    // let propositionalLabelTmp_l = getExtensionElementValue(tmpElement, "TDuration", "propositionalLabel");
-    // tmpElement = elementRegistry.get(elementBP.id);
-    // let propositionalLabelTmp_lb = getExtensionElementValue(tmpElement, "TDuration", "propositionalLabel");
-    // // debugger;
-    // if (propositionalLabelTmp_l != undefined)
-    //   if (propositionalLabelTmp_l != '') {
-    //     propositionalLabel_l = propositionalLabelTmp_l;
-    //     propositionalLabel_lb = propositionalLabelTmp_l + propositionalLabelTmp_lb;
-    //     propositionalLabel_lnotb = propositionalLabelTmp_l + '¬' + propositionalLabelTmp_lb;
-    //   }
-    //   else {
-    //     propositionalLabel_lb = propositionalLabelTmp_lb;
-    //     propositionalLabel_lnotb = '¬' + propositionalLabelTmp_lb;
-    //   }
-
-    // let id_node = nodeA_e.attribs.id.value + "_join";
-    // let node = graph.ele("node", { id: id_node }, "");
-    // node.ele("data", { key: "x" }, Number(x) - 50);
-    // node.ele("data", { key: "y" }, Number(y));
-    // node.ele("data", { key: "Label" }, propositionalLabel_l);
-
-    // let [nodeNew_idx, nodeNew] = getGraphNodeFromId(graph, id_node);
-
-    // arraymove(graph.children, nodeNew_idx, nodeA_e_idx);
-    // [nodeNew_idx, nodeNew] = getGraphNodeFromId(graph, id_node);
+  else {   
 
     let outputElementA_xml = xmlDoc.getElementById(outputElementA.id);
     let tmpObj = checkMinMax_sequenceFlow(outputElementA_xml, myLogObj, edgeType);
     let minD = tmpObj.minDuration;
     let maxD = tmpObj.maxDuration;
-    let okVals = tmpObj.okVals;
-
 
     // Update the arrows connecting A and D, remove the connection from A and use new node + 
     let j;
@@ -1083,30 +1022,7 @@ function createBoundaryNode(params, xmlDoc) {
         edgeToUpdate.ele("data", { key: "LabeledValues" }, "{(" + minD + ", " + propositionalLabel_lnotb + ") }");
       }
     }
-
   }
-
-
-
-  // // To add the attribute Obs to the node of bounday event
-  // let j;
-  // if (graph.children.length > 0) {
-  //   for (j = 0; j < graph.children.length; j++) {
-  //     let childObj = graph.children[j];
-  //     if (childObj && childObj.attribs.id.value === myObjs[target].id_e) {
-  //       // debugger;
-  //       let tempElement = elementRegistry.get(idArrow);
-
-  //       // childObj.ele("data", { key: "Obs" }, getExtensionElementValue(element, "TXorProposition", "observedProposition")); 
-  //       // XML SD chenged, TODO report the change 
-  //     }
-  //   }
-  // }
-  // debugger;
-
-
-
-
 }
 
 /**

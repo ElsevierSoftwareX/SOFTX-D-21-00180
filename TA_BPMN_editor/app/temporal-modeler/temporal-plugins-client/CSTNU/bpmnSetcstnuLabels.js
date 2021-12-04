@@ -64,7 +64,6 @@ export default function bpmnSetcstnuLabels(bpmn) {
       visited[node.id] += 1;
       if (node.id && visited[node.id] < 2) {
         if (myObjs[node.id].obs != undefined) {
-          // debugger;
           if (myObjs[node.id].obs === 'join') {
 
             let tempElement = elementRegistry.get(node.id);
@@ -88,7 +87,6 @@ export default function bpmnSetcstnuLabels(bpmn) {
             let tempElement = elementRegistry.get(node.id);
 
             setExtensionElementValue(tempElement, "TGatewaySplitJoin", "gatewaySplitJoin", "split");
-// debugger;
             if (myObjs[node.id].observedProposition)
               tempProposition = myObjs[node.id].observedProposition;
             else {
@@ -110,7 +108,6 @@ export default function bpmnSetcstnuLabels(bpmn) {
             }
           }
           if (myObjs[node.id].obs === 'boundaryEvent') {
-            // debugger;
 
             let tempElement = elementRegistry.get(node.id);
 
@@ -125,7 +122,6 @@ export default function bpmnSetcstnuLabels(bpmn) {
                 tempProposition = myObjs['nodeObservation'].pop();
                 myObjs[node.id].observedProposition = tempProposition;
                 // Assign the same literal to the boundaryEvent and to task attachedToRef
-                // debugger
                 // myObjs[myObjs[node.id].boundaryEventRelation].observedProposition = tempProposition;
                 setExtensionElementValue(tempElement, "TXorProposition", "observedProposition", tempProposition);
               }
@@ -195,7 +191,6 @@ export default function bpmnSetcstnuLabels(bpmn) {
 
   if (countObjs.elementsWithWarning > 0)
     divModalContent.innerText += '\n' + myLogObj.warnings;
-  // debugger
   let xmlString = '';
   return { xmlString, myLogObj, countObjs, myObjs, textMessage };
 }
@@ -236,7 +231,6 @@ function processElements(params) {
           if (element.nodeName.includes("exclusiveGateway")) {
 
             let observedPropositionTmp = getExtensionElementValue(sourceElement, "TXorProposition", "observedProposition");
-// debugger;
             if (observedPropositionTmp != undefined) {
               if (/[a-zA-F]/.test(observedPropositionTmp)) {
                 myObjs[element.attributes.id.value].observedProposition = observedPropositionTmp.trim().charAt(0);
@@ -363,21 +357,14 @@ function createBoundaryNode(params) {
     myObjs        // Dictionary to match bpmnId:cstnId
   } = params;
 
-  // // Process the event element
-  // processElements(params);
-
-
   // Create the arrow that connects the task and the boundary event 
-  let eventBus = window.bpmnjs.get('eventBus');
   let elementRegistry = window.bpmnjs.get('elementRegistry');
-  let modeling = window.bpmnjs.get('modeling');
 
   // Get cstnuId of the connected nodes
   let source = element.attributes.attachedToRef.value;
   let target = element.attributes.id.value;
 
   let idArrow = element.attributes.id.value + '_arrow';
-  let tempElement, isTrueBranchTmp;
 
   if (source == undefined || target == undefined) {
     myLogObj.errors += "\n Invalid edge " + idArrow + ", source  " + source + ' and target ' + target;
@@ -391,7 +378,6 @@ function createBoundaryNode(params) {
     return;
   }
 
-  // debugger;
   // If event non Interrupting
   if (element.attributes.cancelActivity && element.attributes.cancelActivity.value == "false") {
     // Check that the Task A has one output
@@ -420,7 +406,6 @@ function createBoundaryNode(params) {
       myObjs.arrows[myObjs[target].outputs[0]].isTrueBranch = true;
     }
 
-
     let taskAfterEvent = myObjs.arrows[myObjs[target].outputs[0]].target;
     // Check that the task connected to the BoundaryEvent B has one output
     if (myObjs[taskAfterEvent].outputs.length != 1) {
@@ -434,7 +419,6 @@ function createBoundaryNode(params) {
       countObjs.elementsWithError += 1;
       return;
     }
-
   }
   else { // Event interrupting 
     // Check that the Task A has one output
@@ -481,29 +465,19 @@ function createBoundaryNode(params) {
       countObjs.elementsWithError += 1;
       return;
     }
-
   }
-
-
-
 
   myObjs['arrows'][idArrow] = { id: idArrow, source: source, target: target };
   myObjs[source].outputs.push(idArrow); // A
   myObjs[target].inputs.push(idArrow);  // Boundary event
 
-
-
   // Add a cross relation
   myObjs[source].boundaryEventRelation = target; // A
   myObjs[target].boundaryEventRelation = source; // Boundary event
 
-  // debugger
-
-
   let sourceElement = elementRegistry.get(element.attributes.id.value);
 
   let observedPropositionTmp = getExtensionElementValue(sourceElement, "TXorProposition", "observedProposition");
-// debugger; 
   if (observedPropositionTmp != undefined) {
     if (/[a-zA-F]/.test(observedPropositionTmp)) {
       myObjs[element.attributes.id.value].observedProposition = observedPropositionTmp.trim().charAt(0);
@@ -523,7 +497,6 @@ function createBoundaryNode(params) {
   else {
     myObjs[element.attributes.id.value].observedProposition = undefined; // This will be set when the labels are created            
   }
-
     // myObjs[source].obs = 'boundaryEvent'; // A
     myObjs[target].obs = 'boundaryEvent'; // Boundary event
 
