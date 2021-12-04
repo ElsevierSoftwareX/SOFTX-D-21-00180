@@ -36,7 +36,7 @@ const java = require("java");
 java.options.push('-Xms2G');
 java.options.push('-Xmx4G');
 java.options.push('-Djava.util.logging.config.file=nologging.properties');
-java.classpath.push("./temporal-plugins-server/CSTNU/javaRep/CSTNU-Tool-4.1.jar");
+java.classpath.push("./temporal-plugins-server/CSTNU/javaRep/CSTNU-Tool-4.4.jar");
 
 
 /** 
