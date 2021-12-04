@@ -226,7 +226,7 @@ var validateMaxDuration_BoundaryEvent = function (element, values, node) {
   if (attachedTo) {
     let valMaxDuration_attached = getExtensionElementValue(attachedTo, 'TDuration', 'maxDuration');
 
-    
+
     if (val === undefined || (isNaN(val) || Number(val) >= Number(valMaxDuration_attached)) || Number(val) < 0 || !Number.isInteger(parseFloat(val))) {
       if (node.childElementCount > 0) {
         if (node.childNodes[2].className.includes("bpp-field-description")) {
@@ -242,21 +242,50 @@ var validateMaxDuration_BoundaryEvent = function (element, values, node) {
 /** Check observedProposition.length == 1 */
 var validate_observedProposition = function (element, values, node) {
   let val;
-  if(values.observedProposition){
-    val = values.observedProposition.length;
 
   if (node.childElementCount > 0) {
     if (node.childNodes[2].className.includes("bpp-field-description")) {
       node.childNodes[1].style.border = '';
     }
   }
-  if (val != '1') {
-    if (node.childElementCount > 0) {
-      if (node.childNodes[2].className.includes("bpp-field-description")) {
-        node.childNodes[1].style.border = '2px solid red';
+  
+  if (values.observedProposition) {
+    val = values.observedProposition.length;
+
+    
+    if (val != '1' || !/[a-zA-F]/.test(values.observedProposition)) {
+      if (node.childElementCount > 0) {
+        if (node.childNodes[2].className.includes("bpp-field-description")) {
+          node.childNodes[1].style.border = '2px solid red';
+        }
       }
     }
   }
+  return val != undefined || val == 1;
+};
+
+
+
+/** Check observedProposition.length == 1 */
+var validate_PropositionalLabel = function (element, values, node) {
+  let val;
+
+  if (node.childElementCount > 0) {
+    if (node.childNodes[2].className.includes("bpp-field-description")) {
+      node.childNodes[1].style.border = '';
+    }
+  }
+
+  if (values.propositionalLabel) {
+    val = values.propositionalLabel;
+    
+    if (!/(((¬|¿|)[a-zA-F])+)/.test(val) && val != '') {
+      if (node.childElementCount > 0) {
+        if (node.childNodes[2].className.includes("bpp-field-description")) {
+          node.childNodes[1].style.border = '2px solid red';
+        }
+      }
+    }
   }
   return val != undefined || val == 1;
 };
@@ -460,9 +489,10 @@ export default function (group, element, bpmnFactory, translate) {
       disabled = false;
     group.entries.push(entryFactory.textField(translate, {
       id: 'propositionalLabel',
-      description: 'Label created with propositions of XORs',
+      description: 'Label set by the user RE:[(((¬|¿|)[a-zA-F])+)]',
       label: 'Propositional label',
-      modelProperty: 'propositionalLabel'
+      modelProperty: 'propositionalLabel',
+      validate: validate_PropositionalLabel
     }));
   }
 
@@ -542,11 +572,22 @@ export default function (group, element, bpmnFactory, translate) {
     if (element.businessObject.eventDefinitions && element.businessObject.eventDefinitions.length > 0) {
       // For IntermediateCatchEvent
       let strOptions = ['bpmn:MessageEventDefinition'];
-      
+
       // TODO Check if eventDefinitions can have more than 1 element     
       if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
         // set_group_minDuration(group, validateMinDuration_noContingent);
         set_group_maxDuration(group, validateMaxDuration_BoundaryEvent);
+
+        group.entries.push(entryFactory.textField(translate, {
+          id: 'observedProposition',
+          description: 'Type one letter ([a-zA-F]) to be used as proposition',
+          label: 'Letter representing the boolean condition',
+          modelProperty: 'observedProposition',
+          get: getValue(getBusinessObject(element), "tempcon", "TXorProposition", "observedProposition"),
+          set: setValue(getBusinessObject(element), "tempcon", "TXorProposition", "observedProposition"),
+          validate: validate_observedProposition
+        }));
+
         set_group_propositionalLabel(group);
       }
     }
