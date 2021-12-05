@@ -24,11 +24,11 @@ export default function bpmnSetcstnuLabels(bpmn) {
   // the edges will be stores in the element (key) arrows
   let myObjs = {};
   myObjs['arrows'] = {};  // Will represent the edges to create the graph
+  // Possible letters to use as observation  /[a-zA-F]/
   myObjs['nodeObservation'] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
     'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-    'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F'];  // TODO pLabels allow the nonCapitals 
-  // TOOD check that there are no duplicated leters by the user 
-  myObjs['nodeObservationUsed'] = [];  // This will be fillef with the used letters to check there are not repeated ones 
+    'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E'];
+  myObjs['nodeObservationUsed'] = [];  // This will be filled with the used letters to check there are not repeated ones 
   // To keep track of errors and show them to the user
   let myLogObj = { log: "", errors: "", warnings: "" };
 
@@ -93,7 +93,6 @@ export default function bpmnSetcstnuLabels(bpmn) {
               if (myObjs['nodeObservation'].length > 0) {
                 tempProposition = myObjs['nodeObservation'].pop();
                 setExtensionElementValue(tempElement, "TXorProposition", "observedProposition", tempProposition);
-
               }
               else {
                 myLogObj.errors += '\nMax number of observations reached \n';
@@ -110,10 +109,6 @@ export default function bpmnSetcstnuLabels(bpmn) {
           if (myObjs[node.id].obs === 'boundaryEvent') {
 
             let tempElement = elementRegistry.get(node.id);
-
-            // setExtensionElementValue(tempElement, "TGatewaySplitJoin", "gatewaySplitJoin", "split");
-
-            // Check that 
 
             if (myObjs[node.id].observedProposition)
               tempProposition = myObjs[node.id].observedProposition;
@@ -137,16 +132,14 @@ export default function bpmnSetcstnuLabels(bpmn) {
             //   console.log('Error when fire element.changed ' + tempElement.businessObject.id);
             // }
           }
-          
+
           if (myObjs['nodeObservationUsed'].includes(tempProposition) && tempProposition != '') {
             myLogObj.errors += '\nobservedProposition "' + tempProposition + '" used more than once (' + node.id + ') \n';
             countObjs.elementsWithError += 1;
           }
           else {
             myObjs['nodeObservationUsed'].push(tempProposition);
-           
           }
-
 
           myObjs[node.id].label = Array.from(node.cps);
 
@@ -231,7 +224,7 @@ function processElements(params) {
           if (element.nodeName.includes("exclusiveGateway")) {
 
             let observedPropositionTmp = getExtensionElementValue(sourceElement, "TXorProposition", "observedProposition");
-            if (observedPropositionTmp != undefined) {
+            if (observedPropositionTmp != undefined && observedPropositionTmp != '') {
               if (/[a-zA-F]/.test(observedPropositionTmp)) {
                 myObjs[element.attributes.id.value].observedProposition = observedPropositionTmp.trim().charAt(0);
                 // Check and remove from array of possible letters 
@@ -336,7 +329,6 @@ function processStartEndElements(params) {
     myObjs[element.attributes.id.value].id = element.attributes.id.value;
     myObjs[element.attributes.id.value].nodeName = element.nodeName;
     if (element.attributes.name != undefined) myObjs[element.attributes.id.value].name = element.attributes.name.value.replace(/(\r\n|\n|\r)/gm, "") + ' ';
-
   }
   else {
     myLogObj.errors += element.nodeName + ' without id \n';
@@ -478,7 +470,7 @@ function createBoundaryNode(params) {
   let sourceElement = elementRegistry.get(element.attributes.id.value);
 
   let observedPropositionTmp = getExtensionElementValue(sourceElement, "TXorProposition", "observedProposition");
-  if (observedPropositionTmp != undefined) {
+  if (observedPropositionTmp != undefined && observedPropositionTmp != '') {
     if (/[a-zA-F]/.test(observedPropositionTmp)) {
       myObjs[element.attributes.id.value].observedProposition = observedPropositionTmp.trim().charAt(0);
       // Check and remove from array of possible letters 
@@ -497,8 +489,8 @@ function createBoundaryNode(params) {
   else {
     myObjs[element.attributes.id.value].observedProposition = undefined; // This will be set when the labels are created            
   }
-    // myObjs[source].obs = 'boundaryEvent'; // A
-    myObjs[target].obs = 'boundaryEvent'; // Boundary event
+  // myObjs[source].obs = 'boundaryEvent'; // A
+  myObjs[target].obs = 'boundaryEvent'; // Boundary event
 
 }
 
@@ -878,16 +870,11 @@ function createDictionaryFromBpmnXml(xmlDoc, myLogObj, countObjs, myObjs) {
   for (i = 0; i < boundaryEventsToProcess.length; i++) {
     createBoundaryNode(boundaryEventsToProcess[i]); // each i contains boundaryEvent element in the structure params
   }
-
-
 }
-
-
 
 function getExtensionElementValue(element, typeName, property) {
   return window.bpmnjs.getExtensionElementValue(element, typeName, property);
 }
-
 
 function setExtensionElementValue(element, typeName, property, value) {
 

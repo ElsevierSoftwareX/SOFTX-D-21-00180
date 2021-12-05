@@ -26,7 +26,7 @@ export default function bpmn2cstnu(bpmn, customElements, fileName) {
   myObjs['arrows'] = {};  // To create the graph 
   myObjs['nodeObservation'] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
     'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-    'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F'];  // pLabels 
+    'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E'];  // pLabels 
   // To keep track of errors and show them to the user
   let myLogObj = { log: "", errors: "", warnings: "" };
 
@@ -890,7 +890,6 @@ function createBoundaryNode(params, xmlDoc) {
 
   // Create the edge As --[0,0],l--> Bs   ------------------------------
   createBoundaryNode_createEdgeAsBs(params);
-
 
   // For nonInterrupting nodes, a node has to be added after A_end, 
   // Find A_end, and the output edge, update it
