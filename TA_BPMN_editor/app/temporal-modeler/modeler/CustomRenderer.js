@@ -240,7 +240,8 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
     minD = Number(minD);
     maxD = (maxD != "" ? maxD : Infinity);
     if (maxD <= minD) colorFrame = COLOR_RED;
-    if (!/(((¬|¿|)[a-zA-F])+)/.test(propositionalLabel) && propositionalLabel != "") colorFrame = COLOR_RED;
+    if (propositionalLabel != "")
+      if (!/(((¬|¿|)[a-zA-F])+)/.test(propositionalLabel) || /[G-Z]/.test(propositionalLabel)) colorFrame = COLOR_RED;
 
     var attrs = computeStyle(attrs, {
       stroke: colorFrame,
@@ -501,11 +502,13 @@ function drawShape_contingent(
   // svgRemove(shape);
 
   // Information about min max duration and isContingent
-  let minD = "", maxD = "";
+  let minD = "", maxD = "", propositionalLabel = "";
   if (getExtensionElementValue(element, 'TDuration', 'minDuration') != undefined)
     minD = getExtensionElementValue(element, 'TDuration', 'minDuration');
   if (getExtensionElementValue(element, 'TDuration', 'maxDuration') != undefined)
     maxD = getExtensionElementValue(element, 'TDuration', 'maxDuration');
+  if (getExtensionElementValue(element, 'TDuration', 'propositionalLabel') != undefined)
+    propositionalLabel = getExtensionElementValue(element, 'TDuration', 'propositionalLabel');
 
   let colorFrame = COLOR_GREEN;
   if (isContingent) colorFrame = "#0000cc";
@@ -535,6 +538,10 @@ function drawShape_contingent(
   }
   else
     if (maxD_num < minD_num) colorFrame = COLOR_RED;
+
+  if (propositionalLabel != "")
+    if (!/(((¬|¿|)[a-zA-F])+)/.test(propositionalLabel) || /[G-Z]/.test(propositionalLabel)) colorFrame = COLOR_RED;
+
 
   if (isAny(element, ["bpmn:ExclusiveGateway", "bpmn:ParallelGateway"])) {
     // Check it has a type: split or join 

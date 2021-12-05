@@ -248,11 +248,11 @@ var validate_observedProposition = function (element, values, node) {
       node.childNodes[1].style.border = '';
     }
   }
-  
+
   if (values.observedProposition) {
     val = values.observedProposition.length;
 
-    
+
     if (val != '1' || !/[a-zA-F]/.test(values.observedProposition)) {
       if (node.childElementCount > 0) {
         if (node.childNodes[2].className.includes("bpp-field-description")) {
@@ -264,8 +264,6 @@ var validate_observedProposition = function (element, values, node) {
   return val != undefined || val == 1;
 };
 
-
-
 /** Check observedProposition.length == 1 */
 var validate_PropositionalLabel = function (element, values, node) {
   let val;
@@ -275,28 +273,24 @@ var validate_PropositionalLabel = function (element, values, node) {
       node.childNodes[1].style.border = '';
     }
   }
-
   if (values.propositionalLabel) {
     val = values.propositionalLabel;
-    
-    if (!/(((¬|¿|)[a-zA-F])+)/.test(val) && val != '') {
-      if (node.childElementCount > 0) {
-        if (node.childNodes[2].className.includes("bpp-field-description")) {
-          node.childNodes[1].style.border = '2px solid red';
+    if (val != ''){
+      if (!/(((¬|¿|)[a-zA-F])+)/.test(val) || /[G-Z]/.test(val) ) {
+        if (node.childElementCount > 0) {
+          if (node.childNodes[2].className.includes("bpp-field-description")) {
+            node.childNodes[1].style.border = '2px solid red';
+          }
         }
       }
-    }
   }
-  return val != undefined || val == 1;
+}
+return val != undefined || val == 1;
 };
-
-
 
 function getExtensionElementValue(element, typeName, property) {
   return window.bpmnjs.getExtensionElementValue(element, typeName, property);
 }
-
-
 
 function checkSplitJoin(element) {
   return window.bpmnjs.checkSplitJoin(element);
@@ -456,7 +450,8 @@ export default function (group, element, bpmnFactory, translate) {
       label: 'Propositional label',
       modelProperty: 'propositionalLabel',
       get: getValue(getBusinessObject(element), "tempcon", "TDuration", "propositionalLabel"),
-      set: setValue(getBusinessObject(element), "tempcon", "TDuration", "propositionalLabel")
+      set: setValue(getBusinessObject(element), "tempcon", "TDuration", "propositionalLabel"),
+      validate: validate_PropositionalLabel
     }));
   }
 
@@ -633,9 +628,7 @@ export default function (group, element, bpmnFactory, translate) {
     // gatewaySplitJoin was moved to tab General 
 
     set_group_propositionalLabel(group);
-
   }
-
 
   // ---------- RelativeConstraint ------------
   if (is(element, 'custom:connection')) {
@@ -672,6 +665,5 @@ export default function (group, element, bpmnFactory, translate) {
     set_group_maxDuration_asProperty(group, validateMaxDuration_relative, " (default: ∞)");
 
     set_group_propositionalLabel_asProperty(group, false);
-
   }
 }
