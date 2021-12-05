@@ -111,7 +111,7 @@ export default function CustomContextPadProvider(injector, connect, translate, c
         }
       });
     }
-    if (isAny(businessObject, ['bpmn:Task', 'bpmn:Gateway', 'bpmn:IntermediateCatchEvent', 'bpmn:IntermediateThrowEvent', 'bpmn:StartEvent', 'bpmn:EndEvent']) && !element.labelTarget) {
+    if (isAny(businessObject, ['bpmn:Task', 'bpmn:Gateway', 'bpmn:IntermediateCatchEvent', 'bpmn:IntermediateThrowEvent', 'bpmn:BoundaryEvent', 'bpmn:StartEvent', 'bpmn:EndEvent']) && !element.labelTarget) {
       assign(actions, {
         'relativeConstraint': {
           group: 'relativeConstraint',
@@ -125,7 +125,7 @@ export default function CustomContextPadProvider(injector, connect, translate, c
       });
     }
     // To create a user task from the context menu of the specified objects
-    if (isAny(businessObject, ['bpmn:Task', 'bpmn:Gateway', 'bpmn:IntermediateCatchEvent', 'bpmn:IntermediateThrowEvent', 'bpmn:StartEvent', 'bpmn:EndEvent']) && !element.labelTarget) {
+    if (isAny(businessObject, ['bpmn:Task', 'bpmn:Gateway', 'bpmn:IntermediateCatchEvent', 'bpmn:IntermediateThrowEvent', 'bpmn:BoundaryEvent', 'bpmn:StartEvent', 'bpmn:EndEvent']) && !element.labelTarget) {
       assign(actions, {
         'append.user-task': {
           group: 'model',

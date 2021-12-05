@@ -2,6 +2,17 @@
 
 ## TimeAwareBPMN-js
 
+v1.3.0 - 20211205
+
+- Add support of boundary events (interrupting and non-interrupting)
+- Change Value for LabeledValues in the CSTNU edges for relative constraints
+- Update examples
+- Fix bugs 
+
+v1.2.1 - 20211118
+
+-  Update naming of nodes START and END in CSTNU
+
 v1.2.1 - 20211117 
 
 - Remove IntermediateCatchEvent-timerEventDefinition elements

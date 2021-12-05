@@ -24,7 +24,9 @@ export default function bpmn2cstnu(bpmn, customElements, fileName) {
   myObjs['relative'] = { datainput: [], dataoutput: [] }; // To recover the relative connection 
   myObjs['edges_ids'] = {};  // To avoid duplicated ids
   myObjs['arrows'] = {};  // To create the graph 
-  myObjs['nodeObservation'] = ['P', 'Q', 'R', 'S', 'T', 'U', 'V',];  // pLabels 
+  myObjs['nodeObservation'] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+    'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+    'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E'];  // pLabels 
   // To keep track of errors and show them to the user
   let myLogObj = { log: "", errors: "", warnings: "" };
 
@@ -39,7 +41,9 @@ export default function bpmn2cstnu(bpmn, customElements, fileName) {
     startEventsTotal: 0,
     startEvents: 0,
     endEvents: 0,
-    endEventsTotal: 0
+    endEventsTotal: 0,
+    boundaryEvents: 0,
+    boundaryEventsTotal: 0
   };
 
   let root = getStart_xml();
@@ -396,14 +400,13 @@ function checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs) {
   if (element.nodeName.includes("exclusiveGateway") || element.nodeName.includes("parallelGateway")) {
 
     const elementRegistry = window.bpmnjs.get('elementRegistry');
-    let tempElement = elementRegistry.get(element.attributes.id.value);
-    let gatewaySplitJoinTmp = window.bpmnjs.checkSplitJoin(tempElement);
+    let tmpElement = elementRegistry.get(element.attributes.id.value);
+    let gatewaySplitJoinTmp = window.bpmnjs.checkSplitJoin(tmpElement);
 
     if (gatewaySplitJoinTmp != undefined) { // Read it
       if (gatewaySplitJoinTmp.includes('split')) {
 
         if (element.nodeName.includes("exclusiveGateway")) {
-          let tmpElement = elementRegistry.get(element.attributes.id.value);
           let observedPropositionTmp = getExtensionElementValue(tmpElement, "TXorProposition", "observedProposition");
 
           if (observedPropositionTmp != undefined) {
@@ -429,6 +432,38 @@ function checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs) {
       countObjs.elementsWithError += 1;
       return false;
     }
+  }
+  return true;
+}
+
+
+/**
+ * Check that the Gateway elements contains valid number of 
+ * inputs and outputs
+ * @param {*} element 
+ * @param {*} myObjs 
+ * @param {*} myLogObj 
+ * @param {*} countObjs 
+ * @returns {Boolean}
+ */
+function checkObservedPropositionInBoundaryEvents(element, myObjs, myLogObj, countObjs) {
+
+  if (element.nodeName.includes("boundaryEvent")) {
+
+    const elementRegistry = window.bpmnjs.get('elementRegistry');
+    let tmpElement = elementRegistry.get(element.attributes.id.value);
+
+    let observedPropositionTmp = getExtensionElementValue(tmpElement, "TXorProposition", "observedProposition");
+
+    if (observedPropositionTmp != undefined) {
+      myObjs[element.attributes.id.value].observedProposition = observedPropositionTmp;
+    }
+    else {
+      myLogObj.errors += '\n' + element.nodeName + ' (' + element.attributes.id.value + ')' + ' observedProposition not defined \n';
+      countObjs.elementsWithError += 1;
+      return false;
+    }
+    myObjs[element.attributes.id.value].obs = 'boundaryEvent';
   }
   return true;
 }
@@ -478,8 +513,8 @@ function setTwoNodesToEdges(params) {
     myObjs[element.attributes.id.value].nodeName = element.nodeName;
     if (element.attributes.name != undefined) myObjs[element.attributes.id.value].name = element.attributes.name.value.replace(/(\r\n|\n|\r)/gm, "") + ' ';
 
-    if (!checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs))
-      return;
+    if (!checkIfIsGateway_isOK(element, myObjs, myLogObj, countObjs)) return;
+    if (!checkObservedPropositionInBoundaryEvents(element, myObjs, myLogObj, countObjs)) return;
 
     let propositionalLabel = "⊡";
     let tmpElement = elementRegistry.get(element.attributes.id.value);
@@ -507,7 +542,7 @@ function setTwoNodesToEdges(params) {
     node.ele("data", { key: "Label" }, propositionalLabel);
 
     if (myObjs[element.attributes.id.value].obs) {
-      if (myObjs[element.attributes.id.value].obs === 'split') {
+      if (myObjs[element.attributes.id.value].obs === 'split' || myObjs[element.attributes.id.value].obs === 'boundaryEvent') {
         node.ele("data", { key: "Obs" }, getExtensionElementValue(tmpElement, "TXorProposition", "observedProposition"));
         myObjs[element.attributes.id.value].observedProposition = getExtensionElementValue(tmpElement, "TXorProposition", "observedProposition");
         countObjs.nObservedProposition += 1;
@@ -616,7 +651,8 @@ function createOneNode(params) {
     nodeLabel += 'Ω';
     elementType = 'END';
     if (countObjs.endEventsTotal > 1) {
-      nodeLabel += countObjs.endEvents;
+      if (countObjs.endEvents > 0)
+        nodeLabel += countObjs.endEvents;
       elementTypeNumber = String(countObjs.endEvents);
       countObjs.endEvents += 1;
     }
@@ -633,19 +669,358 @@ function createOneNode(params) {
     if (element.attributes.name != undefined) myObjs[element.attributes.id.value].name = element.attributes.name.value.replace(/(\r\n|\n|\r)/gm, "") + ' ';
 
     // Nodes // The N_ is nedded to keep the structure like S_ E_
-    let id_node = "N_" + elementType + "_" + elementTypeNumber + "_" + element.attributes.id.value;
+    let id_node = nodeLabel; // "N_" + elementType + "_" + elementTypeNumber + "_" + element.attributes.id.value;
     myObjs[element.attributes.id.value].id_node = id_node;
     let node = graph.ele("node", { id: id_node }, "");
     node.ele("data", { key: "x" }, Number(x) + Number(elementTypeNumber));
     node.ele("data", { key: "y" }, Number(y) + Number(elementTypeNumber));
-    node.ele("data", { key: "Label" }, nodeLabel);
 
     countObjs.tasks += 1;
-    myObjs[element.attributes.id.value].cstnuNodeIds = [elementType + '_' + elementTypeNumber];
+    countObjs.nodes += 1;
+    // myObjs[element.attributes.id.value].cstnuNodeIds = [elementType + '_' + elementTypeNumber];
+    myObjs[element.attributes.id.value].cstnuNodeIds = [id_node];
   }
   else {
     myLogObj.errors += element.nodeName + ' without id \n';
     countObjs.elementsWithError += 1;
+  }
+}
+
+function getGraphNodeFromId(graph, id) {
+  let j;
+  if (graph.children.length > 0) {
+    for (j = 0; j < graph.children.length; j++) {
+      let childObj = graph.children[j];
+      if (childObj && childObj.attribs.id.value === id) {
+        return [j, childObj];
+      }
+    }
+  }
+
+}
+
+function arraymove(arr, fromIndex, toIndex) {
+  var element = arr[fromIndex];
+  arr.splice(fromIndex, 1);
+  arr.splice(toIndex, 0, element);
+}
+
+
+/**
+ * Auxiliar function to keep clean the function createBoundaryNode.
+ * This creates the edge for the boudary events. 
+ * The edge connects the taskA element (that contains the boundaryEvent) and 
+ * the boundary event.
+ * Create the edge As --[0,0],l--> Bs
+ */
+function createBoundaryNode_createEdgeAsBs(params) {
+  let { element, // element to transform
+    graph,        // node to add the element transformed
+    bpmnPlane,    // xml node witht he x,y position
+    edgeType,     // contingent or normal
+    myLogObj,     // To report erros and log
+    countObjs,    // To count tasks, nodes, edges, nContingents, nObservedProposition,elementsWithError
+    myObjs        // Dictionary to match bpmnId:cstnId
+  } = params;
+
+  let minD = 0;
+  let maxD = 0;
+
+  //Get cstnuId of the connected nodes
+  let source = element.attributes.attachedToRef.value;
+  let target = element.attributes.id.value;
+  let sourceTaskId, targetTaskId;
+
+  if (source != undefined && myObjs[source] != undefined) {
+    sourceTaskId = myObjs[source].id_s;
+  }
+  if (target != undefined && myObjs[target] != undefined) {
+    targetTaskId = myObjs[target].id_s;
+  }
+
+  // If they are not there, do not create the edges
+  if (targetTaskId === undefined || sourceTaskId === undefined) {
+
+    myLogObj.errors += "\n Edges " + element.nodeName;
+    myLogObj.errors += "\n\t source " + source + " \"" + myObjs[source].name + "\" " + ' (CSTNU_id ' + sourceTaskId + ') ';
+    myLogObj.errors += "\n\t target " + target + "\"" + myObjs[target].name + "\"" + ' (CSTNU_id ' + targetTaskId + ') ';
+
+    countObjs.elementsWithError += 1;
+    return;
+  }
+
+  let idArrow = element.attributes.id.value + '_arrow';
+  let outputSource = myObjs[source].outputs[0];
+
+  myObjs['arrows'][idArrow] = { id: idArrow, source: source, target: target, cstnuEdgeIds: [], edgeType: edgeType, presentInBPMN: false };
+  myObjs[source].outputs.push(idArrow);
+  myObjs[target].inputs.push(idArrow);
+
+  // Edges
+
+
+  let edge, edgeId, countOccurrences;
+
+  if (maxD != Infinity) { // maxD = '∞';
+
+    edgeId = sourceTaskId + "-" + targetTaskId;
+    countOccurrences = '';
+    if (myObjs['edges_ids'][edgeId] === undefined) {
+      myObjs['edges_ids'][edgeId] = { occurrences: 1 };
+      myObjs['edges_ids'][edgeId] = { elementIds: [element.id], occurrences: 1 };
+    }
+    else {
+      countOccurrences = '_' + myObjs['edges_ids'][edgeId].occurrences;
+      myObjs['edges_ids'][edgeId].occurrences++;
+      myObjs['edges_ids'][edgeId].elementIds.push(element.id);
+    }
+    edgeId += countOccurrences;
+
+    edge = graph.ele(
+      "edge",
+      {
+        id: edgeId,
+        source: sourceTaskId,
+        target: targetTaskId,
+      },
+      ""
+    );
+    edge.ele("data", { key: "Type" }, edgeType);
+    edge.ele("data", { key: "Value" }, maxD);
+    countObjs.edges += 1;
+    myObjs['arrows'][idArrow].cstnuEdgeIds.push(edgeId);
+  }
+
+  edgeId = targetTaskId + "-" + sourceTaskId;
+  countOccurrences = '';
+  if (myObjs['edges_ids'][edgeId] === undefined) {
+    myObjs['edges_ids'][edgeId] = { elementIds: [element.id], occurrences: 1 };
+  }
+  else {
+    countOccurrences = '_' + myObjs['edges_ids'][edgeId].occurrences;
+    myObjs['edges_ids'][edgeId].occurrences++;
+    myObjs['edges_ids'][edgeId].elementIds.push(element.id);
+  }
+  edgeId += countOccurrences;
+
+  edge = graph.ele(
+    "edge",
+    {
+      id: edgeId,
+      source: targetTaskId,
+      target: sourceTaskId,
+    },
+    ""
+  );
+
+  if (Number(minD) != 0) minD = -Number(minD);
+  edge.ele("data", { key: "Type" }, edgeType);
+  edge.ele("data", { key: "Value" }, minD);
+
+  countObjs.edges += 1;
+  myObjs['arrows'][idArrow].cstnuEdgeIds.push(edgeId);
+
+}
+
+function createBoundaryNode_getPropositionalLabels(elementD, elementBP) {
+
+  let elementRegistry = window.bpmnjs.get('elementRegistry');
+  let propositionalLabel_l = "⊡", propositionalLabel_lnotb;
+  let tmpElement = elementRegistry.get(elementD.id);
+  let propositionalLabelTmp_l = getExtensionElementValue(tmpElement, "TDuration", "propositionalLabel");
+  tmpElement = elementRegistry.get(elementBP.id);
+  let propositionalLabel_lb = getExtensionElementValue(tmpElement, "TDuration", "propositionalLabel");
+  let propositionalLabel_b = propositionalLabel_lb.slice(-1); // Get the last character
+  let tmp_l = propositionalLabel_lb.slice(0, -1); // Get all but the last character 
+  propositionalLabel_lnotb = tmp_l + '¬' + propositionalLabel_b;
+
+  if (propositionalLabelTmp_l != undefined)
+    if (propositionalLabelTmp_l != '') {
+      propositionalLabel_l = propositionalLabelTmp_l;
+    }
+
+  return [propositionalLabel_l, propositionalLabel_lb, propositionalLabel_lnotb];
+
+}
+
+function createBoundaryNode_createNodeANDJoin(graph, bpmnPlane, elementD, elementBP, nodeA_e_idx, id_node, propositionalLabel_l, countObjs) {
+
+
+
+  // Load position from a "real node" 
+  let tmpObj = getXY(bpmnPlane, elementD.id);
+  let x = tmpObj.x;
+  let y = tmpObj.y;
+
+  let node = graph.ele("node", { id: id_node }, "");
+  node.ele("data", { key: "x" }, Number(x) - 50);
+  node.ele("data", { key: "y" }, Number(y));
+  node.ele("data", { key: "Label" }, propositionalLabel_l);
+
+  let [nodeNew_idx, nodeNew] = getGraphNodeFromId(graph, id_node);
+
+  // The new node has to be before the edges, if not there is an error in CSTNU 
+  arraymove(graph.children, nodeNew_idx, nodeA_e_idx);
+
+  countObjs.nodes += 1;
+
+}
+
+/**
+ * Creates the nodes for a boundary event and the connection 
+ * to the element to which it is atached 
+ * @param {*} params 
+ */
+function createBoundaryNode(params, xmlDoc) {
+  let { element, // element to transform
+    graph,        // node to add the element transformed
+    bpmnPlane,    // xml node witht he x,y position
+    edgeType,     // contingent or normal
+    myLogObj,     // To report erros and log
+    countObjs,    // To count tasks, nodes, edges, nContingents, nObservedProposition,elementsWithError
+    myObjs        // Dictionary to match bpmnId:cstnId
+  } = params;
+
+
+  //Get cstnuId of the connected nodes
+  let source = element.attributes.attachedToRef.value;
+  let target = element.attributes.id.value;
+  let sourceTaskId, targetTaskId;
+
+
+  // Create the edge As --[0,0],l--> Bs   ------------------------------
+  createBoundaryNode_createEdgeAsBs(params);
+
+  // For nonInterrupting nodes, a node has to be added after A_end, 
+  // Find A_end, and the output edge, update it
+  // create the new node and update the connections
+  // Find BP_end, update the output edge 
+  //
+
+
+  // Identify the elements (BPMN) and nodes (CSTNU)
+  let [nodeA_e_idx, nodeA_e] = getGraphNodeFromId(graph, myObjs[source].id_e);
+  let outputElementA = myObjs['arrows'][myObjs[source].outputs[0]];
+  let elementD = myObjs[outputElementA.target];
+  let [nodeD_s_idx, nodeD_s] = getGraphNodeFromId(graph, elementD.id_s);
+  let outputElementB = myObjs['arrows'][myObjs[target].outputs[0]];
+  let elementBP = myObjs[outputElementB.target];
+  let [nodeBP_idx, nodeBP_e] = getGraphNodeFromId(graph, elementBP.id_e);
+  // Compute propositionalLabels of l, lb, and lnotb
+  let [propositionalLabel_l, propositionalLabel_lb, propositionalLabel_lnotb] = createBoundaryNode_getPropositionalLabels(elementD, elementBP);
+
+
+  // If event non Interrupting
+  if (element.attributes.cancelActivity && element.attributes.cancelActivity.value == "false") { // Non-interrupting
+
+    // Create new node ----------------
+    let id_node = nodeA_e.attribs.id.value + "_join";
+    createBoundaryNode_createNodeANDJoin(graph, bpmnPlane, elementD, elementBP, nodeA_e_idx, id_node, propositionalLabel_l, countObjs);
+
+    // Update the arrows connecting A and D, remove the connection from A and use new node + 
+    let j;
+    for (j = 0; j < outputElementA.cstnuEdgeIds.length; j++) {
+
+      let [idx, edgeToUpdate] = getGraphNodeFromId(graph, outputElementA.cstnuEdgeIds[j]);
+      if (edgeToUpdate.attribs.source.value == nodeA_e.attribs.id.value) {
+        edgeToUpdate.attribs.source.value = id_node;
+      }
+      else if (edgeToUpdate.attribs.target.value == nodeA_e.attribs.id.value) {
+        edgeToUpdate.attribs.target.value = id_node;
+      }
+    }
+    // Create the new edges connecting A and + 
+    sourceTaskId = nodeA_e.attribs.id.value;
+    targetTaskId = id_node;
+    let edgeId = sourceTaskId + "-" + targetTaskId;
+    let edge;
+    // Upper bound
+    edge = graph.ele(
+      "edge",
+      {
+        id: edgeId,
+        source: sourceTaskId,
+        target: targetTaskId,
+      },
+      ""
+    );
+    edge.ele("data", { key: "Type" }, "normal");
+    edge.ele("data", { key: "LabeledValues" }, "{(0, " + propositionalLabel_lnotb + ") }");
+    countObjs.edges += 1;
+
+    // Lower bound
+    edgeId = targetTaskId + "-" + sourceTaskId;
+    edge = graph.ele(
+      "edge",
+      {
+        id: edgeId,
+        source: targetTaskId,
+        target: sourceTaskId,
+      },
+      ""
+    );
+    edge.ele("data", { key: "Type" }, "normal");
+    edge.ele("data", { key: "LabeledValues" }, "{(0, " + propositionalLabel_lnotb + ") (0, " + propositionalLabel_lb + ") }");
+    countObjs.edges += 1;
+
+    // Create the new edges connecting BPe and + 
+    sourceTaskId = nodeBP_e.attribs.id.value;
+    targetTaskId = id_node;
+    edgeId = sourceTaskId + "-" + targetTaskId;
+    // No upper bound, because the value is inf
+
+    // Lower bound
+    edgeId = targetTaskId + "-" + sourceTaskId;
+    edge = graph.ele(
+      "edge",
+      {
+        id: edgeId,
+        source: targetTaskId,
+        target: sourceTaskId,
+      },
+      ""
+    );
+    edge.ele("data", { key: "Type" }, "normal");
+    edge.ele("data", { key: "LabeledValues" }, "{(0, " + propositionalLabel_lb + ") }");
+    countObjs.edges += 1;
+
+    // Update connection Be -> BPs
+    // for (j = 0; j < outputElementB.cstnuEdgeIds.length; j++) {
+
+    //   let [idx, edgeToUpdate] = getGraphNodeFromId(graph, outputElementB.cstnuEdgeIds[j]);
+    //   edgeToUpdate.ele("data", { key: "LabeledValues" }, "{(0, " + propositionalLabel_lb + ") }");
+
+    // }
+  }
+  else {   
+
+    let outputElementA_xml = xmlDoc.getElementById(outputElementA.id);
+    let tmpObj = checkMinMax_sequenceFlow(outputElementA_xml, myLogObj, edgeType);
+    let minD = tmpObj.minDuration;
+    let maxD = tmpObj.maxDuration;
+
+    // Update the arrows connecting A and D, remove the connection from A and use new node + 
+    let j;
+    for (j = 0; j < outputElementA.cstnuEdgeIds.length; j++) {
+
+      let [idx, edgeToUpdate] = getGraphNodeFromId(graph, outputElementA.cstnuEdgeIds[j]);
+
+      // TODO remove only the node data-Vaue, not all the nodes 
+      edgeToUpdate.children = [];
+      if (edgeToUpdate.attribs.source.value == nodeA_e.attribs.id.value) { // Upper bound
+        if (maxD != Infinity) { // maxD = '∞';
+          // edgeToUpdate.attribs.source.value = id_node;
+          edgeToUpdate.ele("data", { key: "Type" }, edgeType);
+          edgeToUpdate.ele("data", { key: "LabeledValues" }, "{(" + maxD + ", " + propositionalLabel_lnotb + ") }");
+        }
+      }
+      else if (edgeToUpdate.attribs.target.value == nodeA_e.attribs.id.value) {
+        // edgeToUpdate.attribs.target.value = id_node;
+        if (Number(minD) != 0) minD = -Number(minD);
+        edgeToUpdate.ele("data", { key: "Type" }, edgeType);
+        edgeToUpdate.ele("data", { key: "LabeledValues" }, "{(" + minD + ", " + propositionalLabel_lnotb + ") }");
+      }
+    }
   }
 }
 
@@ -672,9 +1047,10 @@ function setTwoEdges_sequenceFlow(params) {
     countObjs.elementsWithError += 1;
     // return;
   }
+
   //Get cstnuId of the connected nodes
-  let source = element.attributes.sourceRef.value;
-  let target = element.attributes.targetRef.value;
+  let source = element.attributes.sourceRef.value; // id element
+  let target = element.attributes.targetRef.value; // id element
   let sourceTaskId, targetTaskId;
 
   if (myObjs[source] != undefined) {
@@ -699,14 +1075,8 @@ function setTwoEdges_sequenceFlow(params) {
   if (targetTaskId === undefined || sourceTaskId === undefined) {
 
     myLogObj.errors += "\n Edges " + element.nodeName;
-
-    myLogObj.errors += "\n\t source_Id " + source + ' (' + sourceTaskId + ') ';
-    if (sourceTaskId != undefined)
-      myLogObj.errors += myObjs[source].name;
-
-    myLogObj.errors += "\n\t target_Id " + target + ' (' + targetTaskId + ') ';
-    if (targetTaskId != undefined)
-      myLogObj.errors += myObjs[target].name;
+    myLogObj.errors += "\n\t source " + source + " \"" + ((myObjs[source]) ? myObjs[source].name : '') + "\" " + ' (CSTNU_id ' + sourceTaskId + ') ';
+    myLogObj.errors += "\n\t target " + target + "\"" + ((myObjs[target]) ? myObjs[target].name : '') + "\"" + ' (CSTNU_id ' + targetTaskId + ') ';
 
     countObjs.elementsWithError += 1;
     return;
@@ -714,7 +1084,7 @@ function setTwoEdges_sequenceFlow(params) {
 
   let idArrow = element.attributes.id.value;
 
-  myObjs['arrows'][idArrow] = { id: idArrow, source: source, target: target, cstnuEdgeIds: [], edgeType: edgeType };
+  myObjs['arrows'][idArrow] = { id: idArrow, source: source, target: target, cstnuEdgeIds: [], edgeType: edgeType, presentInBPMN: true };
   myObjs[source].outputs.push(idArrow);
   myObjs[target].inputs.push(idArrow);
 
@@ -733,6 +1103,7 @@ function setTwoEdges_sequenceFlow(params) {
   edgeId += countOccurrences;
 
   let edge;
+  // Upper bound 
   if (maxD != Infinity) { // maxD = '∞';
     edge = graph.ele(
       "edge",
@@ -761,6 +1132,7 @@ function setTwoEdges_sequenceFlow(params) {
   }
   edgeId += countOccurrences;
 
+  // Lower bound 
   edge = graph.ele(
     "edge",
     {
@@ -809,6 +1181,14 @@ function setTwoEdges_relativeConstraint(params) {
   let propositionalLabel = "⊡";
   if (element.propositionalLabel != undefined)
     propositionalLabel = element.propositionalLabel;
+  if (!/(((¬|¿|)[a-zA-F])+)/.test(propositionalLabel) && propositionalLabel != "⊡") {
+    myLogObj.errors += "\n Relative constraint " + element.id + " has invalid propositional label";
+    countObjs.elementsWithError += 1;
+
+  }
+
+
+
 
   if (myObjs[source] != undefined) {
     if (myObjs[source].elementType === 'START' || myObjs[source].elementType === 'END') {
@@ -876,13 +1256,15 @@ function setTwoEdges_relativeConstraint(params) {
         id: edgeId,
         source: sourceTaskId,
         target: targetTaskId,
-        Label: propositionalLabel
+        // Label: propositionalLabel
       },
       ""
     );
 
     edge.ele("data", { key: "Type" }, 'normal '); //edgeType
-    edge.ele("data", { key: "Value" }, maxD);
+    // edge.ele("data", { key: "Value" }, maxD);
+    edge.ele("data", { key: "LabeledValues" }, "{(" + maxD + ", " + propositionalLabel + ") }");
+
     countObjs.edges += 1;
 
   }
@@ -905,14 +1287,15 @@ function setTwoEdges_relativeConstraint(params) {
       id: edgeId,
       source: targetTaskId,
       target: sourceTaskId,
-      Label: propositionalLabel
+      // Label: propositionalLabel
     },
     ""
   );
 
   if (Number(minD) != 0) minD = -Number(minD);
   edge.ele("data", { key: "Type" }, 'normal'); //edgeType
-  edge.ele("data", { key: "Value" }, minD);
+  // edge.ele("data", { key: "Value" }, minD);
+  edge.ele("data", { key: "LabeledValues" }, "{(" + minD + ", " + propositionalLabel + ") }");
 
   countObjs.edges += 1;
 }
@@ -1037,7 +1420,7 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
     let elementP = xmlDoc.children[0].children[i];
     if (elementP.nodeName.includes("process")) {
       for (j = 0; j < elementP.children.length; j++) {
-        let element = elementP.children[j];
+        let element = elementP.children[j]; // TODO check the elementType TASK END START BOUNDARY ??
         let paramsContingent = { elementType: 'TASK', element, graph, bpmnPlane, "edgeType": "contingent", myLogObj, countObjs, myObjs };
         let paramsNormal = { elementType: 'TASK', element, graph, bpmnPlane, "edgeType": "normal", myLogObj, countObjs, myObjs };
         let elementName = element.nodeName; //.toLowerCase()     
@@ -1089,27 +1472,36 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
           // Subtypes are
           //  bpmn:messageEventDefinition
           //  bpnm:signalEventDefinition
+
+          let numberEventDefinitions = 0;
           for (k = 0; k < element.children.length; k++) {
             let eventElement = element.children[k];
 
             if (eventElement.nodeName.includes('messageEventDefinition') ||
               eventElement.nodeName.includes('signalEventDefinition')) {
               setTwoNodesToEdges(paramsNormal);
+              numberEventDefinitions++;
             }
             else if (eventElement.nodeName.includes('EventDefinition')) {
               myLogObj.errors += "\n " + elementName + "-" + eventElement.nodeName + " not allowed in this version of the CSTNU plug-in \n "; // +element.attributes.id 
               countObjs.elementsWithError++;
+              numberEventDefinitions++;
             }
             else {
               // No subtype - none
-              setTwoNodesToEdges(paramsNormal);
+              // setTwoNodesToEdges(paramsNormal);
             }
           }
+          if (numberEventDefinitions == 0) {
+            setTwoNodesToEdges(paramsNormal);
+          }
+
         }
-        // else if (elementName.includes("boundaryEvent")) { // TODO
-        //   myLogObj.warnings += "\n" + elementName + " no processed";
-        //   countObjs.elementsWithWarning++;
-        // }
+        else if (elementName.includes("boundaryEvent")) { // TODO
+          // myLogObj.warnings += "\n" + elementName + " no processed";
+          // countObjs.elementsWithWarning++;
+          countObjs.boundaryEventsTotal += 1;
+        }
         else if (elementName.includes("startEvent")) {
           //Need to know how many to decide Z or Z_i
           countObjs.startEventsTotal += 1;
@@ -1156,13 +1548,16 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
       }
     }
   }
+
+  let boundaryEventsToProcess = [];
+
   for (i = 0; i < xmlDoc.children[0].children.length; i++) {
     let elementP = xmlDoc.children[0].children[i];
     if (elementP.nodeName.includes("process")) {
       // startEvent and endEvet
       for (j = 0; j < elementP.children.length; j++) {
         let element = elementP.children[j];
-        let paramsNormal = { element, graph, bpmnPlane, "edgeType": "normal", myLogObj, countObjs, myObjs };
+        let paramsNormal = { element, graph, bpmnPlane, "edgeType": "normal", myLogObj, countObjs, myObjs, elementType: 'BOUNDARY' };
         let elementName = element.nodeName;
         // ---------------------------- startEvent and endEvet -------------------------//
         if (elementName.includes("startEvent")) {
@@ -1170,6 +1565,39 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
         }
         else if (elementName.includes("endEvent")) {
           createOneNode(paramsNormal);
+        }
+        else if (elementName.includes("boundaryEvent")) {
+
+          let numberEventDefinitions = 0;
+          for (k = 0; k < element.children.length; k++) {
+            let eventElement;
+            eventElement = element.children[k];
+
+            if (eventElement && eventElement.nodeName) {
+              if (eventElement.nodeName.includes('messageEventDefinition')) {
+                setTwoNodesToEdges(paramsNormal);
+                // createBoundaryNode(paramsNormal);
+                boundaryEventsToProcess.push(paramsNormal);
+                numberEventDefinitions++;
+              }
+              else if (eventElement.nodeName.includes('EventDefinition')) {
+                myLogObj.errors += "\n " + elementName + "-" + eventElement.nodeName + " not allowed in this version of the CSTNU plug-in \n "; // +element.attributes.id 
+                countObjs.elementsWithError++;
+                numberEventDefinitions++;
+              }
+              else {
+                // No subtype -- none
+                // processElements(params);
+                // myLogObj.errors += "\n " + elementName + "-" + eventElement.nodeName + " not allowed in this version of the CSTNU plug-in \n ";
+                // countObjs.elementsWithError++;
+              }
+            }
+          }
+          if (numberEventDefinitions == 0) {
+            myLogObj.errors += "\n " + elementName + " not allowed in this version of the CSTNU plug-in \n ";
+            countObjs.elementsWithError++;
+          }
+
         }
       }
     }
@@ -1224,7 +1652,14 @@ function setElements(xmlDoc, bpmnPlane, graph, myLogObj, countObjs, myObjs, cust
       countObjs.elementsWithError += 1;
     }
   });
+
+  // Added at the end to extend/adapt the elements according to the rules for bounday events
+  for (i = 0; i < boundaryEventsToProcess.length; i++) {
+    createBoundaryNode(boundaryEventsToProcess[i], xmlDoc); // each i contains boundaryEvent element in the structure paramsNormal
+  }
 }
+
+
 
 function getExtensionElementValue(element, typeName, property) {
   return window.bpmnjs.getExtensionElementValue(element, typeName, property);

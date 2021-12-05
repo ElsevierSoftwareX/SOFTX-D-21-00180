@@ -91,13 +91,13 @@
       
       <data key="x">246</data>
       <data key="y">251</data>
-      <data key="Label">¬R</data>
+      <data key="Label">¬A</data>
     </node>
     <node id="E_TASK_1_T3">
       
       <data key="x">294</data>
       <data key="y">249</data>
-      <data key="Label">¬R</data>
+      <data key="Label">¬A</data>
     </node>
     <edge id="S_TASK_1_T3-E_TASK_1_T3" source="S_TASK_1_T3" target="E_TASK_1_T3">
       
@@ -135,22 +135,22 @@
       
       <data key="x">430</data>
       <data key="y">35</data>
-      <data key="Label">R</data>
+      <data key="Label">A</data>
     </node>
     <node id="E_TASK_3_IE1">
       
       <data key="x">474</data>
       <data key="y">29</data>
-      <data key="Label">R</data>
+      <data key="Label">A</data>
     </node>
     <edge id="S_TASK_3_IE1-E_TASK_3_IE1" source="S_TASK_3_IE1" target="E_TASK_3_IE1">
       
-      <data key="Type">normal</data>
+      <data key="Type">contingent</data>
       <data key="Value">3</data>
     </edge>
     <edge id="E_TASK_3_IE1-S_TASK_3_IE1" source="E_TASK_3_IE1" target="S_TASK_3_IE1">
       
-      <data key="Type">normal</data>
+      <data key="Type">contingent</data>
       <data key="Value">-1</data>
     </edge>
     <node id="S_TASK_4_T1">
@@ -179,13 +179,13 @@
       
       <data key="x">250</data>
       <data key="y">15</data>
-      <data key="Label">R</data>
+      <data key="Label">A</data>
     </node>
     <node id="E_TASK_5_T2">
       
       <data key="x">290</data>
       <data key="y">5</data>
-      <data key="Label">R</data>
+      <data key="Label">A</data>
     </node>
     <edge id="S_TASK_5_T2-E_TASK_5_T2" source="S_TASK_5_T2" target="E_TASK_5_T2">
       
@@ -208,7 +208,7 @@
       <data key="x">318</data>
       <data key="y">153</data>
       <data key="Label">⊡</data>
-      <data key="Obs">R</data>
+      <data key="Obs">A</data>
     </node>
     <edge id="S_XOR_2_G1-E_XOR_2_G1" source="S_XOR_2_G1" target="E_XOR_2_G1">
       
@@ -220,17 +220,15 @@
       <data key="Type">normal</data>
       <data key="Value">-2</data>
     </edge>
-    <node id="START__StartEvent_1">
+    <node id="Z">
       
       <data key="x">112</data>
       <data key="y">162</data>
-      <data key="Label">Z</data>
     </node>
-    <node id="END__e">
+    <node id="Ω">
       
       <data key="x">712</data>
       <data key="y">162</data>
-      <data key="Label">Ω</data>
     </node>
     <edge id="S_XOR_1_G2-E_TASK_1_T3" source="S_XOR_1_G2" target="E_TASK_1_T3">
       
@@ -242,7 +240,7 @@
       <data key="Type">normal</data>
       <data key="Value">0</data>
     </edge>
-    <edge id="END__e-E_TASK_2_T4" source="END__e" target="E_TASK_2_T4">
+    <edge id="Ω-E_TASK_2_T4" source="Ω" target="E_TASK_2_T4">
       
       <data key="Type">normal</data>
       <data key="Value">0</data>
@@ -252,7 +250,7 @@
       <data key="Type">normal</data>
       <data key="Value">0</data>
     </edge>
-    <edge id="S_TASK_4_T1-START__StartEvent_1" source="S_TASK_4_T1" target="START__StartEvent_1">
+    <edge id="S_TASK_4_T1-Z" source="S_TASK_4_T1" target="Z">
       
       <data key="Type">normal</data>
       <data key="Value">0</data>
@@ -292,21 +290,21 @@
       <data key="Type">normal</data>
       <data key="Value">0</data>
     </edge>
-    <edge id="S_TASK_4_T1-E_TASK_2_T4-RelativeConstraint_2v93" source="S_TASK_4_T1" target="E_TASK_2_T4" Label="U">
+    <edge id="E_TASK_4_T1-S_TASK_2_T4-RelativeConstraint_2v93" source="E_TASK_4_T1" target="S_TASK_2_T4">
       
       <data key="Type">normal </data>
-      <data key="Value">31</data>
+      <data key="LabeledValues">{(15, ⊡) }</data>
     </edge>
-    <edge id="E_TASK_2_T4-S_TASK_4_T1-RelativeConstraint_2v93" source="E_TASK_2_T4" target="S_TASK_4_T1" Label="U">
+    <edge id="S_TASK_2_T4-E_TASK_4_T1-RelativeConstraint_2v93" source="S_TASK_2_T4" target="E_TASK_4_T1">
       
       <data key="Type">normal</data>
-      <data key="Value">-2</data>
+      <data key="LabeledValues">{(-2, ⊡) }</data>
     </edge>
-    <data key="nContingent">4</data>
+    <data key="nContingent">5</data>
     <data key="nObservedProposition">1</data>
     <data key="NetworkType">CSTNU</data>
     <data key="nEdges">28</data>
-    <data key="nVertices">14</data>
+    <data key="nVertices">16</data>
     <data key="Name">diagrma</data>
   </graph>
 </graphml>

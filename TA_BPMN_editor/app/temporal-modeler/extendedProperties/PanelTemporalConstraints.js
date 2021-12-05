@@ -211,34 +211,86 @@ var validateMaxDuration_relative = function (element, values, node) {
   return !isNaN(val) && Number(val) > 0;
 };
 
+/** Check maxDuration_boudary < maxDuration_attachedToRef */
+var validateMaxDuration_BoundaryEvent = function (element, values, node) {
+  let val = values.maxDuration;
+
+  if (node.childElementCount > 0) {
+    if (node.childNodes[2].className.includes("bpp-field-description")) {
+      node.childNodes[2].innerHTML = '&nbsp;';
+      node.childNodes[1].style.border = '';
+    }
+  }
+
+  let attachedTo = element.businessObject.attachedToRef;
+  if (attachedTo) {
+    let valMaxDuration_attached = getExtensionElementValue(attachedTo, 'TDuration', 'maxDuration');
+
+
+    if (val === undefined || (isNaN(val) || Number(val) >= Number(valMaxDuration_attached)) || Number(val) < 0 || !Number.isInteger(parseFloat(val))) {
+      if (node.childElementCount > 0) {
+        if (node.childNodes[2].className.includes("bpp-field-description")) {
+          node.childNodes[2].innerText = 'Max duration should be a number >= 0 and smaller than max duration of the element to which it was attached.';
+          node.childNodes[1].style.border = '2px solid red';
+        }
+      }
+    }
+  }
+  return !isNaN(val) && Number(val) > 0;
+};
 
 /** Check observedProposition.length == 1 */
 var validate_observedProposition = function (element, values, node) {
-  let val = values.observedProposition.length;
+  let val;
 
   if (node.childElementCount > 0) {
     if (node.childNodes[2].className.includes("bpp-field-description")) {
       node.childNodes[1].style.border = '';
     }
   }
-  if (val != '1') {
-    if (node.childElementCount > 0) {
-      if (node.childNodes[2].className.includes("bpp-field-description")) {
-        node.childNodes[1].style.border = '2px solid red';
+
+  if (values.observedProposition) {
+    val = values.observedProposition.length;
+
+
+    if (val != '1' || !/[a-zA-F]/.test(values.observedProposition)) {
+      if (node.childElementCount > 0) {
+        if (node.childNodes[2].className.includes("bpp-field-description")) {
+          node.childNodes[1].style.border = '2px solid red';
+        }
       }
     }
   }
-
-  return values.observedProposition.length == 1;
+  return val != undefined || val == 1;
 };
 
+/** Check observedProposition.length == 1 */
+var validate_PropositionalLabel = function (element, values, node) {
+  let val;
 
+  if (node.childElementCount > 0) {
+    if (node.childNodes[2].className.includes("bpp-field-description")) {
+      node.childNodes[1].style.border = '';
+    }
+  }
+  if (values.propositionalLabel) {
+    val = values.propositionalLabel;
+    if (val != ''){
+      if (!/(((¬|¿|)[a-zA-F])+)/.test(val) || /[G-Z]/.test(val) ) {
+        if (node.childElementCount > 0) {
+          if (node.childNodes[2].className.includes("bpp-field-description")) {
+            node.childNodes[1].style.border = '2px solid red';
+          }
+        }
+      }
+  }
+}
+return val != undefined || val == 1;
+};
 
 function getExtensionElementValue(element, typeName, property) {
   return window.bpmnjs.getExtensionElementValue(element, typeName, property);
 }
-
-
 
 function checkSplitJoin(element) {
   return window.bpmnjs.checkSplitJoin(element);
@@ -398,7 +450,8 @@ export default function (group, element, bpmnFactory, translate) {
       label: 'Propositional label',
       modelProperty: 'propositionalLabel',
       get: getValue(getBusinessObject(element), "tempcon", "TDuration", "propositionalLabel"),
-      set: setValue(getBusinessObject(element), "tempcon", "TDuration", "propositionalLabel")
+      set: setValue(getBusinessObject(element), "tempcon", "TDuration", "propositionalLabel"),
+      validate: validate_PropositionalLabel
     }));
   }
 
@@ -431,9 +484,10 @@ export default function (group, element, bpmnFactory, translate) {
       disabled = false;
     group.entries.push(entryFactory.textField(translate, {
       id: 'propositionalLabel',
-      description: 'Label created with propositions of XORs',
+      description: 'Label set by the user RE:[(((¬|¿|)[a-zA-F])+)]',
       label: 'Propositional label',
-      modelProperty: 'propositionalLabel'
+      modelProperty: 'propositionalLabel',
+      validate: validate_PropositionalLabel
     }));
   }
 
@@ -509,6 +563,30 @@ export default function (group, element, bpmnFactory, translate) {
       }
     }
   }
+  if (is(element, 'bpmn:BoundaryEvent')) {
+    if (element.businessObject.eventDefinitions && element.businessObject.eventDefinitions.length > 0) {
+      // For IntermediateCatchEvent
+      let strOptions = ['bpmn:MessageEventDefinition'];
+
+      // TODO Check if eventDefinitions can have more than 1 element     
+      if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
+        // set_group_minDuration(group, validateMinDuration_noContingent);
+        set_group_maxDuration(group, validateMaxDuration_BoundaryEvent);
+
+        group.entries.push(entryFactory.textField(translate, {
+          id: 'observedProposition',
+          description: 'Type one letter ([a-zA-F]) to be used as proposition',
+          label: 'Letter representing the boolean condition',
+          modelProperty: 'observedProposition',
+          get: getValue(getBusinessObject(element), "tempcon", "TXorProposition", "observedProposition"),
+          set: setValue(getBusinessObject(element), "tempcon", "TXorProposition", "observedProposition"),
+          validate: validate_observedProposition
+        }));
+
+        set_group_propositionalLabel(group);
+      }
+    }
+  }
 
   if (is(element, 'bpmn:UserTask') ||
     is(element, 'bpmn:ServiceTask') ||
@@ -550,9 +628,7 @@ export default function (group, element, bpmnFactory, translate) {
     // gatewaySplitJoin was moved to tab General 
 
     set_group_propositionalLabel(group);
-
   }
-
 
   // ---------- RelativeConstraint ------------
   if (is(element, 'custom:connection')) {
@@ -589,6 +665,5 @@ export default function (group, element, bpmnFactory, translate) {
     set_group_maxDuration_asProperty(group, validateMaxDuration_relative, " (default: ∞)");
 
     set_group_propositionalLabel_asProperty(group, false);
-
   }
 }

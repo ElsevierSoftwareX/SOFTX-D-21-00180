@@ -283,23 +283,27 @@ function sendCSTNUtoEvaluate(cstnuXml, myObjs) {
                 }
                 else if (jsonEvaluation.consistency == false) {
                     //Extract information about the node with the negative loop 
-                    let strNodeId = jsonEvaluation.negativeLoopNode.replace("❮", "").replace("❯", "");
-                    let strNodeIdArg = strNodeId.split("_");
-                    let elementType = strNodeIdArg[1], elementTypeNumber = strNodeIdArg[2]; 
                     let currentObj;
-                    
-                    let myKeys = Object.keys(myObjs);
-                    for (let i = 0; i < myKeys.length; i++) {
-                        currentObj = myObjs[myKeys[i]];
-                        if (currentObj.elementType) {
-                            if (currentObj.elementType === elementType && currentObj.elementTypeNumber == elementTypeNumber) {
-                                break;
+                    let strNodeId = jsonEvaluation.negativeLoopNode.replace("❮", "").replace("❯", "");
+
+                    if (strNodeId[0] != 'Z') {
+                        // This does not work for the start node Z becase the id does not have the same structure 
+                        let strNodeIdArg = strNodeId.split("_");
+                        let elementType = strNodeIdArg[1], elementTypeNumber = strNodeIdArg[2];
+
+                        let myKeys = Object.keys(myObjs);
+                        for (let i = 0; i < myKeys.length; i++) {
+                            currentObj = myObjs[myKeys[i]];
+                            if (currentObj.elementType) {
+                                if (currentObj.elementType === elementType && currentObj.elementTypeNumber == elementTypeNumber) {
+                                    break;
+                                }
                             }
+                            currentObj = undefined;
                         }
-                        currentObj = undefined;
                     }
                     divModalContent.innerText = "The given network is NOT dynamically controllable.";
-                    
+
                     if (currentObj) {
                         divModalContent.innerText += "\nFound a constraint violation on node " + strNodeId + " (" + currentObj.id + "): its temporal constraint cannot be satisfied.";
                         window.elementsError.push(currentObj.id);
@@ -307,7 +311,15 @@ function sendCSTNUtoEvaluate(cstnuXml, myObjs) {
                         eventBus.fire('element.changed', { element: tempElement });
                     }
                     else {
-                        divModalContent.innerText += "\nFound a constraint violation on node " + strNodeId + ": its temporal constraint cannot be satisfied.";
+                        if (strNodeId[0] == 'Z') {
+                            divModalContent.innerText += "\nFound a constraint violation on node " + strNodeId + "(StartEvent): its temporal constraint cannot be satisfied.";
+                        }
+                        else if(strNodeId[0] == 'Ω'){
+                            divModalContent.innerText += "\nFound a constraint violation on node " + strNodeId + "(EndEvent): its temporal constraint cannot be satisfied.";
+                        }
+                        else {
+                            divModalContent.innerText += "\nFound a constraint violation on node " + strNodeId + ": its temporal constraint cannot be satisfied.";
+                        }
                     }
                 }
                 else {

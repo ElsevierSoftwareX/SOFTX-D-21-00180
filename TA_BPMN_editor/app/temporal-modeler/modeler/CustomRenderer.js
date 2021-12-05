@@ -220,11 +220,15 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
 
     let minD = "";
     let maxD = "";
+    let propositionalLabel = "";
 
     if (element.businessObject.minDuration != undefined)
       minD = element.businessObject.minDuration;
     if (element.businessObject.maxDuration != undefined)
       maxD = element.businessObject.maxDuration;
+    if (element.businessObject.propositionalLabel != undefined)
+      propositionalLabel = element.businessObject.propositionalLabel;
+
 
     let colorFrame = COLOR_GREEN;
 
@@ -236,6 +240,8 @@ export default function CustomRenderer(eventBus, styles, bpmnRenderer, textRende
     minD = Number(minD);
     maxD = (maxD != "" ? maxD : Infinity);
     if (maxD <= minD) colorFrame = COLOR_RED;
+    if (propositionalLabel != "")
+      if (!/(((¬|¿|)[a-zA-F])+)/.test(propositionalLabel) || /[G-Z]/.test(propositionalLabel)) colorFrame = COLOR_RED;
 
     var attrs = computeStyle(attrs, {
       stroke: colorFrame,
@@ -385,10 +391,19 @@ CustomRenderer.prototype.drawShape = function (p, element) {
         drawShape_contingent(p, element, this.textRenderer, false, this.eventBus);
       }
     }
-    if(element.businessObject.eventDefinitions === undefined){
+    if (element.businessObject.eventDefinitions === undefined) {
       drawShape_contingent(p, element, this.textRenderer, false, this.eventBus);
     }
 
+  }
+
+  if (isAny(element, ["bpmn:BoundaryEvent"])) {
+    let strOptions = ['bpmn:MessageEventDefinition'];
+    if (element.businessObject.eventDefinitions && element.businessObject.eventDefinitions.length > 0) {
+      if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
+        drawShape_contingent(p, element, this.textRenderer, false, this.eventBus);
+      }
+    }
   }
 
   return shape;
@@ -425,7 +440,7 @@ CustomRenderer.prototype.drawConnection = function (p, element) {
     if (getExtensionElementValue(element, 'TDuration', 'maxDuration') != undefined)
       maxD = getExtensionElementValue(element, 'TDuration', 'maxDuration');
 
-    // Default values for a norma connection 
+    // Default values for a normal connection 
     if (minD === "") minD = 0;
     if (maxD === "") maxD = Infinity;
 
@@ -487,11 +502,13 @@ function drawShape_contingent(
   // svgRemove(shape);
 
   // Information about min max duration and isContingent
-  let minD = "", maxD = "";
+  let minD = "", maxD = "", propositionalLabel = "";
   if (getExtensionElementValue(element, 'TDuration', 'minDuration') != undefined)
     minD = getExtensionElementValue(element, 'TDuration', 'minDuration');
   if (getExtensionElementValue(element, 'TDuration', 'maxDuration') != undefined)
     maxD = getExtensionElementValue(element, 'TDuration', 'maxDuration');
+  if (getExtensionElementValue(element, 'TDuration', 'propositionalLabel') != undefined)
+    propositionalLabel = getExtensionElementValue(element, 'TDuration', 'propositionalLabel');
 
   let colorFrame = COLOR_GREEN;
   if (isContingent) colorFrame = "#0000cc";
@@ -521,7 +538,11 @@ function drawShape_contingent(
   }
   else
     if (maxD_num < minD_num) colorFrame = COLOR_RED;
-  
+
+  if (propositionalLabel != "")
+    if (!/(((¬|¿|)[a-zA-F])+)/.test(propositionalLabel) || /[G-Z]/.test(propositionalLabel)) colorFrame = COLOR_RED;
+
+
   if (isAny(element, ["bpmn:ExclusiveGateway", "bpmn:ParallelGateway"])) {
     // Check it has a type: split or join 
     // let gatewaySplitJoin = getExtensionElementValue(element, "TGatewaySplitJoin", "gatewaySplitJoin");
@@ -539,10 +560,29 @@ function drawShape_contingent(
         let observedPropositionTmp = getExtensionElementValue(element, "TXorProposition", "observedProposition");
 
         if (observedPropositionTmp)
-          if (observedPropositionTmp.length > 1) colorFrame = COLOR_RED;
+          if (observedPropositionTmp.length > 1 || !/[a-zA-F]/.test(observedPropositionTmp)) colorFrame = COLOR_RED;
       }
     }
     eventBus.fire("tempcon.changed", { element: element });
+  }
+
+  if (isAny(element, ["bpmn:BoundaryEvent"])) {
+    if (element.businessObject.eventDefinitions && element.businessObject.eventDefinitions.length > 0) {
+      let strOptions = ['bpmn:MessageEventDefinition'];
+      if (strOptions.includes(element.businessObject.eventDefinitions[0].$type)) {
+        let attachedTo = element.businessObject.attachedToRef;
+        if (attachedTo) {
+          let valMaxDuration_attached = getExtensionElementValue(attachedTo, 'TDuration', 'maxDuration');
+          if (Number(maxD) >= Number(valMaxDuration_attached)) {
+            colorFrame = COLOR_RED;
+          }
+          let observedPropositionTmp = getExtensionElementValue(element, "TXorProposition", "observedProposition");
+
+          if (observedPropositionTmp)
+            if (observedPropositionTmp.length > 1 || !/[a-zA-F]/.test(observedPropositionTmp)) colorFrame = COLOR_RED;
+        }
+      }
+    }
   }
 
   let temWidth = element.width - 20;
@@ -564,7 +604,7 @@ function drawShape_contingent(
   if (is(element, "bpmn:Gateway")) {
     temWidth = -25;
   }
-  if (is(element, "bpmn:IntermediateCatchEvent") || is(element, "bpmn:IntermediateThrowEvent")) {
+  if (is(element, "bpmn:IntermediateCatchEvent") || is(element, "bpmn:IntermediateThrowEvent") || is(element, "bpmn:BoundaryEvent")) {
     temWidth = -40;
   }
 
